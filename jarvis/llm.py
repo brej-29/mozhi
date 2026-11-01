@@ -201,6 +201,7 @@ def _messages(text: str, history: list[dict] | None, system: str = SYSTEM) -> li
 NOT_CONNECTED = ("General questions need a language model and none is connected. Set LLM_ENDPOINT and "
                  "LLM_API_KEY in a .env file. Weather, reminders and notes work without one.")
 FAILED = "My language model did not answer. Try again in a moment."
+EMPTY = "My language model sent an empty answer. Try again in a moment."
 
 
 async def stream_answer(text: str, history: list[dict] | None = None,
@@ -239,6 +240,8 @@ async def stream_answer(text: str, history: list[dict] | None = None,
                     if piece:
                         out_chars += len(piece)
                         yield piece
+            if not out_chars:
+                yield EMPTY
     except (httpx.HTTPError, ValueError, KeyError):
         yield FAILED
     finally:  # also reached on cancellation or when the consumer stops early

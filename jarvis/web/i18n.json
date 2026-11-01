@@ -307,7 +307,7 @@
   "formal": "Use the respectful register: the polite 'you' ({pronoun}) and courteous written wording.",
   "addr_line": "Address the user as '{addr}' where it sounds natural, not in every sentence.",
   "no_addr_line": "Do not use a kinship or title address term.",
-  "roman_line": "Reply in English. Address the user as '{addr}' where it sounds natural, not in every sentence."
+  "roman_line": "Reply in English, whatever script the user wrote in. Address the user as '{addr}' where it sounds natural, not in every sentence."
  },
  "examples": {
   "en": [
