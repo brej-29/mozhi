@@ -1,4 +1,4 @@
-"""The things Jarvis can actually do. Each returns (spoken reply, optional client action)."""
+"""The things Mozhi can actually do. Each returns (spoken reply, optional client action)."""
 
 import re
 from datetime import datetime, timedelta, timezone
@@ -17,7 +17,7 @@ WMO = {0: "clear", 1: "mostly clear", 2: "partly cloudy", 3: "overcast", 45: "fo
        81: "rain showers", 82: "violent showers", 95: "a thunderstorm", 96: "thunderstorm and hail",
        99: "thunderstorm and hail"}
 
-# friendly names for the fine intents Jarvis hears but cannot act on
+# friendly names for the fine intents Mozhi hears but cannot act on
 UNSUPPORTED_HINT = {
     "play_music": "play music", "play_radio": "play the radio", "play_podcasts": "play podcasts",
     "play_audiobook": "play audiobooks", "play_game": "play games", "music_query": "answer music questions",

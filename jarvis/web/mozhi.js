@@ -1,4 +1,4 @@
-/* Language and respect layer: which words Koottu uses, and what it calls you.
+/* Language and respect layer: which words Mozhi uses, and what it calls you.
    Tamil and Malayalam replies are composed here from facts (a place, a temperature, a time), so the same
    wording is used whether the facts came from the local server or from the browser-only copy. English
    replies come from the backend unchanged. All Tamil and Malayalam text lives in i18n.json. */
@@ -83,7 +83,7 @@ const pick = (list, seenKey) => {
 export async function story(ctx = prefs) {
   const list = (await load("stories")).stories || [];
   if (!list.length) return null;
-  const s = pick(list, "koottu.stories");
+  const s = pick(list, "mozhi.stories");
   const lang = ctx.native ? ctx.lang : "en";
   return { kind: "story", title: s.title[lang], body: s.summary[lang], moral: s.moral[lang], source: s.source, region: s.region };
 }
@@ -93,7 +93,7 @@ export async function verse(ctx = prefs) {
   // Malayalam gets Malayalam classics. Tamil gets Tamil. English gets Thirukkural, which has an English gloss.
   const list = all.filter((v) => (ctx.lang === "ml" ? v.lang === "ml" : ctx.lang === "ta" ? v.lang === "ta" : v.meaning.en));
   if (!list.length) return null;
-  const v = pick(list, `koottu.verses.${ctx.lang}`);
+  const v = pick(list, `mozhi.verses.${ctx.lang}`);
   return { kind: "verse", lines: v.lines, meaning: (ctx.native ? v.meaning[ctx.lang] : v.meaning.en) || v.meaning.en || v.meaning.ta || "", work: ctx.lang === "en" ? v.work_en : v.work,
     author: ctx.lang === "en" ? v.author_en : v.author, ref: v.ref, source: v.source };
 }

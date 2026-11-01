@@ -1,4 +1,4 @@
-# Koottu: Tamil and Malayalam, with a respect meter
+# Mozhi: Tamil and Malayalam, with a respect meter
 
 Design note and pre-registration for the third version of the project. Written before any multilingual
 model was trained. The thresholds in section 5 are fixed now and are not edited after results exist; anything
@@ -15,12 +15,15 @@ they are talking to. A flat "you" is wrong in both languages. That register is t
 
 | Option | Meaning | Note |
 |---|---|---|
-| **Koottu** (கூட்டு / കൂട്ട്) | company, companionship | Same word and sense in both languages. Chosen. |
-| Thunai (துணை / തുണ) | support, a companion | Close second. |
-| Vaani (வாணி / വാണി) | speech, voice | Also a person's name; reads as one persona. |
+| **Mozhi** (மொழி / മൊഴി) | speech, language | Same word in both languages, neutral tone. Chosen. |
+| Koottu (கூட்டு / കൂട്ട്) | company, companionship | First choice, dropped: it reads like a dating or social app. |
+| Thunai (துணை / തുണ) | support, a companion | Also means a spouse, so not used. |
+| Vaani (வாணி / വാണി) | speech, voice | Also a person's name. |
 
-The name lives in one constant (`APP_NAME` in `jarvis/web/i18n.js`), so changing it is one edit. The repository
+The name lives in one value (`app.name` in `jarvis/web/i18n.json`), so changing it is one edit. The repository
 and live URL keep the old slug so existing links work. Meanings are my reading; a native speaker should confirm.
+Some file names keep the earlier working name (`tests/probes_koottu.json`, `training/synth_koottu.py`) because the
+pre-registration and the training scripts refer to them.
 
 ## 3. The respect meter
 
@@ -90,7 +93,7 @@ Tool-level macro-F1 on the MASSIVE test split of each language.
 | T11 | False action rate (an action tool chosen for a request that should be declined) at most 2% per language |
 | T12 | Browser (onnxruntime-web) and Python agree on the tool for at least 99% of 600 test utterances per language |
 | T13 | New tools NEWS, STORY, VERSE: F1 at least 0.90 per language on a **template-held-out** split. This is synthetic evidence and is labelled so wherever it is shown |
-| T14 | On the 90-phrase hand-written probe set (`tests/probes_koottu.json`, written before training, never used for training or tuning) at least 0.80 tool accuracy per language. Small and written by one person; reported with its interval |
+| T14 | On the 90-phrase hand-written probe set (`tests/probes_mozhi.json`, written before training, never used for training or tuning) at least 0.80 tool accuracy per language. Small and written by one person; reported with its interval |
 
 Known limits, stated now: MASSIVE Tamil and Malayalam are translations written in native script, not
 transcripts of speech; romanised typing ("nalai mazhai varuma") and Tamil-English mixed speech are not in the

@@ -1,13 +1,13 @@
-"""Start OmniRoute when Jarvis needs it, and stop it on exit only if Jarvis was the one that started it.
+"""Start OmniRoute when Mozhi needs it, and stop it on exit only if Mozhi was the one that started it.
 
-    external   an OmniRoute was already answering, so Jarvis leaves it alone (never stops it)
-    starting   Jarvis launched `omniroute serve` and is waiting for it to answer
-    started    Jarvis launched it and it is healthy; it will be stopped when Jarvis exits
+    external   an OmniRoute was already answering, so Mozhi leaves it alone (never stops it)
+    starting   Mozhi launched `omniroute serve` and is waiting for it to answer
+    started    Mozhi launched it and it is healthy; it will be stopped when Mozhi exits
     failed     it could not be started (not installed, crashed, or too slow); general questions explain why
     remote     the endpoint is not on this machine, so there is nothing to start
     off        no endpoint configured, or JARVIS_MANAGE_OMNIROUTE=0
 
-On Windows the child is placed in a job object that kills it when Jarvis exits for any reason, including
+On Windows the child is placed in a job object that kills it when Mozhi exits for any reason, including
 closing the console window or killing jarvis.exe, so it cannot be left behind by accident.
 """
 
@@ -140,7 +140,7 @@ class OmniRoute:
                 self.state, self.detail = "failed", "OmniRoute stopped unexpectedly"
                 return
             if self.healthy(base):
-                self.state, self.detail = "started", "started by Jarvis"
+                self.state, self.detail = "started", "started by Mozhi"
                 return
             time.sleep(1)
         self.state, self.detail = "failed", "OmniRoute did not answer in time"

@@ -1,4 +1,4 @@
-/* The orb: a canvas drawing whose motion is a readout of what Koottu is doing.
+/* The orb: a canvas drawing whose motion is a readout of what Mozhi is doing.
    idle      slow breathing, a drifting particle halo
    listening a spectrum ring driven by the real microphone frequencies, ripples on loud moments
    thinking  comets sweeping the ring and a constellation of nodes passing a signal around

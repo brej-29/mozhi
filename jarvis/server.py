@@ -33,7 +33,7 @@ async def lifespan(_: FastAPI):
     manager.stop()  # stops it only if this run started it
 
 
-app = FastAPI(title="Jarvis", version="2.0.0", lifespan=lifespan)
+app = FastAPI(title="Mozhi", version="2.0.0", lifespan=lifespan)
 # Reject foreign Host headers so a web page cannot reach the local API through DNS rebinding.
 # A hosted deployment lists its public hostname in JARVIS_ALLOWED_HOSTS (comma separated).
 _hosts = ["localhost", "127.0.0.1", "[::1]", "testserver"]

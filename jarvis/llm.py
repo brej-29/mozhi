@@ -28,14 +28,14 @@ from pathlib import Path
 import httpx
 
 DEFAULT_MODEL = "auto/best-free"  # a free OmniRoute combo, see D:/Project/models.md
-SYSTEM = ("You are Jarvis, a voice assistant. Answer in one or two short spoken sentences. "
+SYSTEM = ("You are Mozhi, a voice assistant. Answer in one or two short spoken sentences. "
           "No markdown, no lists, no emoji.")
 MAX_TOKENS = 200
 I18N = json.loads((Path(__file__).resolve().parent / "web" / "i18n.json").read_text(encoding="utf-8"))
 
 
 def persona(lang: str = "en", level: int = 2, gender: str = "", native: bool = False) -> str:
-    """System prompt for the chosen language and respect level. English keeps the original Jarvis prompt."""
+    """System prompt for the chosen language and respect level. English keeps the original Mozhi prompt."""
     cfg = I18N["langs"].get(lang)
     if lang == "en" or not cfg:
         return SYSTEM

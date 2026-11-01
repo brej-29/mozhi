@@ -1,7 +1,7 @@
 import { chat, health as engineHealth, STATIC, byok, PROVIDERS } from "./engine.js";
 import { renderEvidence } from "./evidence.js";
 import { createOrb } from "./orb.js";
-import { I18N, prefs, romanTerm, addressed, say, localize, story, verse, persona } from "./koottu.js";
+import { I18N, prefs, romanTerm, addressed, say, localize, story, verse, persona } from "./mozhi.js";
 
 document.documentElement.classList.add("js");
 const $ = (s) => document.querySelector(s);
@@ -58,7 +58,7 @@ async function health() {
     s.className = "status ok";
     if (om.state === "starting") setTimeout(health, 2000);
   } catch {
-    s.textContent = STATIC ? "Loading the 23 MB router into your browser" : "Router offline. Check that the Koottu app is running.";
+    s.textContent = STATIC ? "Loading the 23 MB router into your browser" : "Router offline. Check that the Mozhi app is running.";
     s.className = "status bad";
     setTimeout(health, 4000);
   }
@@ -188,7 +188,7 @@ function schedule(rem) {
   const ms = new Date(rem.at) - Date.now();
   if (ms <= 0 || ms > 2 ** 31 - 1) return;
   timers.set(rem.at + rem.title, setTimeout(() => {
-    if ("Notification" in window && Notification.permission === "granted") new Notification("Koottu reminder", { body: rem.title });
+    if ("Notification" in window && Notification.permission === "granted") new Notification("Mozhi reminder", { body: rem.title });
     caption(`Reminder: ${rem.title}`);
     speak(`Reminder: ${rem.title}`);
   }, ms));

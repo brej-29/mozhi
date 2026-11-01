@@ -13,7 +13,7 @@ import urllib.request
 from pathlib import Path
 
 OUT = Path(__file__).resolve().parents[1] / "jarvis" / "web" / "content" / "verses.json"
-UA = {"User-Agent": "koottu-content-build/0.1 (portfolio project)"}
+UA = {"User-Agent": "mozhi-content-build/0.1 (portfolio project)"}
 KURAL_URL = "https://raw.githubusercontent.com/tk120404/thirukkural/master/thirukkural.json"
 
 

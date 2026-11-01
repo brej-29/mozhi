@@ -17,7 +17,7 @@ def main():
     url = f"http://{a.host}:{a.port}"
     try:  # a second launch just opens the copy that is already running
         if httpx.get(url + "/api/health", timeout=1).status_code == 200:
-            print(f"Jarvis is already running at {url}")
+            print(f"Mozhi is already running at {url}")
             if not a.no_browser:
                 webbrowser.open(url)
             return
@@ -29,8 +29,8 @@ def main():
     from jarvis.server import app
 
     s = llm.settings()
-    print(f"Jarvis is running at {url}  (close this window or press Ctrl+C to quit)")
-    print(f"Language model: {s['model'] if s['endpoint'] else 'none connected'}; OmniRoute is started for you if it is local and not running, and stopped on exit only if Jarvis started it.")
+    print(f"Mozhi is running at {url}  (close this window or press Ctrl+C to quit)")
+    print(f"Language model: {s['model'] if s['endpoint'] else 'none connected'}; OmniRoute is started for you if it is local and not running, and stopped on exit only if Mozhi started it.")
     uvicorn.run(app, host=a.host, port=a.port, log_level="warning")
 
 

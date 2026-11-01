@@ -292,10 +292,10 @@ async function byokAnswer(body, on) {
 }
 async function byokText(body, on) {
   const cfg = byok.get();
-  if (!cfg) return { reply: "General questions need a language model. Add your own key under Preferences, or run Koottu on your computer with OmniRoute. Weather, reminders and notes work without one.", action: say("qa_nokey") };
+  if (!cfg) return { reply: "General questions need a language model. Add your own key under Preferences, or run Mozhi on your computer with OmniRoute. Weather, reminders and notes work without one.", action: say("qa_nokey") };
   if (!underCap()) return { reply: `That is ${DAILY_CAP} answers today on this device, which is the safety limit. Try again tomorrow.`, action: say("qa_cap", { n: DAILY_CAP }) };
   const messages = [
-    { role: "system", content: body.persona || "You are Koottu, a voice assistant. Answer in one or two short spoken sentences. No markdown, no lists, no emoji." },
+    { role: "system", content: body.persona || "You are Mozhi, a voice assistant. Answer in one or two short spoken sentences. No markdown, no lists, no emoji." },
     ...(body.history || []).slice(-6).filter((h) => h.role === "user" || h.role === "assistant").map((h) => ({ role: h.role, content: String(h.content).slice(0, 500) })),
     { role: "user", content: body.text },
   ];
