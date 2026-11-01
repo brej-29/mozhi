@@ -13,8 +13,9 @@ const store = {
 export const prefs = {
   lang: I18N.langs[store.get("lang", "")] ? store.get("lang", "en") : "en",
   level: Math.min(LEVELS - 1, Math.max(0, Number(store.get("level", 2)) || 0)),
+  native: store.get("native", false) === true, // Tamil and Malayalam script replies; off by default, replies stay English
   gender: ["male", "female"].includes(store.get("gender", "")) ? store.get("gender", "") : "",
-  save() { store.set("lang", this.lang); store.set("level", this.level); store.set("gender", this.gender); },
+  save() { store.set("native", this.native); store.set("lang", this.lang); store.set("level", this.level); store.set("gender", this.gender); },
 };
 
 export const formal = (level = prefs.level) => level >= 2; // from "anna/akka" up, the polite "you" is used
@@ -24,6 +25,19 @@ const fill = (s, facts) => s.replace(/\{(\w+)\}/g, (_, k) => facts[k] ?? "");
 export function term(lang = prefs.lang, level = prefs.level, gender = prefs.gender) {
   const row = I18N.langs[lang].address?.[level];
   return row ? row[{ male: 0, female: 1 }[gender] ?? 2] : "";
+}
+
+/** What the person is called in English replies: "Anna, " or "" when no term is chosen. */
+export function romanTerm(ctx = prefs) {
+  const row = I18N.langs[ctx.lang].address_roman?.[ctx.level];
+  const t = row ? row[{ male: 0, female: 1 }[ctx.gender] ?? 2] : "";
+  return t ? `${t[0].toUpperCase()}${t.slice(1)}, ` : "";
+}
+
+/** "Anna, in Lisbon it is 25 degrees": the address term, then the reply with its first letter lowered. */
+export function addressed(reply, ctx = prefs) {
+  const a = reply ? romanTerm(ctx) : "";
+  return a ? a + reply.replace(/^(?!I)([A-Z])(?=[a-z])/, (c) => c.toLowerCase()) : reply;
 }
 
 /** One message in the chosen language and register. English is not handled here. */
@@ -41,7 +55,9 @@ const spokenDate = (iso, lang) => new Intl.DateTimeFormat(I18N.langs[lang].local
 export function localize(d, ctx = prefs) {
   const { lang, level, gender } = ctx;
   const act = d.action || {};
-  if (lang === "en") return { text: d.reply, card: act.type === "news" ? { kind: "news", items: act.items } : null };
+  const news = act.type === "news" ? { kind: "news", items: act.items } : null;
+  if (lang === "en") return { text: d.reply, card: news };
+  if (!ctx.native) return { text: addressed(d.reply, ctx), card: news }; // English reply, addressed the way the meter says
   const m = (code, facts) => say(code, facts, lang, level, gender);
   if (act.type === "say") return { text: m(act.code, act) || d.reply, card: null };
   if (act.type === "weather") return { text: m("weather_ok", { ...act, sky: I18N.langs[lang].sky[act.sky] ?? "" }), card: null };
@@ -68,7 +84,7 @@ export async function story(ctx = prefs) {
   const list = (await load("stories")).stories || [];
   if (!list.length) return null;
   const s = pick(list, "koottu.stories");
-  const lang = ctx.lang;
+  const lang = ctx.native ? ctx.lang : "en";
   return { kind: "story", title: s.title[lang], body: s.summary[lang], moral: s.moral[lang], source: s.source, region: s.region };
 }
 
@@ -78,7 +94,7 @@ export async function verse(ctx = prefs) {
   const list = all.filter((v) => (ctx.lang === "ml" ? v.lang === "ml" : ctx.lang === "ta" ? v.lang === "ta" : v.meaning.en));
   if (!list.length) return null;
   const v = pick(list, `koottu.verses.${ctx.lang}`);
-  return { kind: "verse", lines: v.lines, meaning: v.meaning[ctx.lang] || v.meaning.en || "", work: ctx.lang === "en" ? v.work_en : v.work,
+  return { kind: "verse", lines: v.lines, meaning: (ctx.native ? v.meaning[ctx.lang] : v.meaning.en) || v.meaning.en || v.meaning.ta || "", work: ctx.lang === "en" ? v.work_en : v.work,
     author: ctx.lang === "en" ? v.author_en : v.author, ref: v.ref, source: v.source };
 }
 
@@ -86,6 +102,7 @@ export async function verse(ctx = prefs) {
 export function persona(ctx = prefs) {
   const p = I18N.persona, L = I18N.langs[ctx.lang];
   if (ctx.lang === "en") return null;
+  if (!ctx.native) { const a = romanTerm(ctx).replace(/, $/, ""); return a ? fill(p.name_line, { name: I18N.app.name }) + " " + fill(p.roman_line, { addr: a }) : null; }
   const f = formal(ctx.level), a = term(ctx.lang, ctx.level, ctx.gender);
   return [fill(p.name_line, { name: I18N.app.name }), fill(p.lang_line, { language: L.language }),
     fill(p[f ? "formal" : "informal"], { pronoun: L.pronoun[f ? 1 : 0] }),

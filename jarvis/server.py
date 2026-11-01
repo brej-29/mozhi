@@ -52,11 +52,12 @@ class ChatIn(BaseModel):
     lang: str = Field(default="en", pattern="^(en|ta|ml)$")
     level: int = Field(default=2, ge=0, le=4)  # respect meter, 0 casual to 4 deferential
     gender: str = Field(default="", pattern="^(male|female|)$")
+    native: bool = False  # reply in Tamil or Malayalam script instead of English
 
 
 def route_json(r) -> dict:
     return {"tool": r.tool, "confidence": round(r.confidence, 3), "intent": r.intent, "path": r.path,
-            "args": r.args, "spans": r.spans, "ms": round(r.ms, 2)}
+            "args": r.args, "spans": r.spans, "scores": r.scores, "words": r.words, "ms": round(r.ms, 2)}
 
 
 def run_router(text: str):
@@ -68,7 +69,7 @@ def run_router(text: str):
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "router": "joint-int8", "threshold": state["router"].threshold, "llm": {**llm.status(), "omniroute": {"state": manager.state, "detail": manager.detail}}}
+    return {"status": "ok", "router": "joint-int8", "threshold": state["router"].threshold, "tools": state["router"].tools, "llm": {**llm.status(), "omniroute": {"state": manager.state, "detail": manager.detail}}}
 
 
 @app.post("/api/route")
@@ -80,7 +81,7 @@ def route(body: ChatIn):
 async def act(r, body: ChatIn):
     """Run the tool the router chose. Returns (spoken reply, client action)."""
     if r.tool == "WEATHER":
-        return await tools.weather(r.args.get("city") or body.default_city, lang=body.lang)
+        return await tools.weather(r.args.get("city") or body.default_city, lang=body.lang if body.native else "en")
     if r.tool == "SET_REMINDER":
         when = r.args.get("when", "")
         title = r.args.get("title", "")
@@ -91,7 +92,7 @@ async def act(r, body: ChatIn):
     if r.tool == "SAVE_NOTE":
         return tools.note(body.text)
     if r.tool == "GENERAL_QA":
-        return (tools.GREETING if r.intent == "general_greet" else await llm.answer(body.text, body.history, llm.persona(body.lang, body.level, body.gender))), None
+        return (tools.GREETING if r.intent == "general_greet" else await llm.answer(body.text, body.history, llm.persona(body.lang, body.level, body.gender, body.native))), None
     if r.tool == "NEWS":
         items = await news.headlines(body.lang)
         if not items:
@@ -122,7 +123,7 @@ async def chat_stream(body: ChatIn):
         yield sse("route", route_json(r))
         if r.tool == "GENERAL_QA" and r.intent != "general_greet":
             parts = []
-            async for piece in llm.stream_answer(body.text, body.history, system=llm.persona(body.lang, body.level, body.gender)):
+            async for piece in llm.stream_answer(body.text, body.history, system=llm.persona(body.lang, body.level, body.gender, body.native)):
                 parts.append(piece)
                 yield sse("token", piece)
             yield sse("done", {"reply": "".join(parts).strip(), "action": None})

@@ -20,7 +20,8 @@
    "pronoun": [
     "you",
     "you"
-   ]
+   ],
+   "menu": "English"
   },
   "ta": {
    "label": "தமிழ்",
@@ -130,6 +131,34 @@
    "pronoun": [
     "நீ",
     "நீங்கள்"
+   ],
+   "menu": "Tamil (Tanglish)",
+   "address_roman": [
+    [
+     "da",
+     "di",
+     ""
+    ],
+    [
+     "thambi",
+     "thangachi",
+     ""
+    ],
+    [
+     "anna",
+     "akka",
+     ""
+    ],
+    [
+     "sir",
+     "madam",
+     ""
+    ],
+    [
+     "ayya",
+     "amma",
+     "muthalali"
+    ]
    ]
   },
   "ml": {
@@ -240,6 +269,34 @@
    "pronoun": [
     "നീ",
     "നിങ്ങൾ"
+   ],
+   "menu": "Malayalam (Manglish)",
+   "address_roman": [
+    [
+     "da",
+     "di",
+     ""
+    ],
+    [
+     "mone",
+     "mole",
+     ""
+    ],
+    [
+     "chetta",
+     "chechi",
+     ""
+    ],
+    [
+     "saar",
+     "madam",
+     ""
+    ],
+    [
+     "thampurane",
+     "thampuratti",
+     "muthalali"
+    ]
    ]
   }
  },
@@ -249,148 +306,176 @@
   "informal": "Use the informal, friendly register: the informal 'you' ({pronoun}) and everyday spoken wording.",
   "formal": "Use the respectful register: the polite 'you' ({pronoun}) and courteous written wording.",
   "addr_line": "Address the user as '{addr}' where it sounds natural, not in every sentence.",
-  "no_addr_line": "Do not use a kinship or title address term."
+  "no_addr_line": "Do not use a kinship or title address term.",
+  "roman_line": "Reply in English. Address the user as '{addr}' where it sounds natural, not in every sentence."
  },
  "examples": {
   "en": [
    {
     "group": "do",
     "say": "what's the weather in lisbon",
-    "label": "weather in Lisbon"
+    "label": "weather in Lisbon",
+    "tool": ""
    },
    {
     "group": "do",
     "say": "remind me to call mum tomorrow at 5 pm",
-    "label": "remind me tomorrow at 5 pm"
+    "label": "remind me tomorrow at 5 pm",
+    "tool": ""
    },
    {
     "group": "do",
     "say": "save a note buy oat milk",
-    "label": "save a note"
+    "label": "save a note",
+    "tool": ""
    },
    {
     "group": "do",
     "say": "tell me a folk tale",
-    "label": "a folk tale"
+    "label": "a folk tale",
+    "tool": "STORY"
    },
    {
     "group": "do",
     "say": "recite a thirukkural",
-    "label": "a Thirukkural"
+    "label": "a Thirukkural",
+    "tool": "VERSE"
    },
    {
     "group": "do",
     "say": "what are the main headlines today",
-    "label": "today's headlines"
+    "label": "today's headlines",
+    "tool": "NEWS"
    },
    {
     "group": "no",
     "say": "play some jazz in the kitchen",
-    "label": "play some jazz"
+    "label": "play some jazz",
+    "tool": ""
    },
    {
     "group": "no",
     "say": "turn off the living room lights",
-    "label": "turn off the lights"
+    "label": "turn off the lights",
+    "tool": ""
    },
    {
     "group": "qa",
     "say": "who painted the mona lisa",
-    "label": "who painted the Mona Lisa"
+    "label": "who painted the Mona Lisa",
+    "tool": ""
    }
   ],
   "ta": [
    {
     "group": "do",
-    "say": "மதுரையில் இன்று வானிலை எப்படி இருக்கு",
-    "label": "மதுரை வானிலை"
+    "say": "chennai weather enna",
+    "label": "chennai weather enna",
+    "tool": ""
    },
    {
     "group": "do",
-    "say": "நாளை மாலை நான்கு மணிக்கு தண்ணீர் பாய்ச்ச நினைவூட்டு",
-    "label": "நாளை மாலை நினைவூட்டு"
+    "say": "remind me tomorrow 5 pm amma ku call pannanum",
+    "label": "naalaikku amma ku call",
+    "tool": ""
    },
    {
     "group": "do",
-    "say": "குறிப்பு எழுதிக்கொள் அரிசி வாங்க வேண்டும்",
-    "label": "ஒரு குறிப்பு"
+    "say": "oru note save pannu paal vaanganum",
+    "label": "oru note save pannu",
+    "tool": ""
    },
    {
     "group": "do",
-    "say": "எனக்கு ஒரு கதை சொல்லு",
-    "label": "ஒரு கதை"
+    "say": "oru kathai sollu",
+    "label": "oru kathai sollu",
+    "tool": "STORY"
    },
    {
     "group": "do",
-    "say": "ஒரு குறள் சொல்லுங்கள்",
-    "label": "ஒரு குறள்"
+    "say": "oru thirukkural sollu",
+    "label": "oru thirukkural sollu",
+    "tool": "VERSE"
    },
    {
     "group": "do",
-    "say": "இன்றைய செய்திகள் என்ன",
-    "label": "இன்றைய செய்திகள்"
+    "say": "indraiya seithigal enna",
+    "label": "indraiya seithigal",
+    "tool": "NEWS"
    },
    {
     "group": "no",
-    "say": "அந்தப் பாடலை இசைக்கச் செய்",
-    "label": "பாட்டு போடு"
+    "say": "play some songs podu",
+    "label": "paattu podu",
+    "tool": ""
    },
    {
     "group": "no",
-    "say": "சமையலறை விளக்கை அணைத்துவிடு",
-    "label": "விளக்கை அணை"
+    "say": "kitchen light off pannu",
+    "label": "light off pannu",
+    "tool": ""
    },
    {
     "group": "qa",
-    "say": "பூமி சூரியனைச் சுற்ற எவ்வளவு நாள் ஆகும்",
-    "label": "பூமி சுற்றும் காலம்"
+    "say": "india oda capital enna",
+    "label": "india oda capital enna",
+    "tool": ""
    }
   ],
   "ml": [
    {
     "group": "do",
-    "say": "ആലപ്പുഴയിൽ ഇന്ന് മഴയുണ്ടോ",
-    "label": "ആലപ്പുഴ കാലാവസ്ഥ"
+    "say": "kochi weather ariyan",
+    "label": "kochi weather ariyan",
+    "tool": ""
    },
    {
     "group": "do",
-    "say": "നാളെ വൈകുന്നേരം നാലു മണിക്ക് ചെടി നനയ്ക്കാൻ ഓർമ്മിപ്പിക്കൂ",
-    "label": "നാളെ വൈകുന്നേരം ഓർമ്മിപ്പിക്കൂ"
+    "say": "remind me tomorrow 5 pm ammaye vilikkan",
+    "label": "naale ammaye vilikkan",
+    "tool": ""
    },
    {
     "group": "do",
-    "say": "കുറിപ്പ് എഴുതി വെക്കൂ അരി വാങ്ങണം",
-    "label": "ഒരു കുറിപ്പ്"
+    "say": "oru note save cheyyu paal vangikkanam",
+    "label": "oru note save cheyyu",
+    "tool": ""
    },
    {
     "group": "do",
-    "say": "എനിക്ക് ഒരു കഥ പറഞ്ഞു തരൂ",
-    "label": "ഒരു കഥ"
+    "say": "oru katha parayu",
+    "label": "oru katha parayu",
+    "tool": "STORY"
    },
    {
     "group": "do",
-    "say": "ഒരു കവിത ചൊല്ലിത്തരൂ",
-    "label": "ഒരു കവിത"
+    "say": "oru kavitha chollu",
+    "label": "oru kavitha chollu",
+    "tool": "VERSE"
    },
    {
     "group": "do",
-    "say": "ഇന്നത്തെ വാർത്തകൾ പറയൂ",
-    "label": "ഇന്നത്തെ വാർത്തകൾ"
+    "say": "innathe vartha enthokke",
+    "label": "innathe vartha",
+    "tool": "NEWS"
    },
    {
     "group": "no",
-    "say": "ഒരു പാട്ട് വെക്കൂ",
-    "label": "പാട്ട് വെക്കൂ"
+    "say": "play some songs vekku",
+    "label": "paattu vekku",
+    "tool": ""
    },
    {
     "group": "no",
-    "say": "അടുക്കളയിലെ ലൈറ്റ് അണയ്ക്കൂ",
-    "label": "ലൈറ്റ് അണയ്ക്കൂ"
+    "say": "kitchen light off cheyyu",
+    "label": "light off cheyyu",
+    "tool": ""
    },
    {
     "group": "qa",
-    "say": "ഭൂമി സൂര്യനെ ചുറ്റാൻ എത്ര ദിവസം വേണം",
-    "label": "ഭൂമിയുടെ ഭ്രമണം"
+    "say": "india yude capital ethanu",
+    "label": "india yude capital ethanu",
+    "tool": ""
    }
   ]
  },

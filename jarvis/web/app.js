@@ -1,7 +1,7 @@
 import { chat, health as engineHealth, STATIC, byok, PROVIDERS } from "./engine.js";
 import { renderEvidence } from "./evidence.js";
 import { createOrb } from "./orb.js";
-import { I18N, prefs, term, say, localize, story, verse, persona } from "./koottu.js";
+import { I18N, prefs, romanTerm, addressed, say, localize, story, verse, persona } from "./koottu.js";
 
 document.documentElement.classList.add("js");
 const $ = (s) => document.querySelector(s);
@@ -13,7 +13,7 @@ const store = {
 };
 const TOOL_LABEL = { WEATHER: "Weather", SET_REMINDER: "Reminder", SAVE_NOTE: "Note", GENERAL_QA: "Answer", NEWS: "News", STORY: "Story", VERSE: "Verse", UNSUPPORTED: "Not done" };
 const ACTED = { WEATHER: "Looked up", SET_REMINDER: "Reminder set", SAVE_NOTE: "Note saved", GENERAL_QA: "Asked the model", NEWS: "Fetched headlines", STORY: "Picked a story", VERSE: "Picked a verse" };
-let threshold = 0.85, llm = { connected: false };
+let threshold = 0.85, llm = { connected: false }, supported = null;
 const history = [];
 const orb = createOrb($("#orb"));
 
@@ -48,6 +48,7 @@ async function health() {
   try {
     const h = await engineHealth();
     threshold = h.threshold;
+    if (h.tools && h.tools.join() !== supported?.join()) { supported = h.tools; applyLang(); }
     llm = h.llm || llm;
     const where = STATIC ? "Router ready, running in your browser" : "Router ready, running on this machine";
     const om = llm.omniroute || {};
@@ -83,6 +84,45 @@ function markSpans(text, spans) {
   return out + esc(text.slice(at));
 }
 
+const TOOL_ORDER = ["WEATHER", "SET_REMINDER", "SAVE_NOTE", "GENERAL_QA", "NEWS", "STORY", "VERSE", "UNSUPPORTED"];
+function scoreRows() {
+  const tools = TOOL_ORDER.filter((t) => !supported || supported.includes(t) || t === "UNSUPPORTED");
+  return tools.map((t, i) => `<li data-t="${t}" class="scanning" style="--i:${i}"><span class="nm">${TOOL_LABEL[t]}</span><span class="bar"><i></i></span><span class="pc">&nbsp;</span></li>`).join("");
+}
+
+function explain(r) {
+  const pct = Math.round(r.confidence * 100), bar = Math.round(threshold * 100), top = TOOL_LABEL[r.tool];
+  if (r.path === "abstain") return `Closest match was ${top.toLowerCase()} at ${pct}%, under the ${bar}% bar, so I declined instead of guessing.`;
+  if (r.tool === "UNSUPPORTED") return `Heard as "${(r.intent || "unsupported").replace(/_/g, " ")}", which I cannot do. Nothing was done.`;
+  if (r.tool === "GENERAL_QA") return r.intent === "general_greet" ? "A greeting, so no tool was needed." : `Not an action request. ${llm.connected ? "Asking the language model." : "No language model is connected, so I will say so."}`;
+  if (["NEWS", "STORY", "VERSE"].includes(r.tool)) return `${top} at ${pct}%. This comes from content, not the language model.`;
+  return `${top} at ${pct}%, over the ${bar}% bar, so I went ahead.`;
+}
+
+function revealMind(li, text, r) {
+  const mind = li.querySelector(".mind");
+  const words = (r.words && r.words.length ? r.words : text.toLowerCase().split(/\s+/).filter(Boolean));
+  const slotOf = (w) => (r.spans || []).find((s) => s.text.split(" ").includes(w))?.kind;
+  const heard = mind.querySelector(".heard");
+  heard.replaceChildren(...words.slice(0, 24).map((w, i) => {
+    const c = document.createElement("span");
+    c.textContent = w; c.style.setProperty("--i", i);
+    const k = slotOf(w); if (k) c.dataset.slot = k;
+    return c;
+  }));
+  mind.querySelectorAll(".scores li").forEach((row) => {
+    const t = row.dataset.t, p = r.scores?.[t] ?? (t === r.tool ? r.confidence : 0);
+    row.classList.remove("scanning");
+    row.classList.toggle("lead", t === r.tool);
+    row.style.setProperty("--p", p.toFixed(3));
+    row.querySelector(".pc").textContent = p < 0.005 ? "<1%" : `${Math.round(p * 100)}%`;
+    if (["WEATHER", "SET_REMINDER", "SAVE_NOTE"].includes(t)) row.style.setProperty("--th", threshold);
+  });
+  mind.classList.add("read");
+  mind.querySelector(".dots").remove();
+  mind.querySelector(".why-t").textContent = explain(r);
+}
+
 function newSlip(text) {
   $("#empty").hidden = true;
   $("#clear").hidden = false;
@@ -94,6 +134,11 @@ function newSlip(text) {
     <ol class="trace" aria-label="Steps">
       <li class="on"><b></b><span>Heard</span></li><li><b></b><span>Routed</span></li>
       <li><b></b><span>Acted</span></li><li><b></b><span>Replied</span></li></ol>
+    <div class="mind">
+      <div class="heard" aria-hidden="true"></div>
+      <ul class="scores" aria-hidden="true">${scoreRows()}</ul>
+      <p class="why"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="why-t">Reading your request</span></p>
+    </div>
     <div class="verdict" hidden></div>
     <p class="reply"><span class="shimmer"></span></p>
     <p class="meta fine" hidden></p>`;
@@ -112,6 +157,7 @@ function showRoute(li, text, r) {
   li.dataset.tool = name;
   li.classList.toggle("is-no", no);
   li.querySelector(".said").innerHTML = markSpans(text, r.spans);
+  revealMind(li, text, r);
   const steps = li.querySelectorAll(".trace li");
   steps[1].classList.add("on");
   steps[1].querySelector("span").innerHTML = `Routed<small>${r.ms < 10 ? r.ms.toFixed(1) : Math.round(r.ms)} ms</small>`;
@@ -172,7 +218,7 @@ renderSaved();
 const voiceRank = (v) => (/natural|neural/i.test(v.name) ? 4 : 0) + (/online/i.test(v.name) ? 2 : 0) + (/google/i.test(v.name) ? 1 : 0);
 function fillVoices() {
   if (!("speechSynthesis" in window)) return;
-  const lang = prefs.lang;
+  const lang = prefs.native ? prefs.lang : "en";
   const vs = speechSynthesis.getVoices().filter((v) => v.lang.toLowerCase().startsWith(lang)).sort((a, b) => voiceRank(b) - voiceRank(a));
   const want = store.get("voice", "");
   $("#voice").innerHTML = "";
@@ -182,18 +228,19 @@ function fillVoices() {
     $("#voice").append(o);
   }
   if (vs.some((v) => v.name === want)) $("#voice").value = want;
-  $("#tts-note").textContent = vs.length || prefs.lang === "en" ? "" : fillText(I18N.ui[prefs.lang].no_voice, { lang: I18N.langs[prefs.lang].label });
+  $("#tts-note").textContent = vs.length || prefs.lang === "en" || !prefs.native ? "" : fillText(I18N.ui[prefs.lang].no_voice, { lang: I18N.langs[prefs.lang].label });
 }
 function chosenVoice() { return speechSynthesis.getVoices().find((v) => v.name === $("#voice").value) || null; }
 function speak(t, force = false) {
   if ((!force && !$("#speak").checked) || !("speechSynthesis" in window)) return;
-  if (prefs.lang !== "en" && !chosenVoice()) return; // no Tamil or Malayalam voice here: show the text, never read it with an English voice
+  if (prefs.lang !== "en" && prefs.native && !chosenVoice()) return; // no Tamil or Malayalam voice here: show the text, never read it with an English voice
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(t);
   const v = chosenVoice();
-  if (v) { u.voice = v; u.lang = v.lang; } else u.lang = I18N.langs[prefs.lang].speech;
+  if (v) { u.voice = v; u.lang = v.lang; } else u.lang = prefs.native ? I18N.langs[prefs.lang].speech : "en-US";
   u.rate = Number($("#rate").value) || 1;
   u.onstart = () => setState("speaking");
+  u.onboundary = () => orb.pulse(0.8); // a pulse on every word the voice reaches, where the voice reports them
   u.onend = u.onerror = () => setState("idle");
   speechSynthesis.speak(u);
 }
@@ -218,10 +265,10 @@ async function present(d) {
   }
   const card = d.action.kind === "story" ? await story() : await verse();
   const L = prefs.lang;
-  if (!card) { out.text = L === "en" ? "I do not have one to share yet." : say("decline"); return out; }
+  if (!card) { out.text = L === "en" || !prefs.native ? "I do not have one to share yet." : say("decline"); return out; }
   out.card = card;
   const intro = d.action.kind === "story" ? "story_intro" : "verse_intro";
-  out.text = L === "en" ? (d.action.kind === "story" ? "Here is a folk tale." : "Here is a verse.") : say(intro);
+  out.text = L === "en" || !prefs.native ? addressed(d.action.kind === "story" ? "Here is a folk tale." : "Here is a verse.") : say(intro);
   out.spoken = [out.text, card.title, card.body, card.lines?.join(". "), card.meaning, card.moral].filter(Boolean).join(" ");
   return out;
 }
@@ -247,7 +294,7 @@ function renderCard(c) {
     el.append(ul);
     return el;
   }
-  const L = I18N.langs[prefs.lang];
+  const L = prefs.native ? I18N.langs[prefs.lang] : I18N.langs.en;
   if (c.kind === "story") { add("h3", "", c.title); add("p", "body", c.body); add("p", "moral", `${L.informal?.moral ?? "Moral:"} ${c.moral}`); }
   else { add("p", "lines", c.lines.join("\n")); if (c.meaning) add("p", "body", c.meaning); add("p", "attrib", `${c.author}, ${c.work}${c.ref ? " " + c.ref : ""}`); }
   const src = document.createElement("p");
@@ -260,10 +307,10 @@ function renderCard(c) {
 
 /* ---------- language and respect ---------- */
 function applyLang() {
-  const L = I18N.langs[prefs.lang], ui = I18N.ui[prefs.lang];
-  document.documentElement.lang = prefs.lang;
+  const ui = I18N.ui.en, L = I18N.langs.en;  // the page stays English; only the sample requests change
+  document.documentElement.lang = "en";
   $("#l-lang").textContent = ui.lang; $("#l-respect").textContent = ui.respect; $("#l-gender").textContent = ui.gender;
-  $("#respect-name").textContent = `${prefs.level + 1}/5 ${L.level_names[prefs.level]}${term() ? ", " + term() : ""}`;
+  $("#respect-name").textContent = `${prefs.level + 1}/5 ${L.level_names[prefs.level]}${romanTerm() ? ", " + romanTerm().replace(/, $/, "") : ""}`;
   $("#gender").innerHTML = "";
   for (const [v, k] of [["", "neutral"], ["male", "male"], ["female", "female"]]) $("#gender").append(new Option(ui[k], v));
   $("#gender").value = prefs.gender;
@@ -277,7 +324,7 @@ function applyLang() {
   for (const g of ["do", "no", "qa"]) {
     const div = document.createElement("div"), h = document.createElement("h2"), ul = document.createElement("ul");
     h.textContent = heads[g]; div.append(h, ul);
-    for (const e of I18N.examples[prefs.lang].filter((x) => x.group === g)) {
+    for (const e of I18N.examples[prefs.lang].filter((x) => x.group === g && (!x.tool || !supported || supported.includes(x.tool)))) {
       const li = document.createElement("li"), b = document.createElement("button");
       b.type = "button"; b.textContent = e.label; b.addEventListener("click", () => send(e.say)); li.append(b); ul.append(li);
     }
@@ -285,7 +332,9 @@ function applyLang() {
   }
   if ("speechSynthesis" in window) fillVoices();
 }
-$("#lang").append(...Object.entries(I18N.langs).map(([k, v]) => new Option(v.label, k)));
+$("#lang").append(...Object.entries(I18N.langs).map(([k, v]) => new Option(v.menu, k)));
+$("#native").checked = prefs.native;
+$("#native").addEventListener("change", (e) => { prefs.native = e.target.checked; prefs.save(); applyLang(); });
 $("#lang").value = prefs.lang;
 $("#respect").value = prefs.level;
 $("#lang").addEventListener("change", (e) => { prefs.lang = e.target.value; prefs.save(); applyLang(); });
@@ -307,11 +356,12 @@ async function send(text) {
   let streamed = "";
   try {
     const d = await chat({ text, tz_offset_min: -new Date().getTimezoneOffset(), default_city: $("#city").value.trim(), history,
-      lang: prefs.lang, level: prefs.level, gender: prefs.gender, persona: persona() }, {
+      lang: prefs.lang, level: prefs.level, gender: prefs.gender, native: prefs.native, persona: persona() }, {
       route: (r) => showRoute(li, text, r),
       token: (piece) => {
-        if (!streamed) { reply.textContent = ""; li.querySelectorAll(".trace li")[2]?.classList.add("on"); }
+        if (!streamed) { reply.textContent = ""; li.querySelectorAll(".trace li")[2]?.classList.add("on"); li.classList.add("answering"); }
         streamed += piece;
+        li.dataset.tokens = String((Number(li.dataset.tokens) || 0) + 1);
         reply.textContent = streamed;
         const caret = document.createElement("span");
         caret.className = "caret";
@@ -319,6 +369,7 @@ async function send(text) {
       },
     });
     const out = await present(d);
+    li.classList.remove("answering");
     reply.textContent = out.text;
     if (out.card) li.querySelector(".reply").after(renderCard(out.card));
     const steps = li.querySelectorAll(".trace li");
@@ -356,7 +407,9 @@ if (!SR) {
   $("#voice-hint").textContent = "Voice input needs Chrome or Edge. Typing works in any browser.";
 } else {
   let rec = null, raf = 0, stream = null, ctx = null;
+  const freq = new Uint8Array(256);
   const level = (an, buf) => {
+    an.getByteFrequencyData(freq); orb.setSpectrum(freq);
     an.getByteTimeDomainData(buf);
     let s = 0; for (const v of buf) s += Math.abs(v - 128);
     orb.setLevel(Math.min(1, (s / buf.length) / 24));
@@ -364,14 +417,14 @@ if (!SR) {
   };
   const cleanup = () => {
     mic.setAttribute("aria-pressed", "false");
-    cancelAnimationFrame(raf); orb.setLevel(0);
+    cancelAnimationFrame(raf); orb.setLevel(0); orb.setSpectrum(null);
     stream?.getTracks().forEach((t) => t.stop()); ctx?.close(); stream = ctx = null;
   };
   stopListening = () => rec?.stop();
   mic.addEventListener("click", async () => {
     if (rec) { rec.stop(); return; }
     if (busy) return;
-    rec = new SR(); rec.lang = I18N.langs[prefs.lang].speech; rec.interimResults = true; rec.maxAlternatives = 1;
+    rec = new SR(); rec.lang = prefs.native ? I18N.langs[prefs.lang].speech : "en-IN"; // Tanglish and Manglish come out best through English (India) recognition rec.interimResults = true; rec.maxAlternatives = 1;
     let last = "";
     rec.onresult = (e) => { last = [...e.results].map((r) => r[0].transcript).join(" "); $("#text").value = last; caption(last); };
     rec.onerror = (e) => { $("#voice-hint").textContent = e.error === "not-allowed" ? "Microphone access is blocked. Allow it in the address bar, or type instead." : "Could not hear that. Try again or type."; };

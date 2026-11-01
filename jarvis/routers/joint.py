@@ -108,8 +108,9 @@ class JointRouter:
         intent = self.intents[int(fine.argmax())]
         k = int(tp.argmax())
         tool, conf = self.tools[k], float(tp[k])
+        scores = {t: round(float(tp[i]), 4) for i, t in enumerate(self.tools)}
         if tool in ("WEATHER", "SET_REMINDER", "SAVE_NOTE") and conf < self.threshold:
-            return Route("UNSUPPORTED", confidence=conf, path="abstain", intent=intent)
+            return Route("UNSUPPORTED", confidence=conf, path="abstain", intent=intent, scores=scores, words=words)
         args = {}
         if tool == "WEATHER":
             args["city"] = (spans(words, tags, "CITY") or [""])[0]
@@ -117,4 +118,4 @@ class JointRouter:
             args["when"] = " ".join(spans(words, tags, "WHEN"))
             args["title"] = (spans(words, tags, "TITLE") or [""])[0]
         found = [{"kind": k.lower(), "text": t} for k in ("CITY", "WHEN", "TITLE") for t in spans(words, tags, k)]
-        return Route(tool, args, conf, path="fast", intent=intent, spans=found)
+        return Route(tool, args, conf, path="fast", intent=intent, spans=found, scores=scores, words=words)

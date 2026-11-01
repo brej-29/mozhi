@@ -18,6 +18,8 @@ class Route:
     path: str = ""  # which stage answered (fast, llm, abstain)
     intent: str = ""  # fine-grained intent label when the router has one
     spans: list = field(default_factory=list)  # [{"kind", "text"}] extracted slot spans
+    scores: dict = field(default_factory=dict)  # probability of every tool, so the UI can show the whole decision
+    words: list = field(default_factory=list)  # the words the router actually read, after normalising
 
 
 def action_view(tool: str) -> str:

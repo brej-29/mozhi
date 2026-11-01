@@ -34,12 +34,15 @@ MAX_TOKENS = 200
 I18N = json.loads((Path(__file__).resolve().parent / "web" / "i18n.json").read_text(encoding="utf-8"))
 
 
-def persona(lang: str = "en", level: int = 2, gender: str = "") -> str:
+def persona(lang: str = "en", level: int = 2, gender: str = "", native: bool = False) -> str:
     """System prompt for the chosen language and respect level. English keeps the original Jarvis prompt."""
     cfg = I18N["langs"].get(lang)
     if lang == "en" or not cfg:
         return SYSTEM
     p, level = I18N["persona"], max(0, min(int(level), I18N["levels"] - 1))
+    if not native:  # English replies, addressed the way the respect meter says
+        row = cfg["address_roman"][level][{"male": 0, "female": 1}.get(gender, 2)]
+        return SYSTEM + " " + p["roman_line"].format(addr=row) if row else SYSTEM
     formal = level >= 2
     addr = cfg["address"][level][{"male": 0, "female": 1}.get(gender, 2)]
     return " ".join([

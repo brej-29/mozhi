@@ -12,7 +12,7 @@ export async function health() {
   if (!STATIC) return (await fetch("api/health")).json();
   const r = await router();
   const k = byok.get();
-  return { status: "ok", threshold: r.meta.threshold, llm: k ? { connected: true, model: `${PROVIDERS[k.provider].label} ${k.model}` } : { connected: false } };
+  return { status: "ok", threshold: r.meta.threshold, tools: [...new Set(Object.values(r.meta.tool_of_intent))], llm: k ? { connected: true, model: `${PROVIDERS[k.provider].label} ${k.model}` } : { connected: false } };
 }
 
 /* Streaming chat. `on.route(route)` fires as soon as the router has decided, `on.token(text)` for each
@@ -149,12 +149,13 @@ async function loadRouter() {
     const { tp, tags, intent } = await pending.pending;
     let k = 0; tp.forEach((v, i) => { if (v > tp[k]) k = i; });
     const tool = tools[k], conf = tp[k];
-    if (ACTION.includes(tool) && conf < meta.threshold) return { tool: "UNSUPPORTED", confidence: conf, intent, path: "abstain", args: {}, spans: [] };
+    const scores = Object.fromEntries(tools.map((t, i) => [t, Math.round(tp[i] * 1e4) / 1e4]));
+    if (ACTION.includes(tool) && conf < meta.threshold) return { tool: "UNSUPPORTED", confidence: conf, intent, path: "abstain", args: {}, spans: [], scores, words };
     const args = {};
     if (tool === "WEATHER") args.city = spans(words, tags, "CITY")[0] || "";
     if (tool === "SET_REMINDER") { args.when = spans(words, tags, "WHEN").join(" "); args.title = spans(words, tags, "TITLE")[0] || ""; }
     const found = ["CITY", "WHEN", "TITLE"].flatMap((K) => spans(words, tags, K).map((t) => ({ kind: K.toLowerCase(), text: t })));
-    return { tool, confidence: conf, intent, path: "fast", args: Object.fromEntries(Object.entries(args).map(([a, b]) => [a, b])), spans: found };
+    return { tool, confidence: conf, intent, path: "fast", scores, words, args: Object.fromEntries(Object.entries(args).map(([a, b]) => [a, b])), spans: found };
   };
   return api;
 }
@@ -190,7 +191,7 @@ const say = (code, extra = {}) => ({ type: "say", code, ...extra });
 const GREETING = "Hello. I can check the weather, set reminders and save notes. What do you need?";
 let chronoP;
 async function act(r, body, on = {}) {
-  if (r.tool === "WEATHER") return weather(r.args.city || body.default_city, body.lang || "en");
+  if (r.tool === "WEATHER") return weather(r.args.city || body.default_city, body.native ? body.lang || "en" : "en");
   if (r.tool === "SET_REMINDER") {
     const when = r.args.when || "";
     const derived = reminderTitle(body.text, when);

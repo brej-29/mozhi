@@ -43,12 +43,15 @@ def test_sky_words_cover_every_weather_code_the_app_can_say():
 
 def test_persona_changes_with_language_level_and_gender():
     assert llm.persona("en") == llm.SYSTEM
-    casual = llm.persona("ta", 0, "male")
-    polite = llm.persona("ta", 3, "female")
+    casual = llm.persona("ta", 0, "male", native=True)
+    polite = llm.persona("ta", 3, "female", native=True)
     assert "Tamil" in casual and casual != polite
     assert I18N["langs"]["ta"]["address"][0][0] in casual and I18N["langs"]["ta"]["address"][3][1] in polite
     assert "informal" in casual and "respectful" in polite
-    assert "Do not use" in llm.persona("ml", 1, "")  # neutral below the top level: no address term
+    assert "Do not use" in llm.persona("ml", 1, "", native=True)  # neutral below the top level: no address term
+    roman = llm.persona("ml", 2, "male")  # default: English replies, addressed as a Malayali would
+    assert roman.startswith(llm.SYSTEM) and "'chetta'" in roman and "Malayalam" not in roman
+    assert llm.persona("ta", 2, "") == llm.SYSTEM  # neutral at level 3: no address term
 
 
 def test_news_parse_keeps_only_https_links_and_the_limit():

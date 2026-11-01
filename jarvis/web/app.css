@@ -229,3 +229,34 @@ body[data-state="thinking"] .say::after { opacity: 1; animation: sweep 1.6s line
 .card a { color: inherit; text-underline-offset: 3px; }
 .card-news ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .card-news small { color: var(--mute); }
+
+/* dropdown lists: the browser draws the open list itself, so give it real colours in both themes */
+select { color-scheme: light dark; }
+select option, select optgroup { background-color: var(--solid); color: var(--ink); }
+
+/* ---------- what the router is thinking ---------- */
+.mind { margin-top: 14px; display: grid; gap: 10px; }
+.heard { display: flex; flex-wrap: wrap; gap: 5px; min-height: 1px; }
+.heard span { font: 500 .78rem var(--body); padding: 2px 8px; border-radius: 999px; background: var(--raise); color: var(--mute); border: 1px solid transparent; animation: chip .42s var(--spring) both; animation-delay: calc(var(--i) * 28ms); }
+.heard span[data-slot="city"] { border-color: var(--weather); color: var(--ink); }
+.heard span[data-slot="when"] { border-color: var(--reminder); color: var(--ink); }
+.heard span[data-slot="title"] { border-color: var(--note); color: var(--ink); }
+@keyframes chip { from { opacity: 0; transform: translateY(6px) scale(.85); } to { opacity: 1; transform: none; } }
+.scores { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; }
+.scores li { display: grid; grid-template-columns: 6.2rem 1fr 2.8rem; align-items: center; gap: 10px; font-size: .76rem; color: var(--faint); transition: color .3s; }
+.scores .nm { white-space: nowrap; }
+.scores .pc { text-align: right; font-variant-numeric: tabular-nums; }
+.scores .bar { position: relative; height: 7px; border-radius: 999px; background: var(--raise); overflow: hidden; }
+.scores .bar i { position: absolute; inset: 0; border-radius: inherit; background: color-mix(in srgb, var(--ink) 38%, transparent); transform-origin: left; transform: scaleX(var(--p, 0)); transition: transform .8s var(--out); transition-delay: calc(var(--i) * 55ms); }
+.scores li.lead { color: var(--ink); font-weight: 600; }
+.scores li.lead .bar i { background: linear-gradient(90deg, var(--tone, var(--ink)), color-mix(in srgb, var(--tone, var(--ink)) 55%, #fff)); box-shadow: 0 0 14px color-mix(in srgb, var(--tone, var(--ink)) 70%, transparent); }
+.scores li[style*="--th"] .bar::after { content: ""; position: absolute; top: -2px; bottom: -2px; left: calc(var(--th) * 100%); width: 2px; background: var(--ink); opacity: .55; border-radius: 1px; }
+.scores li.scanning .bar i { transform: scaleX(.3); background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--qa) 70%, transparent), transparent); animation: scan 1.1s ease-in-out infinite; animation-delay: calc(var(--i) * 90ms); }
+@keyframes scan { 0% { transform: translateX(-100%) scaleX(.35); } 100% { transform: translateX(330%) scaleX(.35); } }
+.why { margin: 0; display: flex; align-items: center; gap: 8px; font-size: .86rem; color: var(--mute); }
+.mind.read .why { color: var(--ink); animation: rise .4s var(--out) both; }
+.dots { display: inline-flex; gap: 4px; } .dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--qa); animation: dot 1s ease-in-out infinite; } .dots i:nth-child(2) { animation-delay: .15s; } .dots i:nth-child(3) { animation-delay: .3s; }
+@keyframes dot { 0%, 100% { transform: translateY(0); opacity: .4; } 50% { transform: translateY(-4px); opacity: 1; } }
+.slip.answering::after { content: attr(data-tokens) " tokens"; position: absolute; right: 16px; top: 14px; font: 600 .7rem var(--body); color: var(--qa); padding: 2px 8px; border-radius: 999px; background: color-mix(in srgb, var(--qa) 14%, transparent); animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .55; } }
+@media (prefers-reduced-motion: reduce) { .heard span, .scores .bar i, .dots i, .scores li.scanning .bar i, .slip.answering::after { animation: none; transition: none; } }
