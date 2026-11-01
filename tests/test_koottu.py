@@ -25,7 +25,7 @@ def test_text_is_written_in_the_right_script_and_has_no_em_dash():
         for reg in ("informal", "formal"):
             for code, text in I18N["langs"][lang][reg].items():
                 assert rx.search(text), (lang, reg, code)
-    assert "—" not in json.dumps(I18N, ensure_ascii=False)
+    assert chr(0x2014) not in json.dumps(I18N, ensure_ascii=False)
 
 
 def test_five_levels_each_with_name_and_address_row():
@@ -67,7 +67,7 @@ def test_bundled_content_is_sourced():
     if stories.exists():
         for s in json.loads(stories.read_text(encoding="utf-8"))["stories"]:
             assert s["source"]["url"].startswith("https://") and set(s["summary"]) == {"en", "ta", "ml"}
-            assert "—" not in json.dumps(s, ensure_ascii=False)
+            assert chr(0x2014) not in json.dumps(s, ensure_ascii=False)
 
 
 def test_chat_accepts_language_fields_and_rejects_bad_ones():
