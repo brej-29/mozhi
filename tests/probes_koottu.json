@@ -1,0 +1,455 @@
+{
+ "note": "Hand-written by the author before any Tamil or Malayalam model was trained. Never used for training or tuning. See docs/KOOTTU.md T14.",
+ "rows": [
+  {
+   "lang": "en",
+   "text": "will it rain in kochi tomorrow",
+   "tool": "WEATHER"
+  },
+  {
+   "lang": "en",
+   "text": "what is the temperature in madurai right now",
+   "tool": "WEATHER"
+  },
+  {
+   "lang": "en",
+   "text": "tell me the weather in coimbatore",
+   "tool": "WEATHER"
+  },
+  {
+   "lang": "en",
+   "text": "is it hot in trichy today",
+   "tool": "WEATHER"
+  },
+  {
+   "lang": "en",
+   "text": "remind me to wake up at six tomorrow morning",
+   "tool": "SET_REMINDER"
+  },
+  {
+   "lang": "en",
+   "text": "remind me to call amma at five this evening",
+   "tool": "SET_REMINDER"
+  },
+  {
+   "lang": "en",
+   "text": "remind me to see the doctor on friday",
+   "tool": "SET_REMINDER"
+  },
+  {
+   "lang": "en",
+   "text": "remind me to take my medicine at eight tonight",
+   "tool": "SET_REMINDER"
+  },
+  {
+   "lang": "en",
+   "text": "write a note that I need to buy milk",
+   "tool": "SAVE_NOTE"
+  },
+  {
+   "lang": "en",
+   "text": "save this as a note the wifi password is on the table",
+   "tool": "SAVE_NOTE"
+  },
+  {
+   "lang": "en",
+   "text": "take a note the meeting is tomorrow at ten",
+   "tool": "SAVE_NOTE"
+  },
+  {
+   "lang": "en",
+   "text": "write down that the house rent is due on the fifth",
+   "tool": "SAVE_NOTE"
+  },
+  {
+   "lang": "en",
+   "text": "what is the capital of india",
+   "tool": "GENERAL_QA"
+  },
+  {
+   "lang": "en",
+   "text": "what is a light year",
+   "tool": "GENERAL_QA"
+  },
+  {
+   "lang": "en",
+   "text": "who built the taj mahal",
+   "tool": "GENERAL_QA"
+  },
+  {
+   "lang": "en",
+   "text": "order me a pizza",
+   "tool": "UNSUPPORTED"
+  },
+  {
+   "lang": "en",
+   "text": "phone my mother",
+   "tool": "UNSUPPORTED"
+  },
+  {
+   "lang": "en",
+   "text": "switch off the light",
+   "tool": "UNSUPPORTED"
+  },
+  {
+   "lang": "en",
+   "text": "what are the main headlines today",
+   "tool": "NEWS"
+  },
+  {
+   "lang": "en",
+   "text": "tell me the world news",
+   "tool": "NEWS"
+  },
+  {
+   "lang": "en",
+   "text": "read me the latest headlines",
+   "tool": "NEWS"
+  },
+  {
+   "lang": "en",
+   "text": "what happened in the world today",
+   "tool": "NEWS"
+  },
+  {
+   "lang": "en",
+   "text": "tell me a folk tale",
+   "tool": "STORY"
+  },
+  {
+   "lang": "en",
+   "text": "tell a story for the kids",
+   "tool": "STORY"
+  },
+  {
+   "lang": "en",
+   "text": "tell me a tenali raman story",
+   "tool": "STORY"
+  },
+  {
+   "lang": "en",
+   "text": "tell me a story like grandma used to",
+   "tool": "STORY"
+  },
+  {
+   "lang": "en",
+   "text": "recite a thirukkural",
+   "tool": "VERSE"
+  },
+  {
+   "lang": "en",
+   "text": "say an aathichoodi line",
+   "tool": "VERSE"
+  },
+  {
+   "lang": "en",
+   "text": "tell me a kural with its meaning",
+   "tool": "VERSE"
+  },
+  {
+   "lang": "en",
+   "text": "sing me a poem by bharathiyar",
+   "tool": "VERSE"
+  },
+  {
+   "lang": "ta",
+   "text": "நாளை சென்னையில் மழை பெய்யுமா",
+   "tool": "WEATHER"
+  },
+  {
+   "lang": "ta",
+   "text": "மதுரையில் இப்போது வெப்பநிலை என்ன",
+   "tool": "WEATHER"
+  },
+  {
+   "lang": "ta",
+   "text": "கோயம்புத்தூர் வானிலை சொல்லு",
+   "tool": "WEATHER"
+  },
+  {
+   "lang": "ta",
+   "text": "இன்று திருச்சியில் வெயில் அதிகமா",
+   "tool": "WEATHER"
+  },
+  {
+   "lang": "ta",
+   "text": "நாளை காலை ஆறு மணிக்கு எழுந்திருக்க நினைவூட்டு",
+   "tool": "SET_REMINDER"
+  },
+  {
+   "lang": "ta",
+   "text": "இன்று மாலை ஐந்து மணிக்கு அம்மாவை அழைக்க நினைவூட்டு",
+   "tool": "SET_REMINDER"
+  },
+  {
+   "lang": "ta",
+   "text": "வெள்ளிக்கிழமை மருத்துவரைப் பார்க்க ஞாபகப்படுத்து",
+   "tool": "SET_REMINDER"
+  },
+  {
+   "lang": "ta",
+   "text": "இரவு எட்டு மணிக்கு மருந்து சாப்பிட நினைவூட்டு",
+   "tool": "SET_REMINDER"
+  },
+  {
+   "lang": "ta",
+   "text": "ஒரு குறிப்பு எழுதிக்கொள் பால் வாங்க வேண்டும்",
+   "tool": "SAVE_NOTE"
+  },
+  {
+   "lang": "ta",
+   "text": "இதை குறிப்பாக சேமி வைஃபை கடவுச்சொல் மேசையில் உள்ளது",
+   "tool": "SAVE_NOTE"
+  },
+  {
+   "lang": "ta",
+   "text": "குறிப்பு எடுத்துக்கொள் நாளை கூட்டம் பத்து மணிக்கு",
+   "tool": "SAVE_NOTE"
+  },
+  {
+   "lang": "ta",
+   "text": "எழுதி வை வீட்டு வாடகை ஐந்தாம் தேதி",
+   "tool": "SAVE_NOTE"
+  },
+  {
+   "lang": "ta",
+   "text": "இந்தியாவின் தலைநகரம் எது",
+   "tool": "GENERAL_QA"
+  },
+  {
+   "lang": "ta",
+   "text": "ஒளி ஆண்டு என்றால் என்ன",
+   "tool": "GENERAL_QA"
+  },
+  {
+   "lang": "ta",
+   "text": "தாஜ் மஹால் யார் கட்டினார்",
+   "tool": "GENERAL_QA"
+  },
+  {
+   "lang": "ta",
+   "text": "எனக்கு ஒரு பிட்சா ஆர்டர் செய்",
+   "tool": "UNSUPPORTED"
+  },
+  {
+   "lang": "ta",
+   "text": "என் அம்மாவுக்கு போன் செய்",
+   "tool": "UNSUPPORTED"
+  },
+  {
+   "lang": "ta",
+   "text": "விளக்கை அணை",
+   "tool": "UNSUPPORTED"
+  },
+  {
+   "lang": "ta",
+   "text": "இன்றைய முக்கிய செய்திகள் என்ன",
+   "tool": "NEWS"
+  },
+  {
+   "lang": "ta",
+   "text": "உலக செய்திகளை சொல்லு",
+   "tool": "NEWS"
+  },
+  {
+   "lang": "ta",
+   "text": "சமீபத்திய தலைப்புச் செய்திகளைப் படி",
+   "tool": "NEWS"
+  },
+  {
+   "lang": "ta",
+   "text": "இன்று என்ன நடந்தது செய்தி சொல்",
+   "tool": "NEWS"
+  },
+  {
+   "lang": "ta",
+   "text": "ஒரு நாட்டுப்புறக் கதை சொல்லு",
+   "tool": "STORY"
+  },
+  {
+   "lang": "ta",
+   "text": "குழந்தைகளுக்கு ஒரு கதை சொல்லுங்கள்",
+   "tool": "STORY"
+  },
+  {
+   "lang": "ta",
+   "text": "தெனாலிராமன் கதை சொல்லு",
+   "tool": "STORY"
+  },
+  {
+   "lang": "ta",
+   "text": "பாட்டி சொல்லும் கதை ஒன்று சொல்",
+   "tool": "STORY"
+  },
+  {
+   "lang": "ta",
+   "text": "ஒரு திருக்குறள் சொல்லு",
+   "tool": "VERSE"
+  },
+  {
+   "lang": "ta",
+   "text": "ஆத்திசூடி சொல்லுங்கள்",
+   "tool": "VERSE"
+  },
+  {
+   "lang": "ta",
+   "text": "இன்றைய குறளும் அதன் பொருளும் சொல்",
+   "tool": "VERSE"
+  },
+  {
+   "lang": "ta",
+   "text": "பாரதியார் பாடல் ஒன்று பாடு",
+   "tool": "VERSE"
+  },
+  {
+   "lang": "ml",
+   "text": "നാളെ കൊച്ചിയിൽ മഴ പെയ്യുമോ",
+   "tool": "WEATHER"
+  },
+  {
+   "lang": "ml",
+   "text": "തിരുവനന്തപുരത്തെ ഇപ്പോഴത്തെ താപനില എത്രയാണ്",
+   "tool": "WEATHER"
+  },
+  {
+   "lang": "ml",
+   "text": "കോഴിക്കോട് കാലാവസ്ഥ പറയൂ",
+   "tool": "WEATHER"
+  },
+  {
+   "lang": "ml",
+   "text": "ഇന്ന് തൃശ്ശൂരിൽ ചൂട് കൂടുതലാണോ",
+   "tool": "WEATHER"
+  },
+  {
+   "lang": "ml",
+   "text": "നാളെ രാവിലെ ആറു മണിക്ക് എഴുന്നേൽക്കാൻ ഓർമ്മിപ്പിക്കൂ",
+   "tool": "SET_REMINDER"
+  },
+  {
+   "lang": "ml",
+   "text": "ഇന്ന് വൈകുന്നേരം അഞ്ചു മണിക്ക് അമ്മയെ വിളിക്കാൻ ഓർമ്മിപ്പിക്കൂ",
+   "tool": "SET_REMINDER"
+  },
+  {
+   "lang": "ml",
+   "text": "വെള്ളിയാഴ്ച ഡോക്ടറെ കാണാൻ ഓർമ്മിപ്പിക്കണം",
+   "tool": "SET_REMINDER"
+  },
+  {
+   "lang": "ml",
+   "text": "രാത്രി എട്ടു മണിക്ക് മരുന്ന് കഴിക്കാൻ ഓർമ്മിപ്പിക്കൂ",
+   "tool": "SET_REMINDER"
+  },
+  {
+   "lang": "ml",
+   "text": "ഒരു കുറിപ്പ് എഴുതി വെക്കൂ പാൽ വാങ്ങണം",
+   "tool": "SAVE_NOTE"
+  },
+  {
+   "lang": "ml",
+   "text": "ഇത് കുറിപ്പായി സൂക്ഷിക്കൂ വൈഫൈ പാസ്‌വേഡ് മേശപ്പുറത്തുണ്ട്",
+   "tool": "SAVE_NOTE"
+  },
+  {
+   "lang": "ml",
+   "text": "കുറിപ്പ് എടുക്കൂ നാളെ യോഗം പത്തു മണിക്ക്",
+   "tool": "SAVE_NOTE"
+  },
+  {
+   "lang": "ml",
+   "text": "എഴുതി വെക്കൂ വീട്ടുവാടക അഞ്ചാം തീയതി",
+   "tool": "SAVE_NOTE"
+  },
+  {
+   "lang": "ml",
+   "text": "ഇന്ത്യയുടെ തലസ്ഥാനം ഏതാണ്",
+   "tool": "GENERAL_QA"
+  },
+  {
+   "lang": "ml",
+   "text": "പ്രകാശവർഷം എന്നാൽ എന്താണ്",
+   "tool": "GENERAL_QA"
+  },
+  {
+   "lang": "ml",
+   "text": "താജ്മഹൽ ആരാണ് പണികഴിപ്പിച്ചത്",
+   "tool": "GENERAL_QA"
+  },
+  {
+   "lang": "ml",
+   "text": "എനിക്കൊരു പിസ്സ ഓർഡർ ചെയ്യൂ",
+   "tool": "UNSUPPORTED"
+  },
+  {
+   "lang": "ml",
+   "text": "അമ്മയെ ഫോൺ ചെയ്യൂ",
+   "tool": "UNSUPPORTED"
+  },
+  {
+   "lang": "ml",
+   "text": "ലൈറ്റ് ഓഫ് ചെയ്യൂ",
+   "tool": "UNSUPPORTED"
+  },
+  {
+   "lang": "ml",
+   "text": "ഇന്നത്തെ പ്രധാന വാർത്തകൾ എന്തൊക്കെയാണ്",
+   "tool": "NEWS"
+  },
+  {
+   "lang": "ml",
+   "text": "ലോക വാർത്തകൾ പറയൂ",
+   "tool": "NEWS"
+  },
+  {
+   "lang": "ml",
+   "text": "ഏറ്റവും പുതിയ തലക്കെട്ടുകൾ വായിക്കൂ",
+   "tool": "NEWS"
+  },
+  {
+   "lang": "ml",
+   "text": "ഇന്ന് എന്താണ് സംഭവിച്ചത് വാർത്ത പറയൂ",
+   "tool": "NEWS"
+  },
+  {
+   "lang": "ml",
+   "text": "ഒരു നാടോടിക്കഥ പറയൂ",
+   "tool": "STORY"
+  },
+  {
+   "lang": "ml",
+   "text": "കുട്ടികൾക്കായി ഒരു കഥ പറയൂ",
+   "tool": "STORY"
+  },
+  {
+   "lang": "ml",
+   "text": "തച്ചോളി ഒതേനന്റെ കഥ പറയൂ",
+   "tool": "STORY"
+  },
+  {
+   "lang": "ml",
+   "text": "മുത്തശ്ശി പറയാറുള്ള ഒരു കഥ പറയൂ",
+   "tool": "STORY"
+  },
+  {
+   "lang": "ml",
+   "text": "ഒരു കവിത ചൊല്ലൂ",
+   "tool": "VERSE"
+  },
+  {
+   "lang": "ml",
+   "text": "ജ്ഞാനപ്പാനയിലെ ഒരു വരി പറയൂ",
+   "tool": "VERSE"
+  },
+  {
+   "lang": "ml",
+   "text": "എഴുത്തച്ഛന്റെ ഒരു ശ്ലോകം ചൊല്ലൂ",
+   "tool": "VERSE"
+  },
+  {
+   "lang": "ml",
+   "text": "കുമാരനാശാന്റെ ഒരു വരി ചൊല്ലൂ",
+   "tool": "VERSE"
+  }
+ ]
+}
