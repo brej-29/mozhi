@@ -13,7 +13,7 @@ def test_reminder_parses_future_time():
 
 def test_reminder_without_time_asks():
     reply, action = tools.reminder("", "dentist")
-    assert action is None and "When" in reply
+    assert action == {"type": "say", "code": "need_when"} and "When" in reply
 
 
 def test_unsupported_names_what_it_heard():
@@ -25,7 +25,7 @@ def test_weather_needs_a_city():
     import asyncio
 
     reply, action = asyncio.run(tools.weather(""))
-    assert action is None and "Which city" in reply
+    assert action["code"] == "need_city" and "Which city" in reply
 
 
 def test_clean_spells_out_recogniser_digits():

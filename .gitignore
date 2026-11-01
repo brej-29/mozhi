@@ -18,3 +18,4 @@ bench/results/*_th*.preds.jsonl
 .site_build/
 .vendor_cache/
 .jarvis_spend.json
+.hf-cache-j2/

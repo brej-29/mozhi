@@ -22,7 +22,7 @@ def test_foreign_host_rejected():
 def test_stream_sends_route_first_then_tokens(monkeypatch):
     from jarvis import llm
 
-    async def fake(text, history=None, client=None):
+    async def fake(text, history=None, client=None, system=""):
         for piece in ("Leonardo", " da Vinci."):
             yield piece
 

@@ -21,7 +21,7 @@
     --c-fast: #0b8a78; --c-llm: #7a52d1; --c-base: #b0700a; --aur-o: .22; color-scheme: light;
   }
 }
-/* the page takes on the colour of what Jarvis is doing */
+/* the page takes on the colour of what Koottu is doing */
 body[data-state="listening"] { --aur-a: #f0b04a; --aur-b: #ff8a5c; --aur-c: #f0b04a; --aur-o: .24; }
 body[data-state="thinking"] { --aur-a: #a47aeb; --aur-b: #6cb6f0; --aur-c: #a47aeb; --aur-o: .26; }
 body[data-state="speaking"] { --aur-a: #7ed4a8; --aur-b: #6cb6f0; --aur-c: #7ed4a8; --aur-o: .22; }
@@ -208,3 +208,24 @@ body[data-state="thinking"] .say::after { opacity: 1; animation: sweep 1.6s line
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .js .chart .bar { transform: none; } .js .chart .pt { opacity: 1; } .js .chart .ln { stroke-dashoffset: 0; }
 }
+
+/* ---------- language and respect ---------- */
+.koottu-bar { display: grid; grid-template-columns: auto minmax(110px, 1fr) auto; gap: 8px 16px; align-items: end; width: 100%; max-width: 520px; margin: 0 0 14px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 16px; background: var(--panel); backdrop-filter: blur(12px); }
+.koottu-bar label { display: grid; gap: 4px; font: 600 .75rem var(--body); color: var(--mute); min-width: 0; }
+.koottu-bar select { height: 36px; border-radius: 10px; border: 1px solid var(--line); background: var(--solid); color: var(--ink); font: inherit; font-weight: 500; font-size: .9rem; padding: 0 8px; max-width: 150px; }
+.koottu-bar input[type="range"] { width: 100%; accent-color: var(--reminder); height: 36px; margin: 0; }
+.koottu-bar output { grid-column: 1 / -1; font: 500 .85rem var(--body); color: var(--ink); min-height: 1.2em; }
+.koottu-bar:has(#respect:disabled) .m-respect, .koottu-bar:has(#respect:disabled) .m-gender { opacity: .45; }
+@media (max-width: 470px) { .koottu-bar { grid-template-columns: 1fr 1fr; } .m-respect { grid-column: 1 / -1; order: 3; } .koottu-bar output { order: 4; } }
+:lang(ta) .reply, :lang(ml) .reply { line-height: 1.65; }
+
+/* ---------- stories, verses, headlines ---------- */
+.card { margin: 10px 0 0; padding: 14px 16px; border-radius: 14px; border: 1px solid var(--line); background: var(--raise); display: grid; gap: 8px; }
+.card h3 { font: 600 1rem var(--display); margin: 0; }
+.card .body { color: var(--ink); line-height: 1.6; margin: 0; }
+.card .lines { white-space: pre-line; font: 600 1.05rem/1.7 var(--display); margin: 0; }
+.card .moral { color: var(--note); margin: 0; font-weight: 500; }
+.card .attrib { color: var(--mute); font-size: .78rem; margin: 0; }
+.card a { color: inherit; text-underline-offset: 3px; }
+.card-news ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.card-news small { color: var(--mute); }

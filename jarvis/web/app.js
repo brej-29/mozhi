@@ -1,16 +1,18 @@
 import { chat, health as engineHealth, STATIC, byok, PROVIDERS } from "./engine.js";
 import { renderEvidence } from "./evidence.js";
 import { createOrb } from "./orb.js";
+import { I18N, prefs, term, say, localize, story, verse, persona } from "./koottu.js";
 
 document.documentElement.classList.add("js");
 const $ = (s) => document.querySelector(s);
+const fillText = (s, f) => s.replace(/\{(\w+)\}/g, (_, k) => f[k] ?? "");
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 const store = {
   get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* private mode */ } },
 };
-const TOOL_LABEL = { WEATHER: "Weather", SET_REMINDER: "Reminder", SAVE_NOTE: "Note", GENERAL_QA: "Answer", UNSUPPORTED: "Not done" };
-const ACTED = { WEATHER: "Looked up", SET_REMINDER: "Reminder set", SAVE_NOTE: "Note saved", GENERAL_QA: "Asked the model" };
+const TOOL_LABEL = { WEATHER: "Weather", SET_REMINDER: "Reminder", SAVE_NOTE: "Note", GENERAL_QA: "Answer", NEWS: "News", STORY: "Story", VERSE: "Verse", UNSUPPORTED: "Not done" };
+const ACTED = { WEATHER: "Looked up", SET_REMINDER: "Reminder set", SAVE_NOTE: "Note saved", GENERAL_QA: "Asked the model", NEWS: "Fetched headlines", STORY: "Picked a story", VERSE: "Picked a verse" };
 let threshold = 0.85, llm = { connected: false };
 const history = [];
 const orb = createOrb($("#orb"));
@@ -25,7 +27,7 @@ function setState(s, then = 0) {
   if (then) settleTimer = setTimeout(() => setState("idle"), then);
 }
 const caption = (t) => { $("#caption").textContent = t; };
-const IDLE_CAPTION = "Ask for something. Jarvis decides whether to do it.";
+let IDLE_CAPTION = "";
 
 /* ---------- tabs ---------- */
 function showTab() {
@@ -55,7 +57,7 @@ async function health() {
     s.className = "status ok";
     if (om.state === "starting") setTimeout(health, 2000);
   } catch {
-    s.textContent = STATIC ? "Loading the 23 MB router into your browser" : "Router offline. Check that the Jarvis app is running.";
+    s.textContent = STATIC ? "Loading the 23 MB router into your browser" : "Router offline. Check that the Koottu app is running.";
     s.className = "status bad";
     setTimeout(health, 4000);
   }
@@ -140,7 +142,7 @@ function schedule(rem) {
   const ms = new Date(rem.at) - Date.now();
   if (ms <= 0 || ms > 2 ** 31 - 1) return;
   timers.set(rem.at + rem.title, setTimeout(() => {
-    if ("Notification" in window && Notification.permission === "granted") new Notification("Jarvis reminder", { body: rem.title });
+    if ("Notification" in window && Notification.permission === "granted") new Notification("Koottu reminder", { body: rem.title });
     caption(`Reminder: ${rem.title}`);
     speak(`Reminder: ${rem.title}`);
   }, ms));
@@ -170,7 +172,7 @@ renderSaved();
 const voiceRank = (v) => (/natural|neural/i.test(v.name) ? 4 : 0) + (/online/i.test(v.name) ? 2 : 0) + (/google/i.test(v.name) ? 1 : 0);
 function fillVoices() {
   if (!("speechSynthesis" in window)) return;
-  const lang = (navigator.language || "en-US").slice(0, 2).toLowerCase();
+  const lang = prefs.lang;
   const vs = speechSynthesis.getVoices().filter((v) => v.lang.toLowerCase().startsWith(lang)).sort((a, b) => voiceRank(b) - voiceRank(a));
   const want = store.get("voice", "");
   $("#voice").innerHTML = "";
@@ -180,14 +182,16 @@ function fillVoices() {
     $("#voice").append(o);
   }
   if (vs.some((v) => v.name === want)) $("#voice").value = want;
+  $("#tts-note").textContent = vs.length || prefs.lang === "en" ? "" : fillText(I18N.ui[prefs.lang].no_voice, { lang: I18N.langs[prefs.lang].label });
 }
 function chosenVoice() { return speechSynthesis.getVoices().find((v) => v.name === $("#voice").value) || null; }
 function speak(t, force = false) {
   if ((!force && !$("#speak").checked) || !("speechSynthesis" in window)) return;
+  if (prefs.lang !== "en" && !chosenVoice()) return; // no Tamil or Malayalam voice here: show the text, never read it with an English voice
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(t);
   const v = chosenVoice();
-  if (v) { u.voice = v; u.lang = v.lang; }
+  if (v) { u.voice = v; u.lang = v.lang; } else u.lang = I18N.langs[prefs.lang].speech;
   u.rate = Number($("#rate").value) || 1;
   u.onstart = () => setState("speaking");
   u.onend = u.onerror = () => setState("idle");
@@ -203,6 +207,91 @@ $("#speak").addEventListener("change", (e) => store.set("speak", e.target.checke
 $("#city").value = store.get("city", "");
 $("#city").addEventListener("change", (e) => store.set("city", e.target.value.trim()));
 
+/* ---------- what to show and say for a result ---------- */
+
+async function present(d) {
+  const out = localize(d);
+  out.spoken = out.text;
+  if (d.action?.type !== "content") {
+    if (out.card?.kind === "news") out.spoken = [out.text, ...out.card.items.map((i) => i.title)].join(". ");
+    return out;
+  }
+  const card = d.action.kind === "story" ? await story() : await verse();
+  const L = prefs.lang;
+  if (!card) { out.text = L === "en" ? "I do not have one to share yet." : say("decline"); return out; }
+  out.card = card;
+  const intro = d.action.kind === "story" ? "story_intro" : "verse_intro";
+  out.text = L === "en" ? (d.action.kind === "story" ? "Here is a folk tale." : "Here is a verse.") : say(intro);
+  out.spoken = [out.text, card.title, card.body, card.lines?.join(". "), card.meaning, card.moral].filter(Boolean).join(" ");
+  return out;
+}
+
+function safeLink(text, url) {
+  const a = document.createElement("a");
+  a.textContent = text; a.href = /^https:\/\//.test(url) ? url : "#"; a.target = "_blank"; a.rel = "noopener noreferrer";
+  return a;
+}
+
+function renderCard(c) {
+  const el = document.createElement("div");
+  el.className = `card card-${c.kind}`;
+  const add = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; n.textContent = text; el.append(n); return n; };
+  if (c.kind === "news") {
+    const ul = document.createElement("ul");
+    for (const i of c.items) {
+      const li = document.createElement("li");
+      li.append(safeLink(i.title, i.url));
+      if (i.source) { const s = document.createElement("small"); s.textContent = ` ${i.source}`; li.append(s); }
+      ul.append(li);
+    }
+    el.append(ul);
+    return el;
+  }
+  const L = I18N.langs[prefs.lang];
+  if (c.kind === "story") { add("h3", "", c.title); add("p", "body", c.body); add("p", "moral", `${L.informal?.moral ?? "Moral:"} ${c.moral}`); }
+  else { add("p", "lines", c.lines.join("\n")); if (c.meaning) add("p", "body", c.meaning); add("p", "attrib", `${c.author}, ${c.work}${c.ref ? " " + c.ref : ""}`); }
+  const src = document.createElement("p");
+  src.className = "attrib";
+  src.append(`${L.informal?.source ?? "Source"}: `, safeLink(c.source.name, c.source.url));
+  if (c.source.licence) src.append(` (${c.source.licence})`);
+  el.append(src);
+  return el;
+}
+
+/* ---------- language and respect ---------- */
+function applyLang() {
+  const L = I18N.langs[prefs.lang], ui = I18N.ui[prefs.lang];
+  document.documentElement.lang = prefs.lang;
+  $("#l-lang").textContent = ui.lang; $("#l-respect").textContent = ui.respect; $("#l-gender").textContent = ui.gender;
+  $("#respect-name").textContent = `${prefs.level + 1}/5 ${L.level_names[prefs.level]}${term() ? ", " + term() : ""}`;
+  $("#gender").innerHTML = "";
+  for (const [v, k] of [["", "neutral"], ["male", "male"], ["female", "female"]]) $("#gender").append(new Option(ui[k], v));
+  $("#gender").value = prefs.gender;
+  $("#gender").disabled = $("#respect").disabled = prefs.lang === "en";
+  $("#text").placeholder = ui.placeholder;
+  $("#send-btn").textContent = ui.send;
+  IDLE_CAPTION = fillText(ui.caption, { name: I18N.app.name });
+  if (state === "idle") caption(IDLE_CAPTION);
+  const heads = { do: ui.should_do, no: ui.should_decline, qa: ui.should_answer };
+  $("#tries").innerHTML = "";
+  for (const g of ["do", "no", "qa"]) {
+    const div = document.createElement("div"), h = document.createElement("h2"), ul = document.createElement("ul");
+    h.textContent = heads[g]; div.append(h, ul);
+    for (const e of I18N.examples[prefs.lang].filter((x) => x.group === g)) {
+      const li = document.createElement("li"), b = document.createElement("button");
+      b.type = "button"; b.textContent = e.label; b.addEventListener("click", () => send(e.say)); li.append(b); ul.append(li);
+    }
+    $("#tries").append(div);
+  }
+  if ("speechSynthesis" in window) fillVoices();
+}
+$("#lang").append(...Object.entries(I18N.langs).map(([k, v]) => new Option(v.label, k)));
+$("#lang").value = prefs.lang;
+$("#respect").value = prefs.level;
+$("#lang").addEventListener("change", (e) => { prefs.lang = e.target.value; prefs.save(); applyLang(); });
+$("#respect").addEventListener("input", (e) => { prefs.level = Number(e.target.value); prefs.save(); applyLang(); });
+$("#gender").addEventListener("change", (e) => { prefs.gender = e.target.value; prefs.save(); applyLang(); });
+
 /* ---------- send ---------- */
 let busy = false;
 async function send(text) {
@@ -217,7 +306,8 @@ async function send(text) {
   const reply = li.querySelector(".reply");
   let streamed = "";
   try {
-    const d = await chat({ text, tz_offset_min: -new Date().getTimezoneOffset(), default_city: $("#city").value.trim(), history }, {
+    const d = await chat({ text, tz_offset_min: -new Date().getTimezoneOffset(), default_city: $("#city").value.trim(), history,
+      lang: prefs.lang, level: prefs.level, gender: prefs.gender, persona: persona() }, {
       route: (r) => showRoute(li, text, r),
       token: (piece) => {
         if (!streamed) { reply.textContent = ""; li.querySelectorAll(".trace li")[2]?.classList.add("on"); }
@@ -228,15 +318,17 @@ async function send(text) {
         reply.append(caret);
       },
     });
-    reply.textContent = d.reply;
+    const out = await present(d);
+    reply.textContent = out.text;
+    if (out.card) li.querySelector(".reply").after(renderCard(out.card));
     const steps = li.querySelectorAll(".trace li");
     if (d.route.tool !== "UNSUPPORTED") steps.forEach((s) => s.classList.add("on"));
     perform(d.action);
-    history.push({ role: "user", content: text }, { role: "assistant", content: d.reply });
+    history.push({ role: "user", content: text }, { role: "assistant", content: out.text });
     if (d.route.tool === "UNSUPPORTED") setState("declined", 1600);
     else setState("idle");
     caption(d.route.tool === "UNSUPPORTED" ? "Declined. Nothing was done." : IDLE_CAPTION);
-    speak(d.reply);
+    speak(out.spoken);
   } catch {
     li.removeAttribute("data-tool");
     reply.textContent = "The router did not answer. In the hosted copy the model may still be loading: wait a few seconds and send again.";
@@ -248,7 +340,7 @@ async function send(text) {
   }
 }
 $("#form").addEventListener("submit", (e) => { e.preventDefault(); send($("#text").value); });
-for (const b of document.querySelectorAll("[data-say]")) b.addEventListener("click", () => send(b.dataset.say));
+applyLang();
 $("#clear").addEventListener("click", () => { $("#feed").innerHTML = ""; $("#empty").hidden = false; $("#clear").hidden = true; });
 addEventListener("keydown", (e) => { // "/" jumps to the input, Escape stops listening; neither animates
   if (e.key === "/" && !/input|textarea/i.test(document.activeElement?.tagName)) { e.preventDefault(); $("#text").focus(); }
@@ -279,7 +371,7 @@ if (!SR) {
   mic.addEventListener("click", async () => {
     if (rec) { rec.stop(); return; }
     if (busy) return;
-    rec = new SR(); rec.lang = navigator.language || "en-US"; rec.interimResults = true; rec.maxAlternatives = 1;
+    rec = new SR(); rec.lang = I18N.langs[prefs.lang].speech; rec.interimResults = true; rec.maxAlternatives = 1;
     let last = "";
     rec.onresult = (e) => { last = [...e.results].map((r) => r[0].transcript).join(" "); $("#text").value = last; caption(last); };
     rec.onerror = (e) => { $("#voice-hint").textContent = e.error === "not-allowed" ? "Microphone access is blocked. Allow it in the address bar, or type instead." : "Could not hear that. Try again or type."; };

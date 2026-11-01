@@ -31,6 +31,21 @@ DEFAULT_MODEL = "auto/best-free"  # a free OmniRoute combo, see D:/Project/model
 SYSTEM = ("You are Jarvis, a voice assistant. Answer in one or two short spoken sentences. "
           "No markdown, no lists, no emoji.")
 MAX_TOKENS = 200
+I18N = json.loads((Path(__file__).resolve().parent / "web" / "i18n.json").read_text(encoding="utf-8"))
+
+
+def persona(lang: str = "en", level: int = 2, gender: str = "") -> str:
+    """System prompt for the chosen language and respect level. English keeps the original Jarvis prompt."""
+    cfg = I18N["langs"].get(lang)
+    if lang == "en" or not cfg:
+        return SYSTEM
+    p, level = I18N["persona"], max(0, min(int(level), I18N["levels"] - 1))
+    formal = level >= 2
+    addr = cfg["address"][level][{"male": 0, "female": 1}.get(gender, 2)]
+    return " ".join([
+        p["name_line"].format(name=I18N["app"]["name"]), p["lang_line"].format(language=cfg["language"]),
+        p["formal" if formal else "informal"].format(pronoun=cfg["pronoun"][1 if formal else 0]),
+        p["addr_line"].format(addr=addr) if addr else p["no_addr_line"]])
 
 
 def load_dotenv(path: Path | None = None) -> None:
@@ -173,11 +188,11 @@ def settle(s: dict, reserved: float, tokens_in: float, tokens_out: float) -> Non
             _MEM["usd"] = max(0.0, _MEM.get("usd", 0.0) - reserved + _cost(s, tokens_in, tokens_out))
 
 
-def _messages(text: str, history: list[dict] | None) -> list[dict]:
+def _messages(text: str, history: list[dict] | None, system: str = SYSTEM) -> list[dict]:
     # the browser supplies the history, so keep only plain user/assistant turns of bounded size
     past = [{"role": h["role"], "content": str(h.get("content", ""))[:500]} for h in (history or [])[-6:]
             if isinstance(h, dict) and h.get("role") in ("user", "assistant")]
-    return [{"role": "system", "content": SYSTEM}, *past, {"role": "user", "content": text}]
+    return [{"role": "system", "content": system}, *past, {"role": "user", "content": text}]
 
 
 NOT_CONNECTED = ("General questions need a language model and none is connected. Set LLM_ENDPOINT and "
@@ -186,13 +201,13 @@ FAILED = "My language model did not answer. Try again in a moment."
 
 
 async def stream_answer(text: str, history: list[dict] | None = None,
-                        client: httpx.AsyncClient | None = None) -> AsyncIterator[str]:
+                        client: httpx.AsyncClient | None = None, system: str = SYSTEM) -> AsyncIterator[str]:
     """Yield the reply in pieces. Never raises: failures become a spoken message."""
     s = settings()
     if not s["endpoint"]:
         yield NOT_CONNECTED
         return
-    messages = _messages(text, history)
+    messages = _messages(text, history, system)
     prompt_chars = sum(len(m["content"]) for m in messages)
     msg, reserved = reserve(s, prompt_chars)
     if msg:
@@ -228,5 +243,5 @@ async def stream_answer(text: str, history: list[dict] | None = None,
                (usage or {}).get("completion_tokens") or out_chars / 4)
 
 
-async def answer(text: str, history: list[dict] | None = None) -> str:
-    return "".join([p async for p in stream_answer(text, history)]).strip()
+async def answer(text: str, history: list[dict] | None = None, system: str = SYSTEM) -> str:
+    return "".join([p async for p in stream_answer(text, history, system=system)]).strip()

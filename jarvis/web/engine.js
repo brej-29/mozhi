@@ -186,10 +186,11 @@ export function reminderTitle(text, when) {
   return words.join(" ");
 }
 
+const say = (code, extra = {}) => ({ type: "say", code, ...extra });
 const GREETING = "Hello. I can check the weather, set reminders and save notes. What do you need?";
 let chronoP;
 async function act(r, body, on = {}) {
-  if (r.tool === "WEATHER") return weather(r.args.city || body.default_city);
+  if (r.tool === "WEATHER") return weather(r.args.city || body.default_city, body.lang || "en");
   if (r.tool === "SET_REMINDER") {
     const when = r.args.when || "";
     const derived = reminderTitle(body.text, when);
@@ -197,33 +198,35 @@ async function act(r, body, on = {}) {
   }
   if (r.tool === "SAVE_NOTE") return { reply: "Saved your note.", action: { type: "note", text: body.text } };
   if (r.tool === "GENERAL_QA" && r.intent === "general_greet") return { reply: GREETING, action: null };
-  if (r.tool === "GENERAL_QA") return { reply: await byokAnswer(body, on), action: null };
+  if (r.tool === "GENERAL_QA") return byokAnswer(body, on);
+  if (r.tool === "NEWS") return { reply: "The news needs the desktop app: browsers block the feed on this page.", action: say("news_static") };
+  if (r.tool === "STORY" || r.tool === "VERSE") return { reply: "", action: { type: "content", kind: r.tool.toLowerCase() } };
   const hints = await (hintsP ||= fetch("hints.json").then((x) => x.json()).catch(() => ({})));
   const hint = hints[r.intent];
   return { reply: (hint ? `That sounds like a request to ${hint}, which I cannot do. ` : "I cannot do that. ") + "I can check the weather, set reminders and save notes.", action: null };
 }
 let hintsP;
 
-async function weather(city) {
-  if (!city) return { reply: "Which city should I check the weather for?", action: null };
+async function weather(city, lang = "en") {
+  if (!city) return { reply: "Which city should I check the weather for?", action: say("need_city") };
   try {
-    const g = await (await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&format=json`)).json();
+    const g = await (await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&format=json&language=${lang}`)).json();
     const hit = (g.results || [])[0];
-    if (!hit) return { reply: `I could not find a place called ${city}.`, action: null };
+    if (!hit) return { reply: `I could not find a place called ${city}.`, action: say("city_not_found", { city }) };
     const f = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${hit.latitude}&longitude=${hit.longitude}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&forecast_days=1&timezone=auto`)).json();
     const place = hit.name + (hit.country ? `, ${hit.country}` : "");
-    return { reply: `In ${place} it is ${Math.round(f.current.temperature_2m)} degrees and ${WMO[f.current.weather_code] ?? "mixed conditions"}. Today's range is ${Math.round(f.daily.temperature_2m_min[0])} to ${Math.round(f.daily.temperature_2m_max[0])}.`, action: { type: "weather", place } };
+    return { reply: `In ${place} it is ${Math.round(f.current.temperature_2m)} degrees and ${WMO[f.current.weather_code] ?? "mixed conditions"}. Today's range is ${Math.round(f.daily.temperature_2m_min[0])} to ${Math.round(f.daily.temperature_2m_max[0])}.`, action: { type: "weather", place, temp: Math.round(f.current.temperature_2m), sky: f.current.weather_code, lo: Math.round(f.daily.temperature_2m_min[0]), hi: Math.round(f.daily.temperature_2m_max[0]) } };
   } catch {
-    return { reply: "I could not reach the weather service. Try again in a moment.", action: null };
+    return { reply: "I could not reach the weather service. Try again in a moment.", action: say("weather_down") };
   }
 }
 
 async function reminder(when, title) {
-  if (!when) return { reply: "When should I remind you?", action: null };
+  if (!when) return { reply: "When should I remind you?", action: say("need_when") };
   const norm = normalizeWhen(when);
   const chrono = await (chronoP ||= import(CHRONO));
   let at = chrono.parseDate(norm, new Date(), { forwardDate: true });
-  if (!at) return { reply: `I did not understand the time '${when}'. Try something like tomorrow at 3 pm.`, action: null };
+  if (!at) return { reply: `I did not understand the time '${when}'. Try something like tomorrow at 3 pm.`, action: say("bad_time", { when }) };
   if (!HAS_TIME.test(norm)) at.setHours(9, 0, 0, 0);
   const label = title || "Reminder";
   const spoken = at.toLocaleString(undefined, { weekday: "long", day: "numeric", month: "long", hour: "numeric", minute: "2-digit" });
@@ -278,11 +281,15 @@ function underCap() {
   return true;
 }
 async function byokAnswer(body, on) {
+  const text = await byokText(body, on);
+  return typeof text === "string" ? { reply: text, action: null } : text;
+}
+async function byokText(body, on) {
   const cfg = byok.get();
-  if (!cfg) return "General questions need a language model. Add your own key under Preferences, or run Jarvis on your computer with OmniRoute. Weather, reminders and notes work without one.";
-  if (!underCap()) return `That is ${DAILY_CAP} answers today on this device, which is the safety limit. Try again tomorrow.`;
+  if (!cfg) return { reply: "General questions need a language model. Add your own key under Preferences, or run Koottu on your computer with OmniRoute. Weather, reminders and notes work without one.", action: say("qa_nokey") };
+  if (!underCap()) return { reply: `That is ${DAILY_CAP} answers today on this device, which is the safety limit. Try again tomorrow.`, action: say("qa_cap", { n: DAILY_CAP }) };
   const messages = [
-    { role: "system", content: "You are Jarvis, a voice assistant. Answer in one or two short spoken sentences. No markdown, no lists, no emoji." },
+    { role: "system", content: body.persona || "You are Koottu, a voice assistant. Answer in one or two short spoken sentences. No markdown, no lists, no emoji." },
     ...(body.history || []).slice(-6).filter((h) => h.role === "user" || h.role === "assistant").map((h) => ({ role: h.role, content: String(h.content).slice(0, 500) })),
     { role: "user", content: body.text },
   ];

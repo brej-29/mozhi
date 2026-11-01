@@ -44,21 +44,26 @@ UNSUPPORTED_HINT = {
 }
 
 
-async def weather(city: str, client: httpx.AsyncClient | None = None) -> tuple[str, dict | None]:
+def say(code: str, **facts) -> dict:
+    """An action that only names which message was sent, so a client can say it in another language."""
+    return {"type": "say", "code": code, **facts}
+
+
+async def weather(city: str, client: httpx.AsyncClient | None = None, lang: str = "en") -> tuple[str, dict | None]:
     try:
-        return await _weather(city, client)
+        return await _weather(city, client, lang)
     except (httpx.HTTPError, KeyError, ValueError):
-        return "I could not reach the weather service. Try again in a moment.", None
+        return "I could not reach the weather service. Try again in a moment.", say("weather_down")
 
 
-async def _weather(city: str, client: httpx.AsyncClient | None) -> tuple[str, dict | None]:
+async def _weather(city: str, client: httpx.AsyncClient | None, lang: str = "en") -> tuple[str, dict | None]:
     if not city:
-        return "Which city should I check the weather for?", None
+        return "Which city should I check the weather for?", say("need_city")
     async with (client or httpx.AsyncClient(timeout=8)) as c:
-        g = (await c.get(GEO, params={"name": city, "count": 1, "format": "json"})).json()
+        g = (await c.get(GEO, params={"name": city, "count": 1, "format": "json", "language": lang})).json()
         hit = (g.get("results") or [None])[0]
         if not hit:
-            return f"I could not find a place called {city}.", None
+            return f"I could not find a place called {city}.", say("city_not_found", city=city)
         f = (await c.get(FORECAST, params={
             "latitude": hit["latitude"], "longitude": hit["longitude"],
             "current": "temperature_2m,weather_code,wind_speed_10m",
@@ -69,7 +74,9 @@ async def _weather(city: str, client: httpx.AsyncClient | None) -> tuple[str, di
     place = hit["name"] + (f", {hit['country']}" if hit.get("country") else "")
     return (f"In {place} it is {round(cur['temperature_2m'])} degrees and {sky}. "
             f"Today's range is {round(day['temperature_2m_min'][0])} to "
-            f"{round(day['temperature_2m_max'][0])}."), {"type": "weather", "place": place}
+            f"{round(day['temperature_2m_max'][0])}."), {
+        "type": "weather", "place": place, "temp": round(cur["temperature_2m"]), "sky": int(cur["weather_code"]),
+        "lo": round(day["temperature_2m_min"][0]), "hi": round(day["temperature_2m_max"][0])}
 
 
 _WORD_NUM = {w: str(i) for i, w in enumerate(
@@ -102,12 +109,12 @@ def reminder(when: str, title: str, tz_offset_min: int = 0, now: datetime | None
     tz = timezone(timedelta(minutes=tz_offset_min))
     now = now or datetime.now(tz)
     if not when:
-        return "When should I remind you?", None
+        return "When should I remind you?", say("need_when")
     norm = normalize_when(when)
     at = dateparser.parse(norm, settings={"RELATIVE_BASE": now.replace(tzinfo=None),
                                           "PREFER_DATES_FROM": "future"})
     if at is None:
-        return f"I did not understand the time '{when}'. Try something like tomorrow at 3 pm.", None
+        return f"I did not understand the time '{when}'. Try something like tomorrow at 3 pm.", say("bad_time", when=when)
     if not _HAS_TIME.search(norm):
         at = at.replace(hour=9, minute=0)  # a date with no time of day: remind at 9 am
     at = at.replace(tzinfo=tz)
