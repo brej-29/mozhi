@@ -39,6 +39,11 @@ export async function chat(body, on = {}) {
     if (!route || !done) throw new Error("stream ended early");
     return { reply: done.reply, action: done.action, route };
   }
+  if (/[஀-௿ഀ-ൿ]/.test(body.text)) { // the browser copy only has the English router so far
+    const note = { tool: "UNSUPPORTED", confidence: 1, intent: "", path: "abstain", args: {}, spans: [], scores: {}, words: [] };
+    on.route?.(note);
+    return { reply: "Tamil and Malayalam script is understood by the desktop app. This web copy has the English router only, so type Tanglish or Manglish here.", action: null, route: note };
+  }
   const r = await router();
   const t0 = performance.now();
   const route = await r.finish(r.route(body.text));

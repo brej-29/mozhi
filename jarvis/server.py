@@ -15,6 +15,8 @@ from pydantic import BaseModel, Field
 from jarvis import llm, news, tools
 from jarvis.omniroute import manager
 from jarvis.routers.joint import JointRouter
+from jarvis.routers.joint2 import MODEL_DIR as J2_DIR
+from jarvis.routers.joint2 import JointRouter2, language
 
 llm.load_dotenv()
 WEB = Path(__file__).resolve().parent / "web"
@@ -24,6 +26,8 @@ state: dict = {}
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     state["router"] = JointRouter()
+    # Tamil and Malayalam script go to the multilingual router. Without its model files, they fall back to the English one.
+    state["router2"] = JointRouter2() if (J2_DIR / "model.int8.onnx").exists() else None
     manager.ensure_in_background(llm.settings()["endpoint"])  # starts OmniRoute only if it is local and not running
     yield
     manager.stop()  # stops it only if this run started it
@@ -62,14 +66,15 @@ def route_json(r) -> dict:
 
 def run_router(text: str):
     t0 = time.perf_counter()
-    r = state["router"].route(text)
+    router = state["router2"] if state["router2"] and language(text) != "en" else state["router"]
+    r = router.route(text)
     r.ms = (time.perf_counter() - t0) * 1000
     return r
 
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "router": "joint-int8", "threshold": state["router"].threshold, "tools": state["router"].tools, "llm": {**llm.status(), "omniroute": {"state": manager.state, "detail": manager.detail}}}
+    return {"status": "ok", "router": "joint-int8", "threshold": state["router"].threshold, "tools": sorted({*state["router"].tools, *(state["router2"].tools if state["router2"] else [])}), "llm": {**llm.status(), "omniroute": {"state": manager.state, "detail": manager.detail}}}
 
 
 @app.post("/api/route")

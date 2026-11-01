@@ -82,3 +82,17 @@ def test_chat_accepts_language_fields_and_rejects_bad_ones():
         assert ok.status_code == 200
         assert c.post("/api/chat", json={"text": "hello", "lang": "fr"}).status_code == 422
         assert c.post("/api/chat", json={"text": "hello", "level": 9}).status_code == 422
+
+
+def test_native_script_goes_to_the_multilingual_router():
+    import pytest
+    from fastapi.testclient import TestClient
+
+    from jarvis.routers.joint2 import MODEL_DIR
+    from jarvis.server import app
+    if not (MODEL_DIR / "model.int8.onnx").exists():
+        pytest.skip("models/joint2 not built")
+    with TestClient(app) as c:
+        r = c.post("/api/route", json={"text": "இன்றைய செய்திகள் என்ன"}).json()  # Tamil: what is today's news
+        assert r["tool"] in {"NEWS", "GENERAL_QA"}
+        assert c.post("/api/route", json={"text": "what is the weather in lisbon"}).json()["tool"] == "WEATHER"
