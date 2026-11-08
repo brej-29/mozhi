@@ -1,0 +1,382 @@
+{
+  "stories": [
+    {
+      "id": "chandralekha-and-the-eight-thieves",
+      "region": "tamil",
+      "title": {
+        "en": "Chandralekha and the Eight Thieves",
+        "ta": "சந்திரலேகாவும் எட்டுத் திருடர்களும்",
+        "ml": "ചന്ദ്രലേഖയും എട്ടു കള്ളന്മാരും"
+      },
+      "summary": {
+        "en": "Chandralekha was the daughter of a dancer, and she was very quick-witted. Her guru was a scheming man, and he spread a rumour that she had lost her mind. Chandralekha answered him by staging a ritual at the temple. Later, eight bandits came after her. She tricked them by swapping their treasure for rocks, and she escaped from the bed they had stolen with the help of a pile of mangoes. At last she brought the prince's soldiers, dressed in disguise, to the bandits, and all eight were arrested.",
+        "ta": "இது தமிழ்நாட்டில் சொல்லப்படும் ஒரு பழைய கதை. சந்திரலேகா ஒரு நடனக் கலைஞரின் மகள். அவள் மிகவும் புத்திசாலி, எதற்கும் அஞ்சாதவள். அவளுடைய குரு சூழ்ச்சிக்காரர். அவள் மனம் பிறழ்ந்துவிட்டாள் என்று ஊரெங்கும் வதந்தி பரப்பினார். சந்திரலேகா கோயிலில் ஒரு சடங்கை நடத்தி அவருக்குப் பதில் சொன்னாள். பிறகு எட்டுக் கொள்ளையர்கள் அவளைத் தேடி வந்தனர். அவள் அவர்களுடைய புதையலுக்குப் பதிலாகக் கற்களை வைத்து அவர்களை ஏமாற்றினாள். அவர்கள் திருடிக்கொண்டு போன கட்டிலிலிருந்து ஒரு மாம்பழக் குவியலின் உதவியால் தப்பினாள். கடைசியில் மாறுவேடத்தில் இருந்த இளவரசனின் வீரர்களைக் கொள்ளையர்களிடம் அழைத்து வந்தாள். இப்படி அவளுடைய சாமர்த்தியத்தால் எட்டுப் பேரும் கைது செய்யப்பட்டனர். அவளை எதிர்த்த அனைவரையும் அவள் தன் அறிவால் வென்றாள்.",
+        "ml": "തമിഴ്നാട്ടിൽ പറഞ്ഞുവരുന്ന ഒരു പഴയ കഥയാണിത്. ചന്ദ്രലേഖ ഒരു നർത്തകിയുടെ മകളായിരുന്നു. അവൾ വളരെ ബുദ്ധിമതിയും ഒന്നിനെയും ഭയക്കാത്തവളുമായിരുന്നു. അവളുടെ ഗുരു ഒരു കൗശലക്കാരനായിരുന്നു. അവൾക്കു ഭ്രാന്താണെന്ന് അയാൾ നാടെങ്ങും പറഞ്ഞു പരത്തി. ചന്ദ്രലേഖ ക്ഷേത്രത്തിൽ ഒരു ചടങ്ങു നടത്തി അതിനു മറുപടി നൽകി. പിന്നീട് എട്ടു കൊള്ളക്കാർ അവളെ തേടിയെത്തി. അവരുടെ നിധിക്കു പകരം അവൾ കല്ലുകൾ വച്ച് അവരെ കബളിപ്പിച്ചു. അവർ മോഷ്ടിച്ചുകൊണ്ടുപോയ കട്ടിലിൽ നിന്ന് ഒരു കൂന മാമ്പഴത്തിന്റെ സഹായത്തോടെ അവൾ രക്ഷപ്പെട്ടു. ഒടുവിൽ വേഷം മാറിയ രാജകുമാരന്റെ പടയാളികളെ അവൾ കൊള്ളക്കാരുടെ അടുത്തെത്തിച്ചു. അങ്ങനെ അവളുടെ സാമർത്ഥ്യം കൊണ്ട് എട്ടുപേരും അറസ്റ്റിലായി. തന്നെ എതിർത്തവരെയെല്ലാം അവൾ ബുദ്ധികൊണ്ട് തോൽപ്പിച്ചു."
+      },
+      "moral": {
+        "en": "Quick wit and courage can defeat both schemers and thieves.",
+        "ta": "சமயோசித அறிவும் துணிவும் சூழ்ச்சிக்காரர்களையும் திருடர்களையும் வெல்லும்.",
+        "ml": "ബുദ്ധിയും ധൈര്യവും കൗശലക്കാരെയും കള്ളന്മാരെയും തോൽപ്പിക്കും."
+      },
+      "source": {
+        "name": "Stories From India podcast, episode 85 (told by Narada Muni)",
+        "author": "Narada Muni",
+        "year": null,
+        "url": "https://sfipodcast.com/episode-85-tamil-folk-tale-chandralekha-and-the-eight-thieves/"
+      },
+      "rights": "plot summary written by the project author in his own words; the source text is in copyright and is not reproduced",
+      "review": "draft: Tamil and Malayalam not yet checked by a native speaker"
+    },
+    {
+      "id": "lamps-of-lakshmi",
+      "region": "tamil",
+      "title": {
+        "en": "The Lamps of Lakshmi",
+        "ta": "லட்சுமியின் விளக்குகள்",
+        "ml": "ലക്ഷ്മിയുടെ വിളക്കുകൾ"
+      },
+      "summary": {
+        "en": "Two families once agreed that their children, who were cousins, would marry one day. Years later one family grew poor, and the rich girl's parents wanted her to marry elsewhere. She kept the old promise and married her poor cousin. One day an eagle dropped the king's lost ring into their house, and the couple returned it. The king offered any reward, and she asked only that on one Friday no lamp be lit in the town except in her house. Goddess Lakshmi found light nowhere else and came in, and her sister Poverty left by the back door. The family grew rich, and people still light lamps on Fridays.",
+        "ta": "இரண்டு குடும்பத்தினர் தங்கள் பிள்ளைகளுக்குத் திருமணம் செய்து வைப்பதாக முன்பே பேசி வைத்திருந்தனர். பிறகு ஒரு குடும்பம் ஏழ்மையில் வாடியது. பணக்காரப் பெண்ணின் பெற்றோர் வேறு இடத்தில் மணம் முடிக்க நினைத்தனர். ஆனால் அவள் அந்த வாக்கைக் காப்பாற்றி, ஏழை உறவினரையே மணந்தாள். ஒருநாள் ஒரு கழுகு அரசரின் தொலைந்த மோதிரத்தை அவர்கள் வீட்டில் போட்டது. தம்பதியர் அதை அரசரிடம் ஒப்படைத்தனர். என்ன வேண்டுமானாலும் கேள் என்றார் அரசர். ஒரு வெள்ளிக்கிழமை தன் வீட்டைத் தவிர ஊரில் வேறெங்கும் விளக்கு ஏற்றக்கூடாது என்று மட்டும் அவள் கேட்டாள். வேறெங்கும் ஒளி இல்லாததால் லட்சுமி தேவி அவள் வீட்டுக்குள் வந்தாள். அவளுடைய சகோதரி மூதேவி பின்கதவு வழியாக வெளியேறினாள். குடும்பம் செல்வந்தர் ஆனது. அதனால்தான் இன்றும் வெள்ளிக்கிழமைகளில் விளக்கு ஏற்றுகிறார்கள்.",
+        "ml": "രണ്ടു കുടുംബങ്ങൾ തങ്ങളുടെ മക്കളെ വിവാഹം കഴിപ്പിക്കാമെന്ന് മുമ്പേ പറഞ്ഞുറപ്പിച്ചിരുന്നു. പിന്നീട് ഒരു കുടുംബം ദരിദ്രമായി. പണക്കാരിപ്പെൺകുട്ടിയുടെ മാതാപിതാക്കൾ മറ്റൊരിടത്തു വിവാഹം നടത്താൻ ആഗ്രഹിച്ചു. പക്ഷേ അവൾ വാക്കു പാലിച്ച് പാവപ്പെട്ട ബന്ധുവിനെത്തന്നെ വിവാഹം ചെയ്തു. ഒരു ദിവസം ഒരു കഴുകൻ രാജാവിന്റെ കളഞ്ഞുപോയ മോതിരം അവരുടെ വീട്ടിൽ ഇട്ടു. ദമ്പതിമാർ അതു രാജാവിനു തിരികെ നൽകി. എന്തു വേണമെങ്കിലും ചോദിച്ചുകൊള്ളാൻ രാജാവ് പറഞ്ഞു. ഒരു വെള്ളിയാഴ്ച തന്റെ വീട്ടിലല്ലാതെ നാട്ടിൽ ഒരിടത്തും വിളക്കു കത്തിക്കരുത് എന്നു മാത്രമാണ് അവൾ ചോദിച്ചത്. മറ്റെങ്ങും വെളിച്ചം കാണാതെ ലക്ഷ്മീദേവി ആ വീട്ടിൽ കയറി. ദേവിയുടെ സഹോദരി ദാരിദ്ര്യദേവി പിൻവാതിലിലൂടെ ഇറങ്ങിപ്പോയി. കുടുംബം സമ്പന്നമായി. അതുകൊണ്ടാണ് ഇന്നും വെള്ളിയാഴ്ച വിളക്കു കത്തിക്കുന്നത്."
+      },
+      "moral": {
+        "en": "A kept promise and a wise wish can turn poverty into plenty.",
+        "ta": "வாக்கைக் காப்பாற்றி, அறிவுடன் வேண்டிக்கொண்டால் வறுமையும் செல்வமாக மாறும்.",
+        "ml": "വാക്കു പാലിച്ച് വിവേകത്തോടെ ആവശ്യപ്പെട്ടാൽ ദാരിദ്ര്യവും സമൃദ്ധിയാകും."
+      },
+      "source": {
+        "name": "Kalampedia, A Tamil Folk Story (credited there to K. A. Seethalakshmi's book)",
+        "author": "K. A. Seethalakshmi",
+        "year": null,
+        "url": "https://kalampedia.org/2022/06/26/a-tamil-folk-story-indian-folktales/"
+      },
+      "rights": "plot summary written by the project author in his own words; the source text is in copyright and is not reproduced",
+      "review": "draft: Tamil and Malayalam not yet checked by a native speaker"
+    },
+    {
+      "id": "kanji-varadappa",
+      "region": "tamil",
+      "title": {
+        "en": "Kanji Varadappa",
+        "ta": "கஞ்சி வரதப்பா",
+        "ml": "കഞ്ഞി വരദപ്പാ"
+      },
+      "summary": {
+        "en": "A hungry beggar was refused food at every door, so he cursed the town and lay down in front of a Vaishnavite's house. That evening the Vaishnavite finished his prayers, folded his hands and murmured 'Kanji Varadappa', a name of the Lord. In Tamil, kanji means rice gruel, and varadappa sounded like 'it is coming'. The beggar sprang up and asked, 'Where is it coming?' The Vaishnavite saw how hungry the poor man was and felt sorry for him. He took the beggar into his house and gave him a full meal of sweet milk rice.",
+        "ta": "பசியோடு இருந்த ஒரு பிச்சைக்காரனுக்கு எங்கும் உணவு கிடைக்கவில்லை. கோபத்தில் ஊரையே சபித்துவிட்டு, நடந்து நடந்து களைத்துப் போய், ஒரு வைணவரின் வீட்டுத் திண்ணையில் படுத்துக்கொண்டான். மாலையில் அந்த வைணவர் வழிபாடு முடித்து, கைகூப்பி, கடவுளின் பெயரான 'கஞ்சி வரதப்பா' என்று முணுமுணுத்தார். தமிழில் கஞ்சி என்றால் சோற்று நீர். வரதப்பா என்பது 'வருகிறது' என்பது போலவும் ஒலித்தது. பிச்சைக்காரன் துள்ளி எழுந்து, 'கஞ்சி எங்கே வருகிறது?' என்று கேட்டான். அவனுடைய பசியைப் பார்த்த வைணவருக்கு இரக்கம் ஏற்பட்டது. அவனைத் தன் வீட்டுக்கு அழைத்துச் சென்று வயிறு நிறையப் பாயசம் கொடுத்தார். பசியோடு வந்தவன் மனம் குளிர்ந்து வீடு திரும்பினான்.",
+        "ml": "വിശന്നുവലഞ്ഞ ഒരു യാചകന് എവിടെയും ഭക്ഷണം കിട്ടിയില്ല. ദേഷ്യത്തിൽ നാടിനെ ശപിച്ച്, നടന്നുനടന്നു തളർന്ന് അയാൾ ഒരു വൈഷ്ണവന്റെ വീടിന്റെ തിണ്ണയിൽ കിടന്നു. വൈകുന്നേരം ആ വൈഷ്ണവൻ പ്രാർഥന കഴിഞ്ഞ് കൈകൂപ്പി 'കഞ്ഞി വരദപ്പാ' എന്ന് ദൈവനാമം ജപിച്ചു. തമിഴിൽ കഞ്ഞി എന്നാൽ ചോറുവെള്ളം. വരദപ്പാ എന്നത് 'വരുന്നു' എന്നു പറയുന്നതുപോലെയും കേട്ടു. യാചകൻ ചാടി എഴുന്നേറ്റ് 'കഞ്ഞി എവിടെ വരുന്നു?' എന്നു ചോദിച്ചു. അയാളുടെ വിശപ്പും പരവശതയും കണ്ട് വൈഷ്ണവന് മനസ്സലിഞ്ഞ് സങ്കടമായി. അയാളെ വീട്ടിൽ കൊണ്ടുപോയി വയറു നിറയെ പായസം കൊടുത്തു. ദിവസം മുഴുവൻ വിശന്നുവലഞ്ഞ ആ മനുഷ്യൻ മനസ്സും വയറും നിറഞ്ഞ് സന്തോഷത്തോടെ മടങ്ങി."
+      },
+      "moral": {
+        "en": "Kindness to a hungry person is never wasted.",
+        "ta": "பசித்தவருக்கு இரங்கி உணவு அளிப்பது ஒருபோதும் வீண் போகாது.",
+        "ml": "വിശക്കുന്നവനോടു കാണിക്കുന്ന കരുണ ഒരിക്കലും പാഴാകില്ല."
+      },
+      "source": {
+        "name": "Folk Tales of Tamilnadu",
+        "author": "K. A. Seethalakshmi",
+        "year": 1960,
+        "url": "https://archive.org/details/in.ernet.dli.2015.124542"
+      },
+      "rights": "plot summary written by the project author in his own words; the source text is in copyright and is not reproduced",
+      "review": "draft: Tamil and Malayalam not yet checked by a native speaker"
+    },
+    {
+      "id": "the-logician-and-the-oil-merchant",
+      "region": "tamil",
+      "title": {
+        "en": "The Logician and the Oil Merchant",
+        "ta": "தர்க்க அறிஞரும் எண்ணெய் வியாபாரியும்",
+        "ml": "താർക്കികനും എണ്ണ വ്യാപാരിയും"
+      },
+      "summary": {
+        "en": "A logician went to buy oil and saw an oil mill at work, with bulls walking round and round. He noticed a bell tied round each bull's neck and asked the merchant why. 'The bells tell me the bulls are moving,' said the merchant. 'When the ringing stops, I come out and urge them on.' The logician asked, 'But what if a bull stands still and only shakes its head? The bell will ring then.' The merchant laughed. 'Sir, my bulls have not studied logic like you. They will not shake their heads without walking round the mill.' The logician felt foolish and went home.",
+        "ta": "ஒரு தர்க்க அறிஞர் எண்ணெய் வாங்கப் போனார். அங்கே செக்கு ஓடிக்கொண்டிருந்தது, மாடுகள் சுற்றிச் சுற்றி வந்தன. ஒவ்வொரு மாட்டின் கழுத்திலும் மணி கட்டியிருப்பதைப் பார்த்து, 'இது எதற்கு?' என்று வியாபாரியிடம் கேட்டார். 'மணி ஒலித்தால் மாடுகள் நடக்கின்றன என்று அர்த்தம். ஒலி நின்றால் நான் வெளியே வந்து ஓட்டுவேன்' என்றார் வியாபாரி. 'மாடு நின்ற இடத்திலேயே தலையை ஆட்டினாலும் மணி ஒலிக்குமே, அப்போது என்ன செய்வீர்கள்?' என்று அறிஞர் கேட்டார். வியாபாரி சிரித்துக்கொண்டே, 'ஐயா, என் மாடுகள் உங்களைப் போல் தர்க்கம் படித்தவை அல்ல. செக்கைச் சுற்றாமல் தலையை ஆட்டாது' என்றார். அறிஞர் வெட்கத்துடன் வீடு திரும்பினார்.",
+        "ml": "ഒരു താർക്കികൻ എണ്ണ വാങ്ങാൻ പോയി. അവിടെ ചക്ക് ആടുന്നുണ്ടായിരുന്നു, കാളകൾ വട്ടം ചുറ്റുകയായിരുന്നു. ഓരോ കാളയുടെയും കഴുത്തിൽ മണി കെട്ടിയിരിക്കുന്നതു കണ്ട് അയാൾ വ്യാപാരിയോടു കാരണം ചോദിച്ചു. 'മണി മുഴങ്ങിയാൽ കാളകൾ നടക്കുന്നുണ്ടെന്ന് എനിക്കറിയാം. ശബ്ദം നിന്നാൽ ഞാൻ പുറത്തുവന്ന് അവയെ ഓടിക്കും' എന്നു വ്യാപാരി പറഞ്ഞു. 'കാള നിന്നിടത്തുതന്നെ നിന്ന് തലയാട്ടിയാലും മണി മുഴങ്ങുമല്ലോ, അപ്പോൾ എന്തു ചെയ്യും?' എന്നു താർക്കികൻ ചോദിച്ചു. വ്യാപാരി ചിരിച്ചു. 'സാർ, എന്റെ കാളകൾ താങ്കളെപ്പോലെ തർക്കശാസ്ത്രം പഠിച്ചിട്ടില്ല. ചക്കു ചുറ്റാതെ അവ തല ആട്ടില്ല.' താർക്കികൻ ലജ്ജിച്ചു. തന്റെ ചോദ്യങ്ങൾ കൊണ്ട് കാര്യമില്ലെന്നു മനസ്സിലാക്കി അയാൾ വീട്ടിലേക്കു മടങ്ങി."
+      },
+      "moral": {
+        "en": "Experience in a trade can beat clever-sounding questions.",
+        "ta": "ஒருவரின் தொழிலை அனுபவம் உள்ளவரே நன்கு அறிவார்.",
+        "ml": "ഒരാളുടെ തൊഴിൽ ഏറ്റവും നന്നായി അറിയുന്നത് അനുഭവമുള്ളവനാണ്."
+      },
+      "source": {
+        "name": "Folk Tales of Tamilnadu",
+        "author": "K. A. Seethalakshmi",
+        "year": 1960,
+        "url": "https://archive.org/details/in.ernet.dli.2015.124542"
+      },
+      "rights": "plot summary written by the project author in his own words; the source text is in copyright and is not reproduced",
+      "review": "draft: Tamil and Malayalam not yet checked by a native speaker"
+    },
+    {
+      "id": "do-not-be-envious",
+      "region": "tamil",
+      "title": {
+        "en": "Do Not Be Envious",
+        "ta": "பொறாமை வேண்டாம்",
+        "ml": "അസൂയ വേണ്ട"
+      },
+      "summary": {
+        "en": "A poor Brahmin was sent out by his wife to learn a trade, but he came home with only a song from a shepherd. Next day she packed him curd rice, and he slept in the forest with the packet hanging from a tree. Shiva and Parvati ate the food, and to repay him Shiva left five silver cups. When the Brahmin opened them, ladies stepped out and served a grand feast to the whole town. His rich neighbour copied him in envy, and Shiva left cups for him too. But out of these came barbers, who shaved every guest bald.",
+        "ta": "ஏழை அந்தணன் ஒருவனை அவன் மனைவி ஏதாவது தொழில் கற்று வரச் சொல்லி அனுப்பினாள். அவன் ஒரு இடையனிடம் பாட்டு மட்டும் கற்றுக்கொண்டு வந்தான். மறுநாள் மனைவி அவனுக்குக் கட்டுச்சோறு கட்டிக் கொடுத்தாள். காட்டில் ஒரு மரக்கிளையில் பொட்டலத்தைத் தொங்கவிட்டுவிட்டு அவன் தூங்கினான். அப்போது சிவனும் பார்வதியும் வந்து அந்தச் சோற்றைச் சாப்பிட்டனர். அதற்குப் பதிலாக சிவன் ஐந்து வெள்ளிக் கிண்ணங்களை வைத்துவிட்டுப் போனார். அந்தணன் அவற்றைத் திறந்ததும், ஒவ்வொன்றிலிருந்தும் பெண்கள் வந்து ஊரார் அனைவருக்கும் விருந்து பரிமாறினர். பணக்கார அண்டை வீட்டுக்காரர் பொறாமையால் அதேபோல் செய்தார். சிவன் அவருக்கும் கிண்ணங்களை வைத்துவிட்டுப் போனார். ஆனால் அவற்றிலிருந்து முடிவெட்டுபவர்கள் வந்து, விருந்துக்கு வந்த அனைவருக்கும் மொட்டையடித்தனர்.",
+        "ml": "ദരിദ്രനായ ഒരു ബ്രാഹ്മണനെ ഭാര്യ എന്തെങ്കിലും തൊഴിൽ പഠിക്കാൻ പറഞ്ഞയച്ചു. അയാൾ ഒരു ഇടയനിൽ നിന്ന് ഒരു പാട്ടു മാത്രം പഠിച്ചുവന്ന് ഭാര്യയോടു പറഞ്ഞു. പിറ്റേന്ന് ഭാര്യ പൊതിച്ചോറു കെട്ടിക്കൊടുത്തു. കാട്ടിൽ ഒരു മരക്കൊമ്പിൽ പൊതി തൂക്കിയിട്ട് അയാൾ ഉറങ്ങി. ആ സമയം ശിവനും പാർവതിയും വന്ന് ആ ചോറു കഴിച്ചു. പകരം ശിവൻ അഞ്ചു വെള്ളിക്കോപ്പകൾ വച്ചിട്ടുപോയി. ബ്രാഹ്മണൻ അവ തുറന്നപ്പോൾ ഓരോന്നിൽ നിന്നും സ്ത്രീകൾ വന്ന് നാട്ടുകാർക്കെല്ലാം സദ്യ വിളമ്പി. പണക്കാരനായ അയൽക്കാരൻ അസൂയകൊണ്ട് അതുപോലെ ചെയ്തു. ശിവൻ അയാൾക്കും കോപ്പകൾ വച്ചിട്ടുപോയി. പക്ഷേ അവയിൽ നിന്ന് ക്ഷുരകന്മാർ വന്ന് സദ്യയ്ക്കെത്തിയ എല്ലാവരുടെയും തല മൊട്ടയടിച്ചു. പണക്കാരൻ നാണംകെട്ടു."
+      },
+      "moral": {
+        "en": "Envy and trickery bring shame, not riches.",
+        "ta": "பொறாமையும் ஏமாற்றும் அவமானத்தையே தரும்.",
+        "ml": "അസൂയയും ചതിയും നാണക്കേടേ നൽകൂ."
+      },
+      "source": {
+        "name": "Folk Tales of Tamilnadu",
+        "author": "K. A. Seethalakshmi",
+        "year": 1960,
+        "url": "https://archive.org/details/in.ernet.dli.2015.124542"
+      },
+      "rights": "plot summary written by the project author in his own words; the source text is in copyright and is not reproduced",
+      "review": "draft: Tamil and Malayalam not yet checked by a native speaker"
+    },
+    {
+      "id": "an-intelligent-wife",
+      "region": "tamil",
+      "title": {
+        "en": "An Intelligent Wife",
+        "ta": "புத்திசாலி மனைவி",
+        "ml": "ബുദ്ധിമതിയായ ഭാര്യ"
+      },
+      "summary": {
+        "en": "Velayudhan was a miser who never hired workers. A holy man taught him a mantra that called up a huge spirit to work for him, but the spirit warned that if he ever sat idle, he would eat Velayudhan. The spirit finished the farm work at once and asked for more. Velayudhan shook with fear, but his clever wife said she would handle it. She gave the spirit one long hair and told him to straighten it. He tried everywhere, even in a goldsmith's furnace, and the hair simply burned away. Ashamed, the spirit ran off to the forest and never returned.",
+        "ta": "வேலாயுதன் ஒரு கஞ்சன். வேலைக்கு யாரையும் அமர்த்த மாட்டான். ஒரு சந்நியாசி அவனுக்கு ஒரு மந்திரத்தைக் கற்றுக் கொடுத்தார். அதைச் சொன்னால் ஒரு பெரிய பூதம் வந்து வேலை செய்யும். ஆனால் வேலை கொடுக்காவிட்டால் பூதம் அவனையே தின்றுவிடும். பூதம் வயல் வேலையை உடனே முடித்துவிட்டு, மேலும் வேலை கேட்டது. வேலாயுதன் பயந்து நடுங்கினான். அவனுடைய புத்திசாலி மனைவி, 'நான் பார்த்துக்கொள்கிறேன்' என்றாள். அவள் ஒரு நீளமான முடியைக் கொடுத்து அதை நேராக்கச் சொன்னாள். பூதம் எவ்வளவோ முயன்றது. ஒரு பொற்கொல்லனின் உலையிலும் போட்டுப் பார்த்தது, முடி எரிந்து போனது. வெட்கப்பட்ட பூதம் காட்டுக்குள் ஓடி ஒளிந்தது. அதன் பிறகு திரும்பி வரவே இல்லை.",
+        "ml": "വേലായുധൻ ഒരു പിശുക്കനായിരുന്നു; പണിക്കാരെ വയ്ക്കാറില്ല. പണം കൊടുക്കേണ്ടിവരുമെന്നു പേടിച്ചായിരുന്നു അത്. ഒരു സന്ന്യാസി അയാൾക്ക് ഒരു മന്ത്രം പഠിപ്പിച്ചു. അതു ജപിച്ചാൽ ഒരു വലിയ ഭൂതം വന്ന് പണിയെടുക്കും. പക്ഷേ പണി കൊടുത്തില്ലെങ്കിൽ ഭൂതം അയാളെത്തന്നെ തിന്നും. ഭൂതം പാടത്തെ പണി ഉടനെ തീർത്ത് കൂടുതൽ പണി ചോദിച്ചു. വേലായുധൻ പേടിച്ചുവിറച്ചു. ബുദ്ധിമതിയായ ഭാര്യ പറഞ്ഞു, 'ഞാൻ നോക്കിക്കൊള്ളാം.' അവൾ ഒരു നീണ്ട മുടിനാര് കൊടുത്ത് അതു നേരെയാക്കാൻ പറഞ്ഞു. ഭൂതം ഒരുപാടു ശ്രമിച്ചു. ഒരു തട്ടാന്റെ ഉലയിൽ വരെ ഇട്ടുനോക്കി; മുടി കത്തിപ്പോയി. നാണംകെട്ട ഭൂതം കാട്ടിലേക്ക് ഓടി ഒളിച്ചു. പിന്നെ ഒരിക്കലും തിരിച്ചുവന്നില്ല. വേലായുധനും ഭാര്യയും സമാധാനമായി ജീവിച്ചു."
+      },
+      "moral": {
+        "en": "A clear mind can solve a problem that fear cannot.",
+        "ta": "பயத்தால் தீராத சிக்கலை தெளிவான சிந்தனை தீர்க்கும்.",
+        "ml": "ഭയം തീർക്കാത്ത പ്രശ്നം തെളിഞ്ഞ ചിന്ത തീർക്കും."
+      },
+      "source": {
+        "name": "Folk Tales of Tamilnadu",
+        "author": "K. A. Seethalakshmi",
+        "year": 1960,
+        "url": "https://archive.org/details/in.ernet.dli.2015.124542"
+      },
+      "rights": "plot summary written by the project author in his own words; the source text is in copyright and is not reproduced",
+      "review": "draft: Tamil and Malayalam not yet checked by a native speaker"
+    },
+    {
+      "id": "fortune-favours-the-brave",
+      "region": "tamil",
+      "title": {
+        "en": "Fortune Favours the Brave",
+        "ta": "துணிந்தவருக்கு அதிர்ஷ்டம் துணை",
+        "ml": "ധൈര്യശാലിയെ ഭാഗ്യം തുണയ്ക്കും"
+      },
+      "summary": {
+        "en": "A Brahmin spent twenty years building a fine house, but at night a voice in it seemed to say it was about to fall. Frightened, he moved back to his old home, and people called the new house haunted. Later a poor beggar with his family asked to shelter there through the rains, and the Brahmin let him stay free. That night the voice came again, and the beggar, who had nothing to lose, said, 'Fall down.' Gold coins poured down. When the Brahmin tried the same, the coins looked like snakes to him. He gave the house to the beggar, who shared half his gains with him.",
+        "ta": "ஓர் அந்தணன் இருபது ஆண்டுகள் எடுத்து ஒரு அழகான வீடு கட்டினான். ஆனால் இரவில் அந்த வீடு இடிந்து விழப்போவது போல ஒரு குரல் கேட்டது. பயந்து அவன் பழைய வீட்டுக்கே திரும்பினான். புது வீடு பேய் வீடு என்று ஊரார் பேசினர். மழைக்காலத்தில் ஒரு ஏழை பிச்சைக்காரன் மனைவி, இரண்டு குழந்தைகளுடன் தங்க இடம் கேட்டான். அந்தணன் வாடகை இல்லாமல் தங்க அனுமதித்தான். இரவில் அதே குரல் கேட்டது. இழப்பதற்கு எதுவும் இல்லாத பிச்சைக்காரன், 'விழுந்துவிடு' என்றான். உடனே தங்கக் காசுகள் மழை போலப் பொழிந்தன. அந்தணன் அதேபோல் சொன்னபோது, அவை அவனுக்குப் பாம்புகளாகத் தெரிந்தன. வீட்டை அவன் பிச்சைக்காரனுக்கே கொடுத்தான். பிச்சைக்காரன் தன் வருமானத்தில் பாதியை அவனுக்குக் கொடுத்தான்.",
+        "ml": "ഒരു ബ്രാഹ്മണൻ ഇരുപതു വർഷമെടുത്ത് മനോഹരമായ ഒരു വീടു പണിതു. പക്ഷേ രാത്രിയിൽ ആ വീട് ഇടിഞ്ഞുവീഴാൻ പോകുന്നു എന്നു പറയുന്നതുപോലെ ഒരു ശബ്ദം കേട്ടു. പേടിച്ച് അയാൾ പഴയ വീട്ടിലേക്കുതന്നെ മടങ്ങി. അതൊരു പ്രേതഭവനമാണെന്ന് നാട്ടുകാർ പറഞ്ഞു. മഴക്കാലത്ത് ഒരു പാവം യാചകൻ ഭാര്യയും രണ്ടു കുട്ടികളുമായി താമസിക്കാൻ ഇടം ചോദിച്ചു. വാടക വേണ്ടെന്നു പറഞ്ഞ് ബ്രാഹ്മണൻ സമ്മതിച്ചു. രാത്രി ആ ശബ്ദം വീണ്ടും കേട്ടു. നഷ്ടപ്പെടാൻ ഒന്നുമില്ലാത്ത യാചകൻ 'വീണോളൂ' എന്നു പറഞ്ഞു. പെട്ടെന്ന് സ്വർണനാണയങ്ങൾ മഴപോലെ പൊഴിഞ്ഞു. ബ്രാഹ്മണൻ അതുപോലെ പറഞ്ഞപ്പോൾ അവ അയാൾക്കു പാമ്പുകളായി തോന്നി. അയാൾ വീട് യാചകനു നൽകി. യാചകൻ കിട്ടിയതിന്റെ പകുതി ബ്രാഹ്മണനും കൊടുത്തു."
+      },
+      "moral": {
+        "en": "Luck favours those who dare.",
+        "ta": "துணிந்தவருக்கு அதிர்ஷ்டம் துணை நிற்கும்.",
+        "ml": "ധൈര്യമുള്ളവനെ ഭാഗ്യം തുണയ്ക്കും."
+      },
+      "source": {
+        "name": "Folk Tales of Tamilnadu",
+        "author": "K. A. Seethalakshmi",
+        "year": 1960,
+        "url": "https://archive.org/details/in.ernet.dli.2015.124542"
+      },
+      "rights": "plot summary written by the project author in his own words; the source text is in copyright and is not reproduced",
+      "review": "draft: Tamil and Malayalam not yet checked by a native speaker"
+    },
+    {
+      "id": "the-two-neighbours",
+      "region": "kerala",
+      "title": {
+        "en": "The Two Neighbours",
+        "ta": "இரண்டு அண்டை வீட்டார்",
+        "ml": "രണ്ട് അയൽക്കാർ"
+      },
+      "summary": {
+        "en": "Ramu was poor, and his neighbour Govind was rich but never helped him. In despair, Ramu jumped into the river, and Lord Siva appeared and gave him three coconuts. Breaking them, he wished for a house, rice fields and money, and got all three. Envious Govind did the same and got three coconuts too. As he began to break the first, a noisy beggar annoyed him, and he said, 'This is your head.' At once he grew the beggar's head, with tiny heads on his fingers and toes. He used his other two coconuts to undo the trouble, and got only laughter. The beggar was Siva himself.",
+        "ta": "ராமு ஏழை. அவனுடைய அண்டை வீட்டுக்காரன் கோவிந்த் பணக்காரன், ஆனால் ஒருபோதும் உதவ மாட்டான். மனம் நொந்த ராமு ஆற்றில் குதித்தான். அப்போது சிவபெருமான் தோன்றி மூன்று தேங்காய்களைக் கொடுத்தார். அவற்றை உடைத்து வீடு, வயல், பணம் என்று வேண்டினான். மூன்றும் கிடைத்தன. பொறாமைப்பட்ட கோவிந்தும் ஆற்றில் குதித்து மூன்று தேங்காய்கள் பெற்றான். முதல் தேங்காயை உடைக்கும்போது ஒரு பிச்சைக்காரன் சத்தம் போட்டு அவனை எரிச்சலூட்டினான். கோவிந்த், 'இது உன் தலை' என்று சொன்னான். உடனே அவனுக்குப் பிச்சைக்காரனின் தலை முளைத்தது, விரல்களிலும் சின்னத் தலைகள் தோன்றின. மற்ற இரண்டு தேங்காய்களையும் இதைச் சரிசெய்யவே செலவிட்டான். செல்வம் கிடைக்கவில்லை, எல்லோரும் சிரித்ததுதான் மிச்சம். அந்தப் பிச்சைக்காரன் சிவபெருமானே.",
+        "ml": "രാമു പാവപ്പെട്ടവനായിരുന്നു; അയൽക്കാരനായ ഗോവിന്ദ് പണക്കാരനായിരുന്നെങ്കിലും ഒരിക്കലും സഹായിച്ചില്ല. മനം നൊന്ത രാമു പുഴയിൽ ചാടി. അപ്പോൾ ശിവഭഗവാൻ പ്രത്യക്ഷപ്പെട്ട് മൂന്നു തേങ്ങ നൽകി. അവ ഉടച്ച് അയാൾ വീടും പാടവും പണവും ആഗ്രഹിച്ചു; മൂന്നും കിട്ടി. അസൂയ പൂണ്ട ഗോവിന്ദും പുഴയിൽ ചാടി മൂന്നു തേങ്ങ നേടി. ആദ്യത്തെ തേങ്ങ ഉടയ്ക്കുമ്പോൾ ഒരു യാചകൻ ബഹളം വച്ച് അയാളെ ശല്യപ്പെടുത്തി. 'ഇതു നിന്റെ തല' എന്നു ഗോവിന്ദ് പറഞ്ഞു. ഉടനെ അയാൾക്ക് യാചകന്റെ തലയും വിരലുകളിൽ കുഞ്ഞുതലകളും മുളച്ചു. ബാക്കി രണ്ടു തേങ്ങയും ഇതു ശരിയാക്കാൻ തന്നെ തീർന്നു. സമ്പത്തു കിട്ടിയില്ല; എല്ലാവരുടെയും പരിഹാസം മാത്രം ബാക്കിയായി. ആ യാചകൻ ശിവൻ തന്നെയായിരുന്നു."
+      },
+      "moral": {
+        "en": "Greed and envy bring only ridicule.",
+        "ta": "பேராசையும் பொறாமையும் ஏளனத்தையே தரும்.",
+        "ml": "അത്യാഗ്രഹവും അസൂയയും പരിഹാസം മാത്രമേ നൽകൂ."
+      },
+      "source": {
+        "name": "Folk Tales of Kerala",
+        "author": "K. Jacob",
+        "year": 1960,
+        "url": "https://archive.org/details/in.ernet.dli.2015.124538"
+      },
+      "rights": "plot summary written by the project author in his own words; the source text is in copyright and is not reproduced",
+      "review": "draft: Tamil and Malayalam not yet checked by a native speaker"
+    },
+    {
+      "id": "the-minister-who-saved-money",
+      "region": "kerala",
+      "title": {
+        "en": "The Minister Who Saved Money",
+        "ta": "பணத்தைச் சேமித்த அமைச்சர்",
+        "ml": "പണം ലാഭിച്ച മന്ത്രി"
+      },
+      "summary": {
+        "en": "Rajah Pratapavarma was fond of his barber, Ayyappen, and promised him anything he wished. The barber asked to be Prime Minister. Finding the army costly and idle, he sent the soldiers home and gathered a pack of fierce dogs to guard the land instead. A neighbouring Rajah heard of this and attacked. Ayyappen set the dogs loose, but they ignored the enemy and fought one another. The kingdom fell without a blow. Ayyappen was not worried. He said he still had his old razor, and the Rajah could use his late father's razor too.",
+        "ta": "பிரதாபவர்மன் என்ற ராஜா தன் நாவிதன் ஐயப்பனை மிகவும் விரும்பினான். 'என்ன வேண்டுமானாலும் கேள்' என்றான். நாவிதன் தன்னைப் பிரதம மந்திரி ஆக்கும்படி கேட்டான். படைக்குச் செலவு அதிகம், செய்வதற்கு வேலையும் இல்லை என்று நினைத்த ஐயப்பன், வீரர்களை அனுப்பிவிட்டு, நாட்டைக் காக்க சில கடுமையான நாய்களைச் சேர்த்தான். இதைக் கேள்விப்பட்ட பக்கத்து ராஜா படையெடுத்து வந்தான். ஐயப்பன் நாய்களை அவிழ்த்துவிட்டான். நாய்கள் எதிரியைக் கண்டுகொள்ளாமல் தங்களுக்குள்ளே சண்டை போட்டன. ஒரு அடி கூட இல்லாமல் நாடு கைவிட்டுப் போனது. ஐயப்பன் கவலைப்படவில்லை. 'என்னிடம் என் பழைய சவரக் கத்தி இருக்கிறது. தங்களுக்கு என் அப்பாவின் கத்தியைத் தருகிறேன்' என்றான்.",
+        "ml": "പ്രതാപവർമ്മ എന്ന രാജാവിന് തന്റെ ക്ഷുരകനായ അയ്യപ്പനെ വലിയ ഇഷ്ടമായിരുന്നു. 'എന്തു വേണമെങ്കിലും ചോദിച്ചോളൂ' എന്ന് രാജാവ് പറഞ്ഞു. തന്നെ പ്രധാനമന്ത്രിയാക്കണമെന്ന് ക്ഷുരകൻ ചോദിച്ചു. സൈന്യത്തിനു ചെലവ് കൂടുതലാണെന്നും ചെയ്യാൻ പണിയില്ലെന്നും കണ്ട അയ്യപ്പൻ പടയാളികളെ പിരിച്ചുവിട്ട് നാടു കാക്കാൻ കുറെ ഉഗ്രൻ നായ്ക്കളെ ശേഖരിച്ചു. ഇതറിഞ്ഞ അയൽരാജ്യത്തെ രാജാവ് പടയുമായി ആക്രമിച്ചു. അയ്യപ്പൻ നായ്ക്കളെ അഴിച്ചുവിട്ടു. അവ ശത്രുവിനെ നോക്കാതെ തമ്മിൽത്തമ്മിൽ പൊരുതി. ഒരടി പോലും കൊള്ളാതെ രാജ്യം നഷ്ടമായി. രാജാവ് ദുഃഖിച്ചെങ്കിലും അയ്യപ്പൻ കുലുങ്ങിയില്ല. 'എനിക്ക് എന്റെ പഴയ ക്ഷൗരക്കത്തിയുണ്ട്. തിരുമേനിക്ക് എന്റെ അച്ഛന്റെ കത്തി തരാം' എന്നു പറഞ്ഞു. അങ്ങനെ രണ്ടുപേർക്കും പണി ഉറപ്പായി."
+      },
+      "moral": {
+        "en": "Saving money is wise, but not at the cost of what keeps you safe.",
+        "ta": "பணத்தைச் சேமிப்பது நல்லது, ஆனால் பாதுகாப்பைப் பணயம் வைக்கக் கூடாது.",
+        "ml": "പണം ലാഭിക്കുന്നത് നല്ലതാണ്, പക്ഷേ സുരക്ഷ പണയം വച്ചല്ല."
+      },
+      "source": {
+        "name": "Folk Tales of Kerala",
+        "author": "K. Jacob",
+        "year": 1960,
+        "url": "https://archive.org/details/in.ernet.dli.2015.124538"
+      },
+      "rights": "plot summary written by the project author in his own words; the source text is in copyright and is not reproduced",
+      "review": "draft: Tamil and Malayalam not yet checked by a native speaker"
+    },
+    {
+      "id": "mudiattei",
+      "region": "kerala",
+      "title": {
+        "en": "Mudiattei",
+        "ta": "முடியட்டே",
+        "ml": "മുടിയട്ടെ"
+      },
+      "summary": {
+        "en": "A villager named his goat Mudiattei, which means 'be ruined'. When the goat went missing, he wandered about calling its name. At a house where a child had died, his shout upset the mourners, and they told him to speak words of sympathy. At the next house, which was on fire, he offered sympathy, and was told to fetch water instead. Then he came upon a potter baking pots over a fire and poured water on it. The angry potter said he should have tapped the pots and offered to buy one. So the villager tapped a bald gentleman's head and asked its price. He got tapped back, rather hard.",
+        "ta": "ஒரு கிராமத்தான் தன் ஆட்டுக்கு 'முடியட்டே' என்று பெயர் வைத்தான். அதற்கு 'அழிந்து போகட்டும்' என்று பொருள். ஆடு காணாமல் போனபோது அவன் அந்தப் பெயரைக் கூவிக்கொண்டு தேடி அலைந்தான். குழந்தை இறந்த வீட்டில் அவன் கூவ, துக்கத்தில் இருந்தவர்கள் கோபமடைந்து, ஆறுதல் சொல்லக் கற்றுக் கொடுத்தனர். அடுத்து தீப்பிடித்த வீட்டில் ஆறுதல் சொன்னான். 'தண்ணீர் கொண்டுவா' என்று திட்டினார்கள். பிறகு சூளையில் பானை சுடும் குயவனைப் பார்த்து, தீயின் மேல் தண்ணீர் ஊற்றினான். குயவன், 'பானையைத் தட்டிப் பார்த்து, விலை கேட்டிருக்கலாமே' என்றான். அதனால் ஒரு வழுக்கைத் தலை மனிதரின் தலையைத் தட்டி, 'இது எவ்வளவு?' என்று கேட்டான். பதிலுக்கு அவர் அவனைப் பலமாகவே தட்டினார்.",
+        "ml": "ഒരു നാട്ടുമ്പുറത്തുകാരൻ തന്റെ ആടിന് 'മുടിയട്ടെ' എന്നു പേരിട്ടു. 'നശിച്ചുപോകട്ടെ' എന്നാണ് അതിന്റെ അർഥം. ആടിനെ കാണാതായപ്പോൾ ആ പേരു വിളിച്ചുകൊണ്ട് അയാൾ അന്വേഷിച്ചുനടന്നു. കുട്ടി മരിച്ച ഒരു വീട്ടിൽ അയാൾ അങ്ങനെ വിളിച്ചപ്പോൾ ദുഃഖിതർ ദേഷ്യപ്പെട്ട് ആശ്വാസവാക്കു പറയാൻ പഠിപ്പിച്ചു. അടുത്തതായി തീപിടിച്ച ഒരു വീട്ടിൽ അയാൾ ആശ്വാസവാക്കു പറഞ്ഞു; 'വെള്ളം കൊണ്ടുവാ' എന്ന് അവർ ശകാരിച്ചു. പിന്നെ ചൂളയിൽ കലം ചുടുന്ന കുശവനെ കണ്ട് തീയിൽ വെള്ളം ഒഴിച്ചു. 'കലം തട്ടിനോക്കി വില ചോദിക്കാമായിരുന്നില്ലേ' എന്നു കുശവൻ പറഞ്ഞു. അതുകൊണ്ട് ഒരു കഷണ്ടിക്കാരന്റെ തലയിൽ തട്ടി 'ഇതിന് എന്താ വില?' എന്നു ചോദിച്ചു. അദ്ദേഹം തിരിച്ച് നല്ല ശക്തിയിൽത്തന്നെ തട്ടി."
+      },
+      "moral": {
+        "en": "Say the right words at the right moment.",
+        "ta": "சரியான நேரத்தில் சரியான வார்த்தையைச் சொல்ல வேண்டும்.",
+        "ml": "ശരിയായ വാക്ക് ശരിയായ സമയത്തു പറയണം."
+      },
+      "source": {
+        "name": "Folk Tales of Kerala",
+        "author": "K. Jacob",
+        "year": 1960,
+        "url": "https://archive.org/details/in.ernet.dli.2015.124538"
+      },
+      "rights": "plot summary written by the project author in his own words; the source text is in copyright and is not reproduced",
+      "review": "draft: Tamil and Malayalam not yet checked by a native speaker"
+    },
+    {
+      "id": "the-biter-bit",
+      "region": "kerala",
+      "title": {
+        "en": "The Biter Bit",
+        "ta": "திருடன் ஏமாந்த கதை",
+        "ml": "കള്ളൻ കുടുങ്ങിയ കഥ"
+      },
+      "summary": {
+        "en": "A burglar heard that Maria, a woman in a nearby village, was a miser who must have hoarded a lot of money. One night he climbed onto her thatched roof and began to remove the palm leaves. Maria heard the noise and guessed what was happening. She called out loudly to her son Avaran, asking whether the money box was safe up in the ceiling. Delighted, the burglar jumped down onto the ceiling. But the house had no ceiling, and he crashed some twenty feet to the floor, badly hurt. He was handed over to the police, and got some months of rest.",
+        "ta": "பக்கத்து கிராமத்தில் மரியா என்ற கஞ்சப் பெண்மணி நிறையப் பணம் சேர்த்து வைத்திருக்கிறாள் என்று ஒரு திருடன் கேள்விப்பட்டான். ஓர் இரவு அவள் வீட்டுக் கூரையில் ஏறி, ஓலையை விலக்கத் தொடங்கினான். சத்தம் கேட்டு மரியா நடப்பதை ஊகித்தாள். உரத்த குரலில் தன் மகன் அவரானை அழைத்து, 'பணப்பெட்டி மேலே பரணில் பத்திரமாக இருக்கிறதா?' என்று கேட்டாள். திருடன் மகிழ்ந்து, பரண் என்று நினைத்த இடத்தில் குதித்தான். வீட்டில் பரணே இல்லை. இருபது அடி கீழே தரையில் விழுந்து பலத்த அடிபட்டான். அவன் காவலரிடம் ஒப்படைக்கப்பட்டான். சில மாதங்கள் ஓய்வெடுக்க வேண்டியதாயிற்று. கஞ்சப் பெண்மணியின் அறிவுக்கு முன் அவனுடைய சாமர்த்தியம் பலிக்கவில்லை.",
+        "ml": "അടുത്ത ഗ്രാമത്തിലെ മറിയ എന്ന പിശുക്കി ധാരാളം പണം സൂക്ഷിച്ചിട്ടുണ്ടെന്ന് ഒരു കള്ളൻ കേട്ടു. ഒരു രാത്രി അയാൾ അവരുടെ വീടിന്റെ മേൽക്കൂരയിൽ കയറി ഓല നീക്കാൻ തുടങ്ങി. ശബ്ദം കേട്ട മറിയ കാര്യം ഊഹിച്ചു. ഉറക്കെ മകൻ അവരാനെ വിളിച്ച്, 'പണപ്പെട്ടി മുകളിലെ തട്ടിൽ സുരക്ഷിതമല്ലേ?' എന്നു ചോദിച്ചു. കള്ളൻ സന്തോഷിച്ച് തട്ടെന്നു കരുതിയ സ്ഥലത്തേക്കു ചാടി. വീട്ടിൽ തട്ടേ ഇല്ലായിരുന്നു. ഇരുപതടി താഴെ തറയിൽ വീണ് അയാൾക്കു സാരമായി പരിക്കേറ്റു. പിന്നെ പൊലീസിനു കൈമാറി; കുറെ മാസം വിശ്രമിക്കേണ്ടിവന്നു. ആ പിശുക്കിയുടെ ബുദ്ധിക്കു മുന്നിൽ കള്ളന്റെ സാമർത്ഥ്യം പാഴായി. ധനം തേടിയെത്തിയ അയാൾക്കു കിട്ടിയത് വീഴ്ചയും ശിക്ഷയുമായിരുന്നു."
+      },
+      "moral": {
+        "en": "A would-be cheat can be outwitted by a calmer mind.",
+        "ta": "ஏமாற்ற நினைப்பவன், புத்திசாலியிடம் தானே ஏமாறுவான்.",
+        "ml": "ചതിക്കാൻ നോക്കുന്നവൻ കൂടുതൽ ബുദ്ധിയുള്ളവനോടു തോൽക്കും."
+      },
+      "source": {
+        "name": "Folk Tales of Kerala",
+        "author": "K. Jacob",
+        "year": 1960,
+        "url": "https://archive.org/details/in.ernet.dli.2015.124538"
+      },
+      "rights": "plot summary written by the project author in his own words; the source text is in copyright and is not reproduced",
+      "review": "draft: Tamil and Malayalam not yet checked by a native speaker"
+    },
+    {
+      "id": "the-mirror",
+      "region": "kerala",
+      "title": {
+        "en": "The Mirror",
+        "ta": "கண்ணாடி",
+        "ml": "കണ്ണാടി"
+      },
+      "summary": {
+        "en": "A man brought home a small mirror, something nobody had seen before. Having never seen his own face, he thought the face in it was his late father's, whom he resembled, and he kept it in his box to gaze at morning and evening. His wife found it one day, looked in, and saw a woman's face. Furious, she refused him his coffee and accused him. He insisted it was his father's picture and showed her. They both looked and saw two faces, his and hers. Slowly they understood that the mirror showed only their own faces. She was delighted, and gave him a kiss.",
+        "ta": "ஒருவன் ஒரு சிறிய கண்ணாடியைக் கொண்டுவந்தான். அந்தக் காலத்தில் யாரும் அதைப் பார்த்ததில்லை. தன் முகத்தைத் தானே பார்த்ததில்லை என்பதால், அதில் தெரிந்தது இறந்துபோன தன் தந்தையின் முகம் என்று நினைத்தான், ஏனெனில் அவன் தந்தையைப் போலவே இருந்தான். அதைப் பெட்டியில் வைத்துக்கொண்டு காலையிலும் மாலையிலும் பார்த்தான். ஒருநாள் அவன் மனைவி பெட்டியைத் திறந்து கண்ணாடியில் பார்த்தாள், ஒரு பெண்ணின் முகம் தெரிந்தது. கோபத்தில் கணவனுக்குக் காப்பி தரவில்லை. அவன் அது தந்தையின் படம் என்று சொல்லிக் காட்டினான். இருவரும் பார்த்தபோது இரண்டு முகங்கள் தெரிந்தன. கொஞ்ச நேரத்தில் அது தங்கள் முகங்களையே காட்டுகிறது என்று புரிந்தது. அவள் மகிழ்ந்து அவனுக்கு முத்தம் கொடுத்தாள்.",
+        "ml": "ഒരാൾ ഒരു ചെറിയ കണ്ണാടി കൊണ്ടുവന്നു. അന്ന് ആരും അങ്ങനെയൊന്നു കണ്ടിട്ടില്ല. സ്വന്തം മുഖം മുമ്പു കണ്ടിട്ടില്ലാത്തതിനാൽ, അതിൽ കാണുന്നത് തന്റെ മരിച്ചുപോയ അച്ഛന്റെ മുഖമാണെന്ന് അയാൾ കരുതി; അച്ഛനെപ്പോലെയായിരുന്നു അയാൾ. പെട്ടിയിൽ സൂക്ഷിച്ച് രാവിലെയും വൈകിട്ടും അതിൽ നോക്കി. ഒരു ദിവസം ഭാര്യ പെട്ടി തുറന്ന് കണ്ണാടിയിൽ നോക്കിയപ്പോൾ ഒരു സ്ത്രീയുടെ മുഖം കണ്ടു. ദേഷ്യം കൊണ്ട് അവൾ ഭർത്താവിനു കാപ്പി കൊടുത്തില്ല. ഇത് അച്ഛന്റെ ചിത്രമാണെന്നു പറഞ്ഞ് അയാൾ അതു കാണിച്ചു. രണ്ടുപേരും നോക്കിയപ്പോൾ രണ്ടു മുഖങ്ങൾ കണ്ടു. അല്പം കഴിഞ്ഞ് അത് തങ്ങളുടെ മുഖങ്ങൾ തന്നെയാണെന്ന് അവർക്കു മനസ്സിലായി. അവൾ സന്തോഷിച്ച് അയാൾക്ക് ഒരു ഉമ്മ കൊടുത്തു."
+      },
+      "moral": {
+        "en": "Things are not always what they seem, so look closely before judging.",
+        "ta": "எல்லாம் தோன்றுவது போல இருப்பதில்லை, ஆராய்ந்த பின் முடிவு செய்ய வேண்டும்.",
+        "ml": "കാണുന്നതെല്ലാം കാണുന്നതുപോലെയല്ല; സൂക്ഷിച്ചുനോക്കിയിട്ടേ വിധിക്കാവൂ."
+      },
+      "source": {
+        "name": "Folk Tales of Kerala",
+        "author": "K. Jacob",
+        "year": 1960,
+        "url": "https://archive.org/details/in.ernet.dli.2015.124538"
+      },
+      "rights": "plot summary written by the project author in his own words; the source text is in copyright and is not reproduced",
+      "review": "draft: Tamil and Malayalam not yet checked by a native speaker"
+    },
+    {
+      "id": "the-elephant",
+      "region": "kerala",
+      "title": {
+        "en": "The Elephant",
+        "ta": "யானை",
+        "ml": "ആന"
+      },
+      "summary": {
+        "en": "A man in the forest was chased by two wild elephants and climbed an anjili tree. The male elephant tried to pull it down, and when it could not, it filled its trunk at a stream and sprayed the roots again and again, hoping the tree would topple. The female stayed on guard below. The man knew he was in great danger, so he threw ripe anjili fruits down for her, first near the tree and then farther and farther away. She could not resist and wandered after them. When she was far enough, the man slipped down from the tree and ran away.",
+        "ta": "காட்டில் இரண்டு காட்டு யானைகள் ஒருவனைத் துரத்தின. அவன் ஒரு அஞ்சிலி மரத்தில் ஏறிக்கொண்டான். ஆண் யானை மரத்தைப் பிடுங்க முயன்றது, முடியவில்லை. பிறகு ஓடைக்குப் போய்த் தும்பிக்கையில் தண்ணீர் எடுத்து வந்து, மரத்தின் வேரில் மீண்டும் மீண்டும் பீய்ச்சியது. பெண் யானை மரத்தடியில் காவல் இருந்தது. மரம் விழுந்துவிடும் என்று பயந்த அவன், பழுத்த அஞ்சிலிப் பழங்களைக் கீழே போட்டான். முதலில் மரத்தின் அருகே, பிறகு தூரம் தூரமாக. பெண் யானை ஆசையை அடக்க முடியாமல் பழங்களைத் தின்றபடி விலகிப் போனது. அது தூரம் போனதும் அவன் மெல்ல இறங்கி, காட்டுக்குள் வேகமாக ஓடிப் பிழைத்தான். ஆண் யானையின் முயற்சி வீணானது.",
+        "ml": "കാട്ടിൽ രണ്ടു കാട്ടാനകൾ ഒരാളെ ഓടിച്ചു. അയാൾ ഒരു ആഞ്ഞിലിമരത്തിൽ കയറി. ആൺ ആന മരം പിഴുതെടുക്കാൻ ശ്രമിച്ചിട്ടു നടന്നില്ല. പിന്നെ അരുവിയിൽ പോയി തുമ്പിക്കൈയിൽ വെള്ളം നിറച്ചുകൊണ്ടുവന്ന് മരത്തിന്റെ വേരിൽ വീണ്ടും വീണ്ടും ചീറ്റി. പിടിയാന മരച്ചുവട്ടിൽ കാവൽ നിന്നു. മരം വീഴുമെന്നു ഭയന്ന അയാൾ പഴുത്ത ആഞ്ഞിലിച്ചക്കകൾ താഴേക്ക് ഇട്ടു, ആദ്യം മരത്തിനടുത്ത്, പിന്നെ അകലെ അകലെ. പിടിയാനയ്ക്ക് ആശ ഒതുക്കാനായില്ല; ചക്കകൾ തിന്നുതിന്ന് അകന്നുപോയി. അവൾ ദൂരെയെത്തിയപ്പോൾ അയാൾ പതുക്കെ മരത്തിൽ നിന്ന് ഇറങ്ങി, കാട്ടിലൂടെ വേഗത്തിൽ ഓടി രക്ഷപ്പെട്ടു. ആൺ ആനയുടെ ശ്രമം വെറുതെയായി. ഒടുവിൽ ബുദ്ധികൊണ്ട് മാത്രം അയാൾ സ്വന്തം ജീവൻ രക്ഷിച്ചു."
+      },
+      "moral": {
+        "en": "In danger, a clear head and a clever plan can save a life.",
+        "ta": "ஆபத்தில் தெளிந்த புத்தி உயிரைக் காக்கும்.",
+        "ml": "അപകടത്തിൽ തെളിഞ്ഞ ബുദ്ധി ജീവൻ രക്ഷിക്കും."
+      },
+      "source": {
+        "name": "Folk Tales of Kerala",
+        "author": "K. Jacob",
+        "year": 1960,
+        "url": "https://archive.org/details/in.ernet.dli.2015.124538"
+      },
+      "rights": "plot summary written by the project author in his own words; the source text is in copyright and is not reproduced",
+      "review": "draft: Tamil and Malayalam not yet checked by a native speaker"
+    },
+    {
+      "id": "the-two-servants",
+      "region": "kerala",
+      "title": {
+        "en": "The Two Servants",
+        "ta": "இரண்டு வேலைக்காரர்கள்",
+        "ml": "രണ്ടു വേലക്കാർ"
+      },
+      "summary": {
+        "en": "Gopalan and Krishnan joined the Rajah's service together, but Gopalan rose to a high post while Krishnan stayed a menial. Krishnan complained to the Rajah. Just then a bullock cart passed, and the Rajah told him to find out who was in it. Krishnan ran back and forth five times, bringing one answer at a time: the names, the destination, the reason, and so on. Later the Rajah sent Gopalan to ask about another cart. He went once and returned with the names, the destination, the purpose, and even a debt case of three thousand rupees. 'Now do you see the difference?' asked the Rajah. Krishnan agreed.",
+        "ta": "கோபாலனும் கிருஷ்ணனும் ஒரே சமயத்தில் ராஜாவிடம் வேலைக்குச் சேர்ந்தனர். கோபாலனுக்குப் பதவி உயர்வு கிடைத்தது. கிருஷ்ணன் சாதாரண வேலைக்காரனாகவே இருந்தான். அவன் ராஜாவிடம் முறையிட்டான். அப்போது ஒரு மாட்டுவண்டி போனது. அதில் யார் இருக்கிறார்கள் என்று பார்த்து வரச் சொன்னார் ராஜா. கிருஷ்ணன் ஐந்து முறை ஓடி ஓடி வந்தான், ஒவ்வொரு முறையும் ஒரு தகவல் மட்டும் கொண்டுவந்தான்: பெயர், போகும் ஊர், காரணம் என்று. பிறகு வந்த இன்னொரு வண்டியைப் பற்றி விசாரிக்கக் கோபாலனை அனுப்பினார். அவன் ஒரே முறை போய், பெயர், ஊர், காரணம், மூவாயிரம் ரூபாய் கடன் வழக்கு வரை எல்லாம் அறிந்து வந்தான். 'இப்போது வித்தியாசம் தெரிகிறதா?' என்றார் ராஜா. கிருஷ்ணன் ஒப்புக்கொண்டான்.",
+        "ml": "ഗോപാലനും കൃഷ്ണനും ഒരേ സമയത്താണ് രാജാവിന്റെ സേവനത്തിൽ ചേർന്നത്. ഗോപാലനു സ്ഥാനക്കയറ്റം കിട്ടി; കൃഷ്ണൻ സാധാരണ വേലക്കാരനായിത്തന്നെ തുടർന്നു. അയാൾ രാജാവിനോടു പരാതി പറഞ്ഞു. അപ്പോൾ ഒരു കാളവണ്ടി കടന്നുപോയി. അതിൽ ആരാണെന്ന് അറിഞ്ഞുവരാൻ രാജാവ് പറഞ്ഞു. കൃഷ്ണൻ അഞ്ചുതവണ ഓടിപ്പോയി വന്നു, ഓരോ തവണയും ഓരോ വിവരം മാത്രം കൊണ്ടുവന്നു: പേര്, പോകുന്ന സ്ഥലം, കാരണം എന്നിങ്ങനെ. പിന്നീട് മറ്റൊരു വണ്ടിയെപ്പറ്റി അന്വേഷിക്കാൻ രാജാവ് ഗോപാലനെ അയച്ചു. അയാൾ ഒരിക്കൽ മാത്രം പോയി, പേര്, സ്ഥലം, കാരണം, മൂവായിരം രൂപയുടെ കടക്കേസ് വരെ അറിഞ്ഞുവന്നു. 'ഇപ്പോൾ വ്യത്യാസം മനസ്സിലായോ?' എന്നു രാജാവ് ചോദിച്ചു. കൃഷ്ണൻ സമ്മതിച്ചു. രാജാവ് പറഞ്ഞതു ശരിയാണെന്ന് അയാൾക്കു ബോധ്യമായി."
+      },
+      "moral": {
+        "en": "Thinking ahead and finishing a task fully is what earns trust and promotion.",
+        "ta": "முன்யோசனையும் முழுமையான வேலையுமே நம்பிக்கையையும் பதவி உயர்வையும் தரும்.",
+        "ml": "മുൻകരുതലും പൂർണമായ ജോലിയുമാണ് വിശ്വാസവും സ്ഥാനക്കയറ്റവും നേടിത്തരുന്നത്."
+      },
+      "source": {
+        "name": "Folk Tales of Kerala",
+        "author": "K. Jacob",
+        "year": 1960,
+        "url": "https://archive.org/details/in.ernet.dli.2015.124538"
+      },
+      "rights": "plot summary written by the project author in his own words; the source text is in copyright and is not reproduced",
+      "review": "draft: Tamil and Malayalam not yet checked by a native speaker"
+    }
+  ]
+}

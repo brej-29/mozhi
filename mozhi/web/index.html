@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; worker-src 'self' blob:; connect-src 'self' https://geocoding-api.open-meteo.com https://api.open-meteo.com https://openrouter.ai https://api.groq.com https://api.openai.com https://generativelanguage.googleapis.com https://api.mistral.ai https://api.cerebras.ai">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mozhi, the assistant that checks before it acts</title>
+<meta name="description" content="A Tamil, Malayalam and English voice assistant that picks a tool in milliseconds, declines what it cannot do, and speaks to you at the level of respect you choose.">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23171B26'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23F0B04A'/%3E%3C/svg%3E">
+<link rel="canonical" href="https://brej-29.github.io/mozhi/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="Brejesh Balakrishnan">
+<meta name="keywords" content="Tamil voice assistant, Malayalam voice assistant, Tanglish, Manglish, on-device voice assistant, intent classification, slot filling, ONNX, Whisper, open source, respect meter">
+<meta name="theme-color" content="#0e121b">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Mozhi">
+<meta property="og:title" content="Mozhi: a Tamil, Malayalam and English voice assistant that checks before it acts">
+<meta property="og:description" content="A 2 ms trained router instead of an LLM prompt: 0.941 macro-F1, 0.8% false actions, declines what it cannot do, and speaks at the respect level you choose. Runs in your browser.">
+<meta property="og:url" content="https://brej-29.github.io/mozhi/">
+<meta property="og:image" content="https://brej-29.github.io/mozhi/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Mozhi voice assistant showing how its router read a Tanglish weather request">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mozhi: a Tamil, Malayalam and English voice assistant">
+<meta name="twitter:description" content="A 2 ms trained router instead of an LLM prompt, with a respect meter. Open source, runs in the browser.">
+<meta name="twitter:image" content="https://brej-29.github.io/mozhi/og.png">
+<link rel="alternate" type="text/plain" href="llms.txt" title="Summary for language models">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Mozhi","alternateName":["Mozhi voice assistant","Jarvis voice agent","Koottu"],"url":"https://brej-29.github.io/mozhi/","image":"https://brej-29.github.io/mozhi/og.png","applicationCategory":"UtilitiesApplication","operatingSystem":"Web browser, Windows","inLanguage":["en","ta","ml"],"description":"A free open-source voice assistant for Tamil, Malayalam and English. A small trained router (fine-tuned MiniLM, 23 MB int8 ONNX) picks the right tool in about 2 ms and declines requests it cannot do. A five-level respect meter changes how it addresses the user.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"license":"https://opensource.org/license/mit","isAccessibleForFree":true,"sameAs":["https://github.com/brej-29/mozhi"],"author":{"@type":"Person","name":"Brejesh Balakrishnan","url":"https://github.com/brej-29"}}
+</script>
+<link rel="stylesheet" href="app.css">
+</head>
+<body data-state="idle">
+<a class="skip" href="#main">Skip to content</a>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="top">
+  <a class="brand" href="#talk" aria-label="Mozhi home"><span class="dot" aria-hidden="true"></span><span id="brand-name">Mozhi</span></a>
+  <nav aria-label="Sections">
+    <a href="#talk" data-tab="talk">Talk</a>
+    <a href="#evidence" data-tab="evidence">Evidence</a>
+  </nav>
+  <p class="status" id="status" role="status">Starting the router</p>
+</header>
+
+<main id="main">
+  <!-- TALK -->
+  <section id="talk" class="view" aria-labelledby="talk-h">
+    <div class="talk-grid">
+      <div class="stage">
+        <h1 id="talk-h" class="sr">Talk to Mozhi</h1>
+        <button type="button" id="mic" class="orb-btn" aria-pressed="false" aria-label="Talk to Mozhi" title="Click to talk, click again to stop">
+          <canvas id="orb" width="360" height="360" aria-hidden="true"></canvas>
+          <svg class="mic-ico" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M12 15a3.5 3.5 0 0 0 3.5-3.5v-6a3.5 3.5 0 0 0-7 0v6A3.5 3.5 0 0 0 12 15Zm6-3.5a1 1 0 1 0-2 0 4 4 0 0 1-8 0 1 1 0 1 0-2 0 6 6 0 0 0 5 5.91V20H9.5a1 1 0 1 0 0 2h5a1 1 0 1 0 0-2H13v-2.59A6 6 0 0 0 18 11.5Z"/></svg>
+        </button>
+        <p class="caption" id="caption" aria-live="polite">Ask for something. Mozhi decides whether to do it.</p>
+
+
+        <div class="mozhi-bar" id="meter" role="group" aria-label="Language and respect">
+          <label class="m-lang">
+            <span id="l-lang">Language</span>
+            <select id="lang"></select>
+          </label>
+          <label class="m-respect">
+            <span id="l-respect">Respect</span>
+            <input id="respect" type="range" min="0" max="4" step="1" value="2" aria-describedby="respect-name">
+          </label>
+          <label class="m-gender">
+            <span id="l-gender">Address me as</span>
+            <select id="gender"></select>
+          </label>
+          <output id="respect-name" for="respect"></output>
+        </div>
+
+        <form id="form" class="say" autocomplete="off">
+          <label class="field">
+            <span class="sr">Type a request</span>
+            <input id="text" type="text" placeholder="What is the weather in Lisbon?" maxlength="300" enterkeyhint="send">
+            <kbd aria-hidden="true">/</kbd>
+          </label>
+          <button class="send" type="submit" id="send-btn">Send</button>
+        </form>
+        <p class="hint" id="voice-hint"></p><p class="hint" id="tts-note"></p>
+
+        <div class="tries" id="tries" aria-label="Examples to try"></div>
+
+        <details class="prefs">
+          <summary>Preferences and saved items</summary>
+          <label class="inline">Default city <input id="city" type="text" placeholder="used when you do not say one" maxlength="60"></label>
+          <label class="inline check"><input id="native" type="checkbox"> Reply in Tamil or Malayalam script (draft wording)</label>
+          <label class="inline check"><input id="speak" type="checkbox"> Read replies aloud</label>
+          <label class="inline">Voice <select id="voice" aria-label="Voice for spoken replies"></select></label>
+          <label class="inline">Speed <input id="rate" type="range" min="0.8" max="1.3" step="0.05" value="1" aria-label="Speaking speed"><button type="button" id="hear" class="linkish">Hear it</button></label>
+          <div id="byok" class="byok" hidden>
+            <h2>Use your own model</h2>
+            <p>General questions need a language model. Pick a provider and paste your own key. It is kept in this tab only, forgotten when you close it, and sent only to that provider. Use a key with a spend limit.</p>
+            <label class="inline">Provider <select id="byok-provider"></select></label>
+            <label class="inline">Model <input id="byok-model" type="text" placeholder="a model id from your provider" maxlength="120" autocomplete="off"></label>
+            <label class="inline">Key <input id="byok-key" type="password" placeholder="paste your API key" maxlength="300" autocomplete="off"></label>
+                        <div class="inline"><button type="button" id="byok-save" class="send small">Save</button><button type="button" id="byok-forget" class="linkish">Forget key</button><span id="byok-msg" class="meta" role="status"></span></div>
+          </div>
+          <div id="saved" class="saved" aria-live="polite"></div>
+        </details>
+      </div>
+
+      <div class="feed-wrap">
+        <div class="feed-head">
+          <h2>Decisions</h2>
+          <button type="button" id="clear" class="linkish" hidden>Clear</button>
+        </div>
+        <ol id="feed" class="feed"></ol>
+        <div id="empty" class="empty">
+          <div class="ghost slip is-no" aria-hidden="true">
+            <p class="said">play some jazz in the kitchen</p>
+            <ol class="trace" data-stop="2">
+              <li class="on"><b></b><span>Heard</span></li>
+              <li class="on"><b></b><span>Routed</span></li>
+              <li class="stop"><b></b><span>Not done</span></li>
+            </ol>
+            <p class="reply">That sounds like a request to play music, which I cannot do.</p>
+          </div>
+          <p>Every request becomes a decision slip: what was heard, how the router read it, whether anything was done, and how long each step took.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVIDENCE -->
+  <section id="evidence" class="view" aria-labelledby="ev-h" hidden>
+    <div class="ev" id="ev-root">
+      <h1 id="ev-h">Does a voice assistant need an LLM to decide what to do?</h1>
+      <p class="lede">Loading measurements.</p>
+    </div>
+  </section>
+</main>
+
+
+<section id="about" class="about" aria-label="About Mozhi">
+  <h2>What is Mozhi?</h2>
+  <p>Mozhi (மொழி, മൊഴി: "speech" or "language" in Tamil and Malayalam) is a free, open-source voice assistant for Tamil, Malayalam and English. It checks before it acts: a small trained router decides in about 2 milliseconds whether to check the weather, set a reminder, save a note, tell a story, recite a verse or read the news, and it declines requests it cannot do.</p>
+  <h2>Does it need a large language model?</h2>
+  <p>Not to choose what to do. On 2,805 test requests the router scored 0.941 action macro-F1 with 0.8% false actions, against 0.879 for the best LLM prompt on a 539-request subset, and it is roughly 500 to 1,500 times faster. A language model is only used for open questions, through your own key or a local gateway.</p>
+  <h2>How does the respect meter work?</h2>
+  <p>Five levels change how Mozhi addresses you: from a close friend (da, di) through family respect (anna, akka, chetta, chechi) to polite and deferential forms (sir, ayya, muthalali), together with the polite or informal "you".</p>
+  <h2>Which languages work today?</h2>
+  <p>English is measured and finished. Tamil and Malayalam script are routed by a first multilingual model that scores 0.82 and 0.81, below its 0.85 target, so it is still being improved. Tanglish and Manglish requests work best when mixed with English words. The Tamil and Malayalam wording is a draft awaiting native-speaker review.</p>
+  <p><a href="https://github.com/brej-29/mozhi">Source code and full evaluation on GitHub</a></p>
+</section>
+
+<footer class="foot">
+  <p>Every number here comes from <code>bench/results</code> in the repository and is reproducible with <code>make eval</code>. Data: MASSIVE (CC BY 4.0, Amazon) and SLURP recordings.</p>
+</footer>
+
+<script src="config.js"></script>
+<script src="app.js" type="module"></script>
+</body>
+</html>

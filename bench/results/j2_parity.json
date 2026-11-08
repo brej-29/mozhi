@@ -1,0 +1,20 @@
+{
+  "checked": 1800,
+  "mismatches": 0,
+  "token_ids_match": true,
+  "browser_tool_agreement": "unverified: onnxruntime-web assets were not available in this checkout",
+  "by_language": {
+    "en": {
+      "checked": 600,
+      "mismatches": 0
+    },
+    "ta": {
+      "checked": 600,
+      "mismatches": 0
+    },
+    "ml": {
+      "checked": 600,
+      "mismatches": 0
+    }
+  }
+}

@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 
-from jarvis.server import app
+from mozhi.server import app
 
 
 def test_routes_and_declines():
@@ -20,9 +20,9 @@ def test_foreign_host_rejected():
 
 
 def test_stream_sends_route_first_then_tokens(monkeypatch):
-    from jarvis import llm
+    from mozhi import llm
 
-    async def fake(text, history=None, client=None):
+    async def fake(text, history=None, client=None, system=""):
         for piece in ("Leonardo", " da Vinci."):
             yield piece
 

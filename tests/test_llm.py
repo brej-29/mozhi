@@ -3,7 +3,7 @@ import json
 
 import httpx
 
-from jarvis import llm
+from mozhi import llm
 
 
 def sse(*pieces, usage=None):
@@ -25,10 +25,10 @@ def collect(client):
 
 
 def setup(monkeypatch, tmp_path, **env):
-    monkeypatch.setenv("JARVIS_SPEND_FILE", str(tmp_path / "spend.json"))
+    monkeypatch.setenv("MOZHI_SPEND_FILE", str(tmp_path / "spend.json"))
     llm._MEM.clear()
     for k in ("LLM_ENDPOINT", "LLM_API_KEY", "LLM_MODEL", "MONTHLY_BUDGET_USD", "LLM_PRICE_IN_PER_M",
-              "LLM_PRICE_OUT_PER_M", "JARVIS_LLM_BASE_URL", "JARVIS_LLM_MODEL", "JARVIS_LLM_API_KEY"):
+              "LLM_PRICE_OUT_PER_M", "MOZHI_LLM_BASE_URL", "MOZHI_LLM_MODEL", "MOZHI_LLM_API_KEY"):
         monkeypatch.delenv(k, raising=False)
     for k, v in env.items():
         monkeypatch.setenv(k, v)
@@ -90,7 +90,7 @@ def test_unreadable_ledger_fails_closed(monkeypatch, tmp_path):
 
 def test_unwritable_ledger_fails_closed(monkeypatch, tmp_path):
     setup(monkeypatch, tmp_path, LLM_ENDPOINT="http://x/v1")
-    monkeypatch.setenv("JARVIS_SPEND_FILE", str(tmp_path / "missing_dir" / "spend.json"))
+    monkeypatch.setenv("MOZHI_SPEND_FILE", str(tmp_path / "missing_dir" / "spend.json"))
 
     def handler(request):
         raise AssertionError("must not call the model")
@@ -113,10 +113,10 @@ def test_dotenv_ignores_the_working_directory(monkeypatch, tmp_path):
     setup(monkeypatch, tmp_path)
     (tmp_path / ".env").write_text("LLM_ENDPOINT=http://evil.example/v1\n")
     monkeypatch.chdir(tmp_path)  # a .env in the launch folder is not read ...
-    monkeypatch.setenv("JARVIS_ENV_FILE", str(tmp_path / "elsewhere" / ".env"))  # (the app's own file is somewhere else)
+    monkeypatch.setenv("MOZHI_ENV_FILE", str(tmp_path / "elsewhere" / ".env"))  # (the app's own file is somewhere else)
     llm.load_dotenv()
     assert llm.settings()["endpoint"] == ""
-    monkeypatch.setenv("JARVIS_ENV_FILE", str(tmp_path / ".env"))  # ... unless it is named explicitly
+    monkeypatch.setenv("MOZHI_ENV_FILE", str(tmp_path / ".env"))  # ... unless it is named explicitly
     llm.load_dotenv()
     assert "evil.example" in llm.settings()["endpoint"]
     monkeypatch.delenv("LLM_ENDPOINT")

@@ -50,7 +50,7 @@ def notes(seed: int = 0, per_content: int = 4):
             for _ in range(per_content):
                 text = " ".join(x for x in (rng.choice(TRIGGERS), rng.choice(LINKS), c) if x)
                 if rng.random() < 0.15:
-                    text = "jarvis " + text
+                    text = "mozhi " + text
                 w = text.split()
                 rows.append((w, ["O"] * len(w), "note_save"))
         out.append(rows)
@@ -67,11 +67,11 @@ def wake_word(rows, rng, p: float = 0.12):
     for w, t, i in rows:
         r = rng.random()
         if r < p / 2:
-            out.append((["jarvis"] + w, ["O"] + t, i))
+            out.append((["mozhi"] + w, ["O"] + t, i))
         elif r < p:
-            out.append((["hey", "jarvis"] + w, ["O", "O"] + t, i))
+            out.append((["hey", "mozhi"] + w, ["O", "O"] + t, i))
         elif r < p * 1.5:
-            out.append((w + ["jarvis"], t + ["O"], i))
+            out.append((w + ["mozhi"], t + ["O"], i))
         else:
             out.append((w, t, i))
     return out

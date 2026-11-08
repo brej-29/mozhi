@@ -17,4 +17,6 @@ models/**/*.fp32.onnx
 bench/results/*_th*.preds.jsonl
 .site_build/
 .vendor_cache/
+.mozhi_spend.json
+.hf-cache-j2/
 .jarvis_spend.json

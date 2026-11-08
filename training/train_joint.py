@@ -18,8 +18,8 @@ import torch
 from torch import nn
 from transformers import AutoModel, AutoTokenizer
 
-from jarvis.bench import data
-from jarvis.routers.joint import SLOT_TAGS, clean
+from mozhi.bench import data
+from mozhi.routers.joint import SLOT_TAGS, clean
 from training import synth
 
 BACKBONE = "nreimers/MiniLM-L6-H384-uncased"
@@ -126,7 +126,7 @@ def main():
     ap.add_argument("--lr", type=float, default=1e-4)
     ap.add_argument("--bs", type=int, default=64)
     ap.add_argument("--out", default="models/joint")
-    ap.add_argument("--asr-train", help="Whisper transcripts of SLURP train recordings (see jarvis.bench.asr_train)")
+    ap.add_argument("--asr-train", help="Whisper transcripts of SLURP train recordings (see mozhi.bench.asr_train)")
     ap.add_argument("--no-augment", action="store_true", help="MASSIVE only (the pre-registered J1 setup)")
     a = ap.parse_args()
     random.seed(a.seed); np.random.seed(a.seed); torch.manual_seed(a.seed)
@@ -164,7 +164,7 @@ def main():
         print(f"epoch {ep + 1} loss {tot / (len(train) / a.bs):.4f} t={time.time() - t0:.0f}s", flush=True)
 
     # threshold on dev: the highest-F1 value among those with false-action rate <= 1.5%
-    from jarvis.bench.metrics import macro_f1, rates
+    from mozhi.bench.metrics import macro_f1, rates
     P = predict(model, tok, devset, intents, dev)
     tools = sorted(set(tool_of.values()))
     M = np.zeros((len(intents), len(tools)))
@@ -178,7 +178,7 @@ def main():
         for row in TP:
             k = int(row.argmax()); t = tools[k]
             pred.append("UNSUPPORTED" if t in ("WEATHER", "SET_REMINDER", "SAVE_NOTE") and row[k] < th else t)
-        from jarvis.schema import action_view
+        from mozhi.schema import action_view
         g = [action_view(x) for x in gold]; p = [action_view(x) for x in pred]
         f, far = macro_f1(g, p), rates(gold, pred)["far"]
         if far <= 0.015 and f > best[1]:

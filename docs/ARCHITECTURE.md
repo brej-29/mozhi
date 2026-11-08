@@ -34,17 +34,17 @@ flowchart LR
 
 | Path | Role |
 |---|---|
-| `jarvis/routers/joint.py` | Runtime router (onnxruntime, tokenizers, numpy only) |
-| `jarvis/routers/{rules,linear,llm,cascade}.py` | Baselines and the cascade used in the benchmark |
-| `jarvis/tools.py` | Weather, reminder, note, unsupported reply, optional LLM answer |
-| `jarvis/server.py`, `jarvis/web/` | FastAPI app and the static UI |
-| `jarvis/bench/` | Data mapping, metrics, runner, ASR and latency scripts |
+| `mozhi/routers/joint.py` | Runtime router (onnxruntime, tokenizers, numpy only) |
+| `mozhi/routers/{rules,linear,llm,cascade}.py` | Baselines and the cascade used in the benchmark |
+| `mozhi/tools.py` | Weather, reminder, note, unsupported reply, optional LLM answer |
+| `mozhi/server.py`, `mozhi/web/` | FastAPI app and the static UI |
+| `mozhi/bench/` | Data mapping, metrics, runner, ASR and latency scripts |
 | `training/` | Joint model training and synthetic note data |
 | `bench/results/` | Every result file and per-request predictions |
 | `docs/PREREG.md` | Metrics and thresholds, written before any model was trained |
 
 ## Security notes
 
-- The server rejects requests whose `Host` header is not loopback (or listed in `JARVIS_ALLOWED_HOSTS`), which blocks DNS rebinding against the local app.
-- LLM keys come from environment variables only (`JARVIS_LLM_API_KEY`) and are never logged or sent to the browser.
+- The server rejects requests whose `Host` header is not loopback (or listed in `MOZHI_ALLOWED_HOSTS`), which blocks DNS rebinding against the local app.
+- LLM keys come from environment variables only (`MOZHI_LLM_API_KEY`) and are never logged or sent to the browser.
 - Router output is a closed set of five labels plus extracted text spans, so there is no model-generated JSON to trust.
