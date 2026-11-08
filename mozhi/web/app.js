@@ -268,7 +268,7 @@ $("#city").addEventListener("change", (e) => store.set("city", e.target.value.tr
 
 /* ---------- what to show and say for a result ---------- */
 
-const HISTORY_ASK = /(on this day|today in history|this day in history|history today|what happened today)/i;
+const HISTORY_ASK = /\b(on this day|today in history|this day in history|history today|what happened today)\b/i;
 async function present(d, text = "") {
   const out = localize(d);
   const code = d.action?.type === "say" ? d.action.code : "";
