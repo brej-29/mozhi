@@ -1,0 +1,55 @@
+{
+  "browser": "Playwright msedge 156.0.4314.42",
+  "pages_build": "unverified: used a prepared directory",
+  "reference": "saved Python JointRouter2 decisions in j2_parity.jsonl",
+  "by_language": {
+    "en": {
+      "agree": 600,
+      "total": 600,
+      "percent": 100
+    },
+    "ta": {
+      "agree": 600,
+      "total": 600,
+      "percent": 100
+    },
+    "ml": {
+      "agree": 600,
+      "total": 600,
+      "percent": 100
+    }
+  },
+  "disagreements": [],
+  "native_dispatch_matches_direct_j2": 1200,
+  "dispatch": "unverified: fresh J1 reference unavailable",
+  "slots": "unverified: saved reference contains tool decisions only",
+  "weather": {
+    "mocked": true,
+    "checks": [
+      {
+        "lang": "ta",
+        "query": {
+          "name": "சென்னை",
+          "count": "1",
+          "format": "json",
+          "language": "ta"
+        },
+        "tool": "WEATHER",
+        "action": "weather"
+      },
+      {
+        "lang": "ml",
+        "query": {
+          "name": "കൊച്ചി",
+          "count": "1",
+          "format": "json",
+          "language": "ml"
+        },
+        "tool": "WEATHER",
+        "action": "weather"
+      }
+    ],
+    "live_service": "unverified"
+  },
+  "page_errors": []
+}

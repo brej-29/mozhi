@@ -1,6 +1,8 @@
 /* One interface for the UI, two backends.
    Server mode (python -m mozhi): calls /api/health and /api/chat.
    Static mode (GitHub Pages, window.MOZHI_STATIC): runs the same int8 ONNX router in the browser. */
+import { language, loadRouter2 } from "./router2.js";
+
 export const STATIC = !!window.MOZHI_STATIC;
 
 // third-party code is vendored (see packaging/build_pages.py), so the page loads nothing from other origins
@@ -10,9 +12,9 @@ const MODEL = "model/";
 
 export async function health() {
   if (!STATIC) return (await fetch("api/health")).json();
-  const r = await router();
+  const [r, meta2] = await Promise.all([router(), router2Meta()]);
   const k = byok.get();
-  return { status: "ok", threshold: r.meta.threshold, tools: [...new Set(Object.values(r.meta.tool_of_intent))], llm: k ? { connected: true, model: `${PROVIDERS[k.provider].label} ${k.model}` } : { connected: false } };
+  return { status: "ok", threshold: r.meta.threshold, tools: [...new Set([...Object.values(r.meta.tool_of_intent), ...Object.values(meta2.tool_of_intent)])].sort(), llm: k ? { connected: true, model: `${PROVIDERS[k.provider].label} ${k.model}` } : { connected: false } };
 }
 
 /* Streaming chat. `on.route(route)` fires as soon as the router has decided, `on.token(text)` for each
@@ -39,15 +41,7 @@ export async function chat(body, on = {}) {
     if (!route || !done) throw new Error("stream ended early");
     return { reply: done.reply, action: done.action, route };
   }
-  if (/[஀-௿ഀ-ൿ]/.test(body.text)) { // the browser copy only has the English router so far
-    const note = { tool: "UNSUPPORTED", confidence: 1, intent: "", path: "abstain", args: {}, spans: [], scores: {}, words: [] };
-    on.route?.(note);
-    return { reply: "Tamil and Malayalam script is understood by the desktop app. This web copy has the English router only, so type Tanglish or Manglish here.", action: null, route: note };
-  }
-  const r = await router();
-  const t0 = performance.now();
-  const route = await r.finish(r.route(body.text));
-  route.ms = performance.now() - t0;
+  const route = await routeOnly(body.text);
   on.route?.(route);
   const { reply, action } = await act(route, body, on);
   return { reply, action, route };
@@ -113,6 +107,9 @@ function spans(words, tags, kind) {
 
 let routerPromise;
 function router() { return (routerPromise ||= loadRouter()); }
+let router2Promise, router2MetaPromise;
+function router2Meta() { return (router2MetaPromise ||= fetch("model2/meta.json").then((r) => r.json())); }
+function router2() { return (router2Promise ||= router().then(() => loadRouter2(window.ort))); }
 function loadScript(src) { return new Promise((ok, bad) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = () => bad(new Error("could not load " + src)); document.head.append(s); }); }
 
 async function loadRouter() {
@@ -150,7 +147,7 @@ async function loadRouter() {
   api.route = (text) => { const words = clean(text); return { words, pending: words.length ? run(words) : null }; };
   api.finish = async (pending) => {
     const words = pending.words;
-    if (!words.length) return { tool: "UNSUPPORTED", confidence: 1, intent: "", path: "empty", args: {}, spans: [] };
+    if (!words.length) return { tool: "UNSUPPORTED", confidence: 1, intent: "", path: "empty", args: {}, spans: [], scores: Object.fromEntries(tools.map((tool) => [tool, 0])), words };
     const { tp, tags, intent } = await pending.pending;
     let k = 0; tp.forEach((v, i) => { if (v > tp[k]) k = i; });
     const tool = tools[k], conf = tp[k];
@@ -196,10 +193,13 @@ const say = (code, extra = {}) => ({ type: "say", code, ...extra });
 const GREETING = "Hello. I can check the weather, set reminders and save notes. What do you need?";
 let chronoP;
 async function act(r, body, on = {}) {
-  if (r.tool === "WEATHER") return weather(r.args.city || body.default_city, body.native ? body.lang || "en" : "en");
+  if (r.tool === "WEATHER") {
+    const city = r.args.city || body.default_city, detected = language(city || "");
+    return weather(city, detected !== "en" ? detected : body.native ? body.lang || "en" : "en");
+  }
   if (r.tool === "SET_REMINDER") {
     const when = r.args.when || "";
-    const derived = reminderTitle(body.text, when);
+    const derived = language(body.text) === "en" ? reminderTitle(body.text, when) : "";
     return reminder(when, derived && (!r.args.title || derived.includes(r.args.title)) ? derived : r.args.title || "");
   }
   if (r.tool === "SAVE_NOTE") return { reply: "Saved your note.", action: { type: "note", text: body.text } };
@@ -241,8 +241,16 @@ async function reminder(when, title) {
 
 /* router only, no tools: used by the parity check against the Python router */
 export async function routeOnly(text) {
-  const r = await router();
-  return r.finish(r.route(text));
+  const t0 = performance.now();
+  if (language(text) !== "en") return (await router2()).route(text);
+  const [r, meta2] = await Promise.all([router(), router2Meta()]);
+  const result = await r.finish(r.route(text));
+  if (!["WEATHER", "SET_REMINDER", "SAVE_NOTE"].includes(result.tool)) { // J1 knows nothing of news, stories or verses
+    const alt = await (await router2()).route(text);
+    if (["NEWS", "STORY", "VERSE"].includes(alt.tool) && alt.confidence >= 0.6) return { ...alt, ms: performance.now() - t0 };
+  }
+  const scores = { ...Object.fromEntries(Object.values(meta2.tool_of_intent).map((tool) => [tool, 0])), ...result.scores };
+  return { ...result, scores, ms: performance.now() - t0 };
 }
 
 /* ---------- bring your own key (hosted site only) ----------

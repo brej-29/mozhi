@@ -21,6 +21,7 @@ from mozhi.routers.joint2 import JointRouter2, language
 llm.load_dotenv()
 WEB = Path(__file__).resolve().parent / "web"
 state: dict = {}
+tools_acting = ("WEATHER", "SET_REMINDER", "SAVE_NOTE")
 
 
 @asynccontextmanager
@@ -66,8 +67,13 @@ def route_json(r) -> dict:
 
 def run_router(text: str):
     t0 = time.perf_counter()
-    router = state["router2"] if state["router2"] and language(text) != "en" else state["router"]
-    r = router.route(text)
+    r2 = state["router2"]
+    r = (r2 if r2 and language(text) != "en" else state["router"]).route(text)
+    if r2 and language(text) == "en" and r.tool not in tools_acting:
+        # J1 knows nothing of news, stories or verses; if the multilingual router is sure it is one of those, use it
+        alt = r2.route(text)
+        if alt.tool in ("NEWS", "STORY", "VERSE") and alt.confidence >= 0.6:
+            r = alt
     r.ms = (time.perf_counter() - t0) * 1000
     return r
 
@@ -96,6 +102,8 @@ async def act(r, body: ChatIn):
         return tools.reminder(when, title, body.tz_offset_min)
     if r.tool == "SAVE_NOTE":
         return tools.note(body.text)
+    if r.tool == "GENERAL_QA" and r.intent != "general_greet" and not llm.settings()["endpoint"]:
+        return llm.NOT_CONNECTED, tools.say("qa_nokey")  # the page answers from Wikipedia instead
     if r.tool == "GENERAL_QA":
         return (tools.GREETING if r.intent == "general_greet" else await llm.answer(body.text, body.history, llm.persona(body.lang, body.level, body.gender, body.native))), None
     if r.tool == "NEWS":
@@ -126,7 +134,7 @@ async def chat_stream(body: ChatIn):
 
     async def events():
         yield sse("route", route_json(r))
-        if r.tool == "GENERAL_QA" and r.intent != "general_greet":
+        if r.tool == "GENERAL_QA" and r.intent != "general_greet" and llm.settings()["endpoint"]:
             parts = []
             async for piece in llm.stream_answer(body.text, body.history, system=llm.persona(body.lang, body.level, body.gender, body.native)):
                 parts.append(piece)

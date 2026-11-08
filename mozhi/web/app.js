@@ -3,6 +3,11 @@ import { renderEvidence } from "./evidence.js";
 import { createOrb } from "./orb.js";
 import { I18N, prefs, romanTerm, addressed, say, localize, story, verse, persona } from "./mozhi.js";
 
+import { initHUD } from "./hud.js";
+import { search, news, history as historyToday } from "./sources.js";
+import { renderCard, prepareSpeech, cardSpeech } from "./cards.js";
+
+initHUD();
 document.documentElement.classList.add("js");
 const $ = (s) => document.querySelector(s);
 const fillText = (s, f) => s.replace(/\{(\w+)\}/g, (_, k) => f[k] ?? "");
@@ -11,8 +16,8 @@ const store = {
   get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* private mode */ } },
 };
-const TOOL_LABEL = { WEATHER: "Weather", SET_REMINDER: "Reminder", SAVE_NOTE: "Note", GENERAL_QA: "Answer", NEWS: "News", STORY: "Story", VERSE: "Verse", UNSUPPORTED: "Not done" };
-const ACTED = { WEATHER: "Looked up", SET_REMINDER: "Reminder set", SAVE_NOTE: "Note saved", GENERAL_QA: "Asked the model", NEWS: "Fetched headlines", STORY: "Picked a story", VERSE: "Picked a verse" };
+const TOOL_LABEL = { WEATHER: "Weather", SET_REMINDER: "Reminder", SAVE_NOTE: "Note", GENERAL_QA: "Answer", NEWS: "News", STORY: "Story", VERSE: "Verse", SEARCH: "Search", HISTORY: "History", UNSUPPORTED: "Not done" };
+const ACTED = { WEATHER: "Looked up", SET_REMINDER: "Reminder set", SAVE_NOTE: "Note saved", GENERAL_QA: "Asked the model", NEWS: "Fetched headlines", STORY: "Picked a story", VERSE: "Picked a verse", SEARCH: "Searched", HISTORY: "Found history" };
 let threshold = 0.85, llm = { connected: false }, supported = null;
 const history = [];
 const orb = createOrb($("#orb"));
@@ -84,7 +89,7 @@ function markSpans(text, spans) {
   return out + esc(text.slice(at));
 }
 
-const TOOL_ORDER = ["WEATHER", "SET_REMINDER", "SAVE_NOTE", "GENERAL_QA", "NEWS", "STORY", "VERSE", "UNSUPPORTED"];
+const TOOL_ORDER = ["WEATHER", "SET_REMINDER", "SAVE_NOTE", "GENERAL_QA", "NEWS", "STORY", "VERSE", "SEARCH", "HISTORY", "UNSUPPORTED"];
 function scoreRows() {
   const tools = TOOL_ORDER.filter((t) => !supported || supported.includes(t) || t === "UNSUPPORTED");
   return tools.map((t, i) => `<li data-t="${t}" class="scanning" style="--i:${i}"><span class="nm">${TOOL_LABEL[t]}</span><span class="bar"><i></i></span><span class="pc">&nbsp;</span></li>`).join("");
@@ -135,14 +140,16 @@ function newSlip(text) {
       <li class="on"><b></b><span>Heard</span></li><li><b></b><span>Routed</span></li>
       <li><b></b><span>Acted</span></li><li><b></b><span>Replied</span></li></ol>
     <div class="mind">
-      <div class="heard" aria-hidden="true"></div>
-      <ul class="scores" aria-hidden="true">${scoreRows()}</ul>
+      <div class="heard" aria-label="Heard words"></div>
+      <ul class="scores" aria-label="Tool probabilities">${scoreRows()}</ul>
       <p class="why"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="why-t">Reading your request</span></p>
     </div>
     <div class="verdict" hidden></div>
-    <p class="reply"><span class="shimmer"></span></p>
+    <p class="reply speech-text" aria-live="polite" aria-atomic="true"><span class="shimmer"></span></p>
     <p class="meta fine" hidden></p>`;
   feed.prepend(li);
+  document.body.dataset.conversation = "active";
+  if (matchMedia("(max-width: 760px)").matches) requestAnimationFrame(() => li.scrollIntoView({ block: "start", behavior: reduced.matches ? "auto" : "smooth" }));
   if (!reduced.matches) { // FLIP: the older slips glide down instead of jumping
     for (const [el, top] of before) {
       const dy = top - el.getBoundingClientRect().top;
@@ -231,17 +238,22 @@ function fillVoices() {
   $("#tts-note").textContent = vs.length || prefs.lang === "en" || !prefs.native ? "" : fillText(I18N.ui[prefs.lang].no_voice, { lang: I18N.langs[prefs.lang].label });
 }
 function chosenVoice() { return speechSynthesis.getVoices().find((v) => v.name === $("#voice").value) || null; }
-function speak(t, force = false) {
+let activeReading = null;
+function speak(t, force = false, container = null) {
   if ((!force && !$("#speak").checked) || !("speechSynthesis" in window)) return;
   if (prefs.lang !== "en" && prefs.native && !chosenVoice()) return; // no Tamil or Malayalam voice here: show the text, never read it with an English voice
+  activeReading?.finish();
   speechSynthesis.cancel();
+  const reading = container ? prepareSpeech(container, t) : null;
+  activeReading = reading;
   const u = new SpeechSynthesisUtterance(t);
   const v = chosenVoice();
   if (v) { u.voice = v; u.lang = v.lang; } else u.lang = prefs.native ? I18N.langs[prefs.lang].speech : "en-US";
   u.rate = Number($("#rate").value) || 1;
   u.onstart = () => setState("speaking");
-  u.onboundary = () => orb.pulse(0.8); // a pulse on every word the voice reaches, where the voice reports them
-  u.onend = u.onerror = () => setState("idle");
+  u.onboundary = (event) => { orb.pulse(0.8); if (event.name === "word" || !event.name) reading?.boundary(event.charIndex); };
+  u.onend = () => { reading?.finish(true); if (activeReading === reading) { activeReading = null; setState("idle"); } };
+  u.onerror = () => { reading?.finish(); if (activeReading === reading) { activeReading = null; setState("idle"); } };
   speechSynthesis.speak(u);
 }
 if ("speechSynthesis" in window) { fillVoices(); speechSynthesis.onvoiceschanged = fillVoices; }
@@ -256,53 +268,39 @@ $("#city").addEventListener("change", (e) => store.set("city", e.target.value.tr
 
 /* ---------- what to show and say for a result ---------- */
 
-async function present(d) {
+const HISTORY_ASK = /(on this day|today in history|this day in history|history today|what happened today)/i;
+async function present(d, text = "") {
   const out = localize(d);
-  out.spoken = out.text;
+  const code = d.action?.type === "say" ? d.action.code : "";
+  const lang = prefs.lang, said = (t) => addressed(t);
+  // No language model connected: answer from free sources instead of telling the visitor to bring a key.
+  if (["GENERAL_QA", "NEWS", "UNSUPPORTED"].includes(d.route?.tool) && HISTORY_ASK.test(text)) {
+    const card = await historyToday();
+    if (card) return { text: said("Here is what happened on this day."), card, spoken: said("Here is what happened on this day.") + " " + cardSpeech(card) };
+  }
+  if (code === "qa_nokey") {
+    const card = await search(text, lang);
+    if (card) return { text: said(lang === "en" ? "Here is what I found." : "Here is what I found, from Wikipedia."), card, spoken: said("Here is what I found.") + " " + cardSpeech(card) };
+  }
+  if (code === "news_static" || code === "news_empty") {
+    const card = await news(lang);
+    if (card) return { text: said("Here are the headlines."), card, spoken: said("Here are the headlines.") + " " + cardSpeech(card) };
+  }
+  out.card = d.card || out.card;
+  if (!out.card && ["search", "history", "story", "verse"].includes(d.action?.type)) out.card = { ...d.action, kind: d.action.type };
+  if (!out.card && d.action?.type === "weather") out.card = { ...d.action, kind: "weather", skyText: d.action.skyText || d.action.sky };
+  out.spoken = [out.text, cardSpeech(out.card)].filter(Boolean).join(" ");
   if (d.action?.type !== "content") {
-    if (out.card?.kind === "news") out.spoken = [out.text, ...out.card.items.map((i) => i.title)].join(". ");
     return out;
   }
   const card = d.action.kind === "story" ? await story() : await verse();
   const L = prefs.lang;
-  if (!card) { out.text = L === "en" || !prefs.native ? "I do not have one to share yet." : say("decline"); return out; }
+  if (!card) { out.spoken = out.text = L === "en" || !prefs.native ? "I do not have one to share yet." : say("decline"); return out; }
   out.card = card;
   const intro = d.action.kind === "story" ? "story_intro" : "verse_intro";
   out.text = L === "en" || !prefs.native ? addressed(d.action.kind === "story" ? "Here is a folk tale." : "Here is a verse.") : say(intro);
-  out.spoken = [out.text, card.title, card.body, card.lines?.join(". "), card.meaning, card.moral].filter(Boolean).join(" ");
+  out.spoken = [out.text, cardSpeech(card)].filter(Boolean).join(" ");
   return out;
-}
-
-function safeLink(text, url) {
-  const a = document.createElement("a");
-  a.textContent = text; a.href = /^https:\/\//.test(url) ? url : "#"; a.target = "_blank"; a.rel = "noopener noreferrer";
-  return a;
-}
-
-function renderCard(c) {
-  const el = document.createElement("div");
-  el.className = `card card-${c.kind}`;
-  const add = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; n.textContent = text; el.append(n); return n; };
-  if (c.kind === "news") {
-    const ul = document.createElement("ul");
-    for (const i of c.items) {
-      const li = document.createElement("li");
-      li.append(safeLink(i.title, i.url));
-      if (i.source) { const s = document.createElement("small"); s.textContent = ` ${i.source}`; li.append(s); }
-      ul.append(li);
-    }
-    el.append(ul);
-    return el;
-  }
-  const L = prefs.native ? I18N.langs[prefs.lang] : I18N.langs.en;
-  if (c.kind === "story") { add("h3", "", c.title); add("p", "body", c.body); add("p", "moral", `${L.informal?.moral ?? "Moral:"} ${c.moral}`); }
-  else { add("p", "lines", c.lines.join("\n")); if (c.meaning) add("p", "body", c.meaning); add("p", "attrib", `${c.author}, ${c.work}${c.ref ? " " + c.ref : ""}`); }
-  const src = document.createElement("p");
-  src.className = "attrib";
-  src.append(`${L.informal?.source ?? "Source"}: `, safeLink(c.source.name, c.source.url));
-  if (c.source.licence) src.append(` (${c.source.licence})`);
-  el.append(src);
-  return el;
 }
 
 /* ---------- language and respect ---------- */
@@ -368,7 +366,7 @@ async function send(text) {
         reply.append(caret);
       },
     });
-    const out = await present(d);
+    const out = await present(d, text);
     li.classList.remove("answering");
     reply.textContent = out.text;
     if (out.card) li.querySelector(".reply").after(renderCard(out.card));
@@ -379,7 +377,7 @@ async function send(text) {
     if (d.route.tool === "UNSUPPORTED") setState("declined", 1600);
     else setState("idle");
     caption(d.route.tool === "UNSUPPORTED" ? "Declined. Nothing was done." : IDLE_CAPTION);
-    speak(out.spoken);
+    speak(out.spoken, false, li);
   } catch {
     li.removeAttribute("data-tool");
     reply.textContent = "The router did not answer. In the hosted copy the model may still be loading: wait a few seconds and send again.";
@@ -392,10 +390,10 @@ async function send(text) {
 }
 $("#form").addEventListener("submit", (e) => { e.preventDefault(); send($("#text").value); });
 applyLang();
-$("#clear").addEventListener("click", () => { $("#feed").innerHTML = ""; $("#empty").hidden = false; $("#clear").hidden = true; });
+$("#clear").addEventListener("click", () => { delete document.body.dataset.conversation; activeReading?.finish(); activeReading = null; if ("speechSynthesis" in window) speechSynthesis.cancel(); $("#feed").innerHTML = ""; $("#empty").hidden = false; $("#clear").hidden = true; });
 addEventListener("keydown", (e) => { // "/" jumps to the input, Escape stops listening; neither animates
   if (e.key === "/" && !/input|textarea/i.test(document.activeElement?.tagName)) { e.preventDefault(); $("#text").focus(); }
-  if (e.key === "Escape") stopListening?.();
+  if (e.key === "Escape") { stopListening?.(); activeReading?.finish(); activeReading = null; if ("speechSynthesis" in window) speechSynthesis.cancel(); if (!busy) setState("idle"); }
 });
 
 /* ---------- voice in ---------- */
@@ -406,9 +404,10 @@ if (!SR) {
   mic.disabled = true;
   $("#voice-hint").textContent = "Voice input needs Chrome or Edge. Typing works in any browser.";
 } else {
-  let rec = null, raf = 0, stream = null, ctx = null;
+  let rec = null, raf = 0, stream = null, ctx = null, analyser = null, waveform = null;
   const freq = new Uint8Array(256);
   const level = (an, buf) => {
+    if (document.hidden || reduced.matches) { raf = 0; return; }
     an.getByteFrequencyData(freq); orb.setSpectrum(freq);
     an.getByteTimeDomainData(buf);
     let s = 0; for (const v of buf) s += Math.abs(v - 128);
@@ -418,13 +417,17 @@ if (!SR) {
   const cleanup = () => {
     mic.setAttribute("aria-pressed", "false");
     cancelAnimationFrame(raf); orb.setLevel(0); orb.setSpectrum(null);
-    stream?.getTracks().forEach((t) => t.stop()); ctx?.close(); stream = ctx = null;
+    stream?.getTracks().forEach((t) => t.stop()); ctx?.close(); stream = ctx = analyser = waveform = null;
   };
+  const resumeMeter = () => { if (analyser && waveform && !raf && !document.hidden && !reduced.matches) level(analyser, waveform); };
+  document.addEventListener("visibilitychange", resumeMeter);
+  reduced.addEventListener("change", resumeMeter);
   stopListening = () => rec?.stop();
   mic.addEventListener("click", async () => {
     if (rec) { rec.stop(); return; }
     if (busy) return;
-    rec = new SR(); rec.lang = prefs.native ? I18N.langs[prefs.lang].speech : "en-IN"; // Tanglish and Manglish come out best through English (India) recognition rec.interimResults = true; rec.maxAlternatives = 1;
+    rec = new SR(); rec.lang = I18N.langs[prefs.lang].speech; // ta-IN or ml-IN follow the chosen language; the router reads the script they return
+    rec.interimResults = true; rec.maxAlternatives = 1;
     let last = "";
     rec.onresult = (e) => { last = [...e.results].map((r) => r[0].transcript).join(" "); $("#text").value = last; caption(last); };
     rec.onerror = (e) => { $("#voice-hint").textContent = e.error === "not-allowed" ? "Microphone access is blocked. Allow it in the address bar, or type instead." : "Could not hear that. Try again or type."; };
@@ -432,12 +435,12 @@ if (!SR) {
     try {
       stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       ctx = new AudioContext(); const an = ctx.createAnalyser(); an.fftSize = 512;
-      ctx.createMediaStreamSource(stream).connect(an); level(an, new Uint8Array(an.fftSize));
+      ctx.createMediaStreamSource(stream).connect(an); analyser = an; waveform = new Uint8Array(an.fftSize); level(an, waveform);
     } catch { /* the level meter is optional */ }
     $("#voice-hint").textContent = "";
     mic.setAttribute("aria-pressed", "true");
     setState("listening"); caption("Listening");
-    rec.start();
+    try { rec.start(); } catch { rec = null; cleanup(); setState("idle"); caption(IDLE_CAPTION); $("#voice-hint").textContent = "Could not start the microphone. Try again or type."; }
   });
   $("#voice-hint").textContent = "Click the orb and speak, or type. Speech recognition runs in your browser. Press / to type.";
 }
