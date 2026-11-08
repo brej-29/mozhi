@@ -96,6 +96,8 @@ async def act(r, body: ChatIn):
         return tools.reminder(when, title, body.tz_offset_min)
     if r.tool == "SAVE_NOTE":
         return tools.note(body.text)
+    if r.tool == "GENERAL_QA" and r.intent != "general_greet" and not llm.settings()["endpoint"]:
+        return llm.NOT_CONNECTED, tools.say("qa_nokey")  # the page answers from Wikipedia instead
     if r.tool == "GENERAL_QA":
         return (tools.GREETING if r.intent == "general_greet" else await llm.answer(body.text, body.history, llm.persona(body.lang, body.level, body.gender, body.native))), None
     if r.tool == "NEWS":
@@ -126,7 +128,7 @@ async def chat_stream(body: ChatIn):
 
     async def events():
         yield sse("route", route_json(r))
-        if r.tool == "GENERAL_QA" and r.intent != "general_greet":
+        if r.tool == "GENERAL_QA" and r.intent != "general_greet" and llm.settings()["endpoint"]:
             parts = []
             async for piece in llm.stream_answer(body.text, body.history, system=llm.persona(body.lang, body.level, body.gender, body.native)):
                 parts.append(piece)

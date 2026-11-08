@@ -1,0 +1,13 @@
+name = "mozhi-proxy"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+
+[vars]
+ALLOWED_ORIGINS = "https://brej-29.github.io"
+TAVILY_MONTHLY_LIMIT = "1000"   # check your Tavily plan and set this to its monthly credits
+CAP_FRACTION = "0.5"            # stop at half
+PER_IP_DAILY = "15"
+
+# [[kv_namespaces]]
+# binding = "USAGE"
+# id = "paste the id printed by: npx wrangler kv namespace create USAGE"
