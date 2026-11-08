@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from jarvis.routers.joint2 import JointRouter2, clean
+from mozhi.routers.joint2 import JointRouter2, clean
 from training.train_joint2 import massive_rows
 
 ROOT = Path(__file__).resolve().parents[1]

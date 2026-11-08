@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from jarvis.omniroute import OmniRoute
+from mozhi.omniroute import OmniRoute
 
 
 def test_binary_in_the_working_directory_is_never_used(monkeypatch, tmp_path):
@@ -27,7 +27,7 @@ def test_explicit_binary_must_be_an_absolute_existing_file(monkeypatch, tmp_path
 
 
 def test_status_never_reveals_hosts_or_error_text(monkeypatch):
-    monkeypatch.delenv("JARVIS_MANAGE_OMNIROUTE", raising=False)
+    monkeypatch.delenv("MOZHI_MANAGE_OMNIROUTE", raising=False)
     m = OmniRoute()
     m.ensure("https://gateway.internal.example/v1/chat/completions")
     assert (m.state, m.detail) == ("remote", "")
@@ -44,7 +44,7 @@ def test_job_object_terminates_the_child(tmp_path):
 
     m = OmniRoute()
     m.proc = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"])
-    from jarvis.omniroute import _kill_on_close_job
+    from mozhi.omniroute import _kill_on_close_job
 
     m._job = _kill_on_close_job(m.proc)
     assert m._job

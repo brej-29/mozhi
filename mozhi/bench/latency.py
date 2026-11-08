@@ -1,6 +1,6 @@
 """Clean latency measurement: run with the machine otherwise idle.
 
-    python -m jarvis.bench.latency --llm data/raw/models/qwen2.5-1.5b-instruct-q4_k_m.gguf
+    python -m mozhi.bench.latency --llm data/raw/models/qwen2.5-1.5b-instruct-q4_k_m.gguf
 Router only, batch size 1, 5 warm-up calls, 150 stratified test utterances, single process.
 """
 
@@ -8,8 +8,8 @@ import argparse
 import json
 import platform
 
-from jarvis.bench import data
-from jarvis.bench.run import RESULTS, build, run_items
+from mozhi.bench import data
+from mozhi.bench.run import RESULTS, build, run_items
 
 
 def main():

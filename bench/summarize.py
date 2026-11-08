@@ -1,4 +1,4 @@
-"""Collect bench/results/*.json into jarvis/web/results.json and bench/results/SUMMARY.md.
+"""Collect bench/results/*.json into mozhi/web/results.json and bench/results/SUMMARY.md.
 
     python bench/summarize.py
 Every number is read from a result file, never typed by hand.
@@ -8,8 +8,8 @@ import json
 import statistics as st
 from pathlib import Path
 
-from jarvis.bench import data, metrics
-from jarvis.schema import Route
+from mozhi.bench import data, metrics
+from mozhi.schema import Route
 
 ROOT = Path(__file__).resolve().parents[1]
 R = ROOT / "bench" / "results"
@@ -127,7 +127,7 @@ def main():
                           "asr": {k: a[k] for k in ("action_macro_f1", "far", "miss")}})
     out["sweep"] = sweep
 
-    (ROOT / "jarvis" / "web" / "results.json").write_text(json.dumps(out, indent=1), encoding="utf-8")
+    (ROOT / "mozhi" / "web" / "results.json").write_text(json.dumps(out, indent=1), encoding="utf-8")
 
     def f(v):
         return "n/a" if v is None else f"{v:.3f}"

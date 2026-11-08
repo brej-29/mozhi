@@ -1,4 +1,4 @@
-"""Capture README screenshots from a running server (python -m jarvis). Needs `pip install playwright` and Edge or Chrome.
+"""Capture README screenshots from a running server (python -m mozhi). Needs `pip install playwright` and Edge or Chrome.
 
     python bench/shots.py http://127.0.0.1:8765 docs/images
 """

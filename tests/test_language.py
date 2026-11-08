@@ -4,9 +4,9 @@ import json
 import re
 from pathlib import Path
 
-from jarvis import llm, news
+from mozhi import llm, news
 
-WEB = Path(__file__).resolve().parents[1] / "jarvis" / "web"
+WEB = Path(__file__).resolve().parents[1] / "mozhi" / "web"
 I18N = json.loads((WEB / "i18n.json").read_text(encoding="utf-8"))
 SCRIPT = {"ta": re.compile(r"[஀-௿]"), "ml": re.compile(r"[ഀ-ൿ]")}
 PLACEHOLDERS = re.compile(r"\{(\w+)\}")
@@ -36,7 +36,7 @@ def test_five_levels_each_with_name_and_address_row():
 
 
 def test_sky_words_cover_every_weather_code_the_app_can_say():
-    from jarvis.tools import WMO
+    from mozhi.tools import WMO
     for lang in ("ta", "ml"):
         assert {str(k) for k in WMO} <= set(I18N["langs"][lang]["sky"])
 
@@ -76,7 +76,7 @@ def test_bundled_content_is_sourced():
 def test_chat_accepts_language_fields_and_rejects_bad_ones():
     from fastapi.testclient import TestClient
 
-    from jarvis.server import app
+    from mozhi.server import app
     with TestClient(app) as c:
         ok = c.post("/api/chat", json={"text": "hello", "lang": "ta", "level": 4, "gender": "female"})
         assert ok.status_code == 200
@@ -88,8 +88,8 @@ def test_native_script_goes_to_the_multilingual_router():
     import pytest
     from fastapi.testclient import TestClient
 
-    from jarvis.routers.joint2 import MODEL_DIR
-    from jarvis.server import app
+    from mozhi.routers.joint2 import MODEL_DIR
+    from mozhi.server import app
     if not (MODEL_DIR / "model.int8.onnx").exists():
         pytest.skip("models/joint2 not built")
     with TestClient(app) as c:

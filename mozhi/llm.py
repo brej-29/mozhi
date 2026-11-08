@@ -8,9 +8,9 @@ Settings come from the environment or a `.env` file (never committed, never sent
     LLM_PRICE_OUT_PER_M  USD per million output tokens (optional)
     MONTHLY_BUDGET_USD   stop calling the model once this much has been spent (optional)
     LLM_MAX_CALLS_PER_DAY   hard cap on calls per day, default 300
-    JARVIS_SPEND_FILE    where the spend ledger lives (default .jarvis_spend.json)
-    JARVIS_ENV_FILE      an explicit .env path
-The older JARVIS_LLM_BASE_URL / JARVIS_LLM_MODEL / JARVIS_LLM_API_KEY names still work.
+    MOZHI_SPEND_FILE    where the spend ledger lives (default .mozhi_spend.json)
+    MOZHI_ENV_FILE      an explicit .env path
+The older MOZHI_LLM_BASE_URL / MOZHI_LLM_MODEL / MOZHI_LLM_API_KEY names still work.
 
 The spend guard fails closed: a call is counted and persisted before it is made, the ledger is written
 atomically, and an unreadable or unwritable ledger blocks calls instead of letting them through.
@@ -54,11 +54,11 @@ def persona(lang: str = "en", level: int = 2, gender: str = "", native: bool = F
 def load_dotenv(path: Path | None = None) -> None:
     """Minimal .env reader: KEY=VALUE lines, existing environment variables win.
 
-    Only files that belong to the application are read (an explicit path, JARVIS_ENV_FILE, the folder
-    holding jarvis.exe, or the repository root). The working directory is deliberately not searched, so a
+    Only files that belong to the application are read (an explicit path, MOZHI_ENV_FILE, the folder
+    holding mozhi.exe, or the repository root). The working directory is deliberately not searched, so a
     stray .env in whatever folder you launch from cannot redirect the endpoint or the API key."""
     here = Path(sys.executable).parent if getattr(sys, "frozen", False) else Path(__file__).resolve().parents[1]
-    candidates = [path] if path else [Path(os.environ["JARVIS_ENV_FILE"])] if os.getenv("JARVIS_ENV_FILE") else [here / ".env"]
+    candidates = [path] if path else [Path(os.environ["MOZHI_ENV_FILE"])] if os.getenv("MOZHI_ENV_FILE") else [here / ".env"]
     for p in candidates:
         if p and p.is_file():
             for line in p.read_text(encoding="utf-8").splitlines():
@@ -76,13 +76,13 @@ def _num(name: str) -> float:
 
 
 def settings() -> dict:
-    endpoint = os.getenv("LLM_ENDPOINT") or os.getenv("JARVIS_LLM_BASE_URL") or ""
+    endpoint = os.getenv("LLM_ENDPOINT") or os.getenv("MOZHI_LLM_BASE_URL") or ""
     if endpoint and not endpoint.rstrip("/").endswith("/chat/completions"):
         endpoint = endpoint.rstrip("/") + "/chat/completions"
-    model = os.getenv("LLM_MODEL") or os.getenv("JARVIS_LLM_MODEL") or ""
+    model = os.getenv("LLM_MODEL") or os.getenv("MOZHI_LLM_MODEL") or ""
     if not model or model.startswith("<"):
         model = DEFAULT_MODEL
-    key = os.getenv("LLM_API_KEY") or os.getenv("JARVIS_LLM_API_KEY") or ""
+    key = os.getenv("LLM_API_KEY") or os.getenv("MOZHI_LLM_API_KEY") or ""
     return {"endpoint": endpoint if not endpoint.startswith("<") else "", "model": model,
             "key": "" if key.startswith("<") else key, "price_in": _num("LLM_PRICE_IN_PER_M"),
             "price_out": _num("LLM_PRICE_OUT_PER_M"), "budget": _num("MONTHLY_BUDGET_USD"),
@@ -99,7 +99,14 @@ _MEM: dict = {}  # in-process floor: what this process has counted, whatever the
 
 
 def spend_file() -> Path:  # resolved on every use, after .env has been loaded
-    return Path(os.getenv("JARVIS_SPEND_FILE") or ".jarvis_spend.json")
+    path = Path(os.getenv("MOZHI_SPEND_FILE") or ".mozhi_spend.json")
+    old = Path(".jarvis_spend.json")  # the ledger kept under the app's earlier name carries over, so the budget is not reset
+    if not os.getenv("MOZHI_SPEND_FILE") and old.exists() and not path.exists():
+        try:
+            old.replace(path)
+        except OSError:
+            pass
+    return path
 
 
 def _read() -> dict:

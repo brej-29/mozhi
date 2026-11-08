@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from jarvis.routers.joint2 import JointRouter2
+from mozhi.routers.joint2 import JointRouter2
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "bench" / "results"

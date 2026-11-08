@@ -9,7 +9,7 @@ from pathlib import Path
 
 import numpy as np
 
-from jarvis.schema import Route
+from mozhi.schema import Route
 
 MODEL_DIR = Path(__file__).resolve().parents[2] / "models" / "joint"
 SLOT_TAGS = ("O", "B-CITY", "I-CITY", "B-WHEN", "I-WHEN", "B-TITLE", "I-TITLE")

@@ -28,9 +28,9 @@ from tokenizers.processors import TemplateProcessing
 from torch import nn
 from transformers import AutoModel, AutoTokenizer, DistilBertModel
 
-from jarvis.bench import data
-from jarvis.bench.metrics import action_view, macro_f1
-from jarvis.routers.joint2 import SLOT_TAGS, clean
+from mozhi.bench import data
+from mozhi.bench.metrics import action_view, macro_f1
+from mozhi.routers.joint2 import SLOT_TAGS, clean
 from training import synth_koottu
 
 ROOT = Path(__file__).resolve().parents[1]

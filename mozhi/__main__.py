@@ -1,4 +1,4 @@
-"""`python -m jarvis` (or jarvis.exe): start the local server and open the browser."""
+"""`python -m mozhi` (or mozhi.exe): start the local server and open the browser."""
 
 import argparse
 import threading
@@ -9,7 +9,7 @@ import uvicorn
 
 
 def main():
-    ap = argparse.ArgumentParser(prog="jarvis")
+    ap = argparse.ArgumentParser(prog="mozhi")
     ap.add_argument("--host", default="127.0.0.1")
     ap.add_argument("--port", type=int, default=8765)
     ap.add_argument("--no-browser", action="store_true")
@@ -25,8 +25,8 @@ def main():
         pass
     if not a.no_browser:
         threading.Timer(1.5, webbrowser.open, args=(url,)).start()
-    from jarvis import llm
-    from jarvis.server import app
+    from mozhi import llm
+    from mozhi.server import app
 
     s = llm.settings()
     print(f"Mozhi is running at {url}  (close this window or press Ctrl+C to quit)")

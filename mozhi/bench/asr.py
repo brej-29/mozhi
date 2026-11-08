@@ -5,7 +5,7 @@ whose sentence is a MASSIVE *test* utterance and appears in neither train nor de
 seen the text. One recording per sentence, stratified like the LLM subset. Audio is never copied
 into the repo; only WER and transcripts' effect on routing are reported.
 
-    python -m jarvis.bench.asr --model base.en
+    python -m mozhi.bench.asr --model base.en
 """
 
 import argparse
@@ -14,7 +14,7 @@ import json
 import random
 from pathlib import Path
 
-from jarvis.bench import data
+from mozhi.bench import data
 
 SLURP = data.RAW / "slurp" / "test0.parquet"
 

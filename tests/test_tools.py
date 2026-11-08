@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from jarvis import tools
+from mozhi import tools
 
 
 def test_reminder_parses_future_time():
@@ -29,7 +29,7 @@ def test_weather_needs_a_city():
 
 
 def test_clean_spells_out_recogniser_digits():
-    from jarvis.routers.joint import clean
+    from mozhi.routers.joint import clean
 
     assert clean("Block 1 hour from 10 tomorrow.") == ["block", "one", "hour", "from", "ten", "tomorrow"]
     assert clean("Wake me at 5:30 p.m.") == ["wake", "me", "at", "five", "thirty", "p", "m"]
@@ -55,5 +55,5 @@ def test_static_hints_match_python():
     import json
     from pathlib import Path
 
-    hints = json.loads((Path(__file__).parents[1] / "jarvis" / "web" / "hints.json").read_text(encoding="utf-8"))
+    hints = json.loads((Path(__file__).parents[1] / "mozhi" / "web" / "hints.json").read_text(encoding="utf-8"))
     assert hints == tools.UNSUPPORTED_HINT

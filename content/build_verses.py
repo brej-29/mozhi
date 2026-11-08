@@ -1,4 +1,4 @@
-"""Builds jarvis/web/content/verses.json from public-domain works.
+"""Builds mozhi/web/content/verses.json from public-domain works.
 
 Every work here is out of copyright (Thiruvalluvar, Avvaiyar, Poonthanam, Ezhuthachan, Kumaran Asan).
 Texts come from the Thirukkural JSON dataset (Apache-2.0) and from Tamil and Malayalam Wikisource
@@ -12,7 +12,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-OUT = Path(__file__).resolve().parents[1] / "jarvis" / "web" / "content" / "verses.json"
+OUT = Path(__file__).resolve().parents[1] / "mozhi" / "web" / "content" / "verses.json"
 UA = {"User-Agent": "mozhi-content-build/0.1 (portfolio project)"}
 KURAL_URL = "https://raw.githubusercontent.com/tk120404/thirukkural/master/thirukkural.json"
 

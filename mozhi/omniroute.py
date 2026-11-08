@@ -5,10 +5,10 @@
     started    Mozhi launched it and it is healthy; it will be stopped when Mozhi exits
     failed     it could not be started (not installed, crashed, or too slow); general questions explain why
     remote     the endpoint is not on this machine, so there is nothing to start
-    off        no endpoint configured, or JARVIS_MANAGE_OMNIROUTE=0
+    off        no endpoint configured, or MOZHI_MANAGE_OMNIROUTE=0
 
 On Windows the child is placed in a job object that kills it when Mozhi exits for any reason, including
-closing the console window or killing jarvis.exe, so it cannot be left behind by accident.
+closing the console window or killing mozhi.exe, so it cannot be left behind by accident.
 """
 
 import atexit
@@ -23,7 +23,7 @@ from urllib.parse import urlparse
 
 import httpx
 
-log = logging.getLogger("jarvis.omniroute")
+log = logging.getLogger("mozhi.omniroute")
 LOCAL = {"localhost", "127.0.0.1", "::1", "[::1]"}
 READY_TIMEOUT_S = float(os.getenv("OMNIROUTE_READY_TIMEOUT_S", "90"))
 
@@ -102,7 +102,7 @@ class OmniRoute:
     # ---- lifecycle ----
     def ensure(self, endpoint: str) -> None:
         """Make sure something answers at the endpoint. Blocking, so run it in a thread."""
-        if os.getenv("JARVIS_MANAGE_OMNIROUTE", "1") == "0" or not endpoint:
+        if os.getenv("MOZHI_MANAGE_OMNIROUTE", "1") == "0" or not endpoint:
             self.state = "off"
             return
         target = self._target(endpoint)

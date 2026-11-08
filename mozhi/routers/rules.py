@@ -2,7 +2,7 @@
 
 import re
 
-from jarvis.schema import Route
+from mozhi.schema import Route
 
 WEATHER = re.compile(
     r"\b(weather|forecast|rain|raining|rainy|snow|snowing|temperature|sunny|cloudy|windy|"

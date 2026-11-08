@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 import dateparser
 import httpx
 
-from jarvis.routers.joint import clean
+from mozhi.routers.joint import clean
 
 GEO = "https://geocoding-api.open-meteo.com/v1/search"
 FORECAST = "https://api.open-meteo.com/v1/forecast"
@@ -124,7 +124,7 @@ def reminder(when: str, title: str, tz_offset_min: int = 0, now: datetime | None
         "type": "reminder", "title": label, "at": at.isoformat()}
 
 
-_LEAD = re.compile(r"^(?:(?:hey |ok |okay )?jarvis,? )?(?:please )?(?:remind me|set (?:a |an )?reminder|reminder)(?: to| about| that| for)? ?")
+_LEAD = re.compile(r"^(?:(?:hey |ok |okay )?(?:jarvis|mozhi),? )?(?:please )?(?:remind me|set (?:a |an )?reminder|reminder)(?: to| about| that| for)? ?")
 
 
 def reminder_title(text: str, when: str) -> str:
@@ -151,4 +151,4 @@ def unsupported(intent: str) -> str:
 GREETING = "Hello. I can check the weather, set reminders and save notes. What do you need?"
 
 
-from jarvis.llm import answer, stream_answer  # noqa: F401  (general questions live in jarvis/llm.py)
+from mozhi.llm import answer, stream_answer  # noqa: F401  (general questions live in mozhi/llm.py)

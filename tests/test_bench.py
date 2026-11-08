@@ -1,5 +1,5 @@
-from jarvis.bench import data, metrics
-from jarvis.schema import Route
+from mozhi.bench import data, metrics
+from mozhi.schema import Route
 
 
 def test_mapping_and_slots():

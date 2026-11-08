@@ -1,6 +1,6 @@
 import pytest
 
-from jarvis.routers.joint2 import MODEL_DIR, JointRouter2, clean, language
+from mozhi.routers.joint2 import MODEL_DIR, JointRouter2, clean, language
 
 pytestmark = pytest.mark.skipif(not (MODEL_DIR / "model.int8.onnx").exists(), reason="J2 model is not shipped")
 

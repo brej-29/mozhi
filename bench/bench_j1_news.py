@@ -6,9 +6,9 @@ import json
 from dataclasses import asdict
 from pathlib import Path
 
-from jarvis.bench import data, metrics
-from jarvis.bench.run import run_items
-from jarvis.routers.joint import JointRouter
+from mozhi.bench import data, metrics
+from mozhi.bench.run import run_items
+from mozhi.routers.joint import JointRouter
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "bench" / "results"

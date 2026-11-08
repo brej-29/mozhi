@@ -12,11 +12,11 @@ from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from jarvis import llm, news, tools
-from jarvis.omniroute import manager
-from jarvis.routers.joint import JointRouter
-from jarvis.routers.joint2 import MODEL_DIR as J2_DIR
-from jarvis.routers.joint2 import JointRouter2, language
+from mozhi import llm, news, tools
+from mozhi.omniroute import manager
+from mozhi.routers.joint import JointRouter
+from mozhi.routers.joint2 import MODEL_DIR as J2_DIR
+from mozhi.routers.joint2 import JointRouter2, language
 
 llm.load_dotenv()
 WEB = Path(__file__).resolve().parent / "web"
@@ -35,9 +35,9 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(title="Mozhi", version="2.0.0", lifespan=lifespan)
 # Reject foreign Host headers so a web page cannot reach the local API through DNS rebinding.
-# A hosted deployment lists its public hostname in JARVIS_ALLOWED_HOSTS (comma separated).
+# A hosted deployment lists its public hostname in MOZHI_ALLOWED_HOSTS (comma separated).
 _hosts = ["localhost", "127.0.0.1", "[::1]", "testserver"]
-_hosts += [h.strip() for h in os.getenv("JARVIS_ALLOWED_HOSTS", "").split(",") if h.strip()]
+_hosts += [h.strip() for h in os.getenv("MOZHI_ALLOWED_HOSTS", "").split(",") if h.strip()]
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=_hosts)
 
 

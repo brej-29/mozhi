@@ -4,7 +4,7 @@ import os
 from PyInstaller.utils.hooks import collect_data_files, collect_submodules
 
 ROOT = os.path.abspath(os.path.join(SPECPATH, ".."))
-datas = [(f"{ROOT}/mozhi/web", "mozhi/web"), (f"{ROOT}/models/joint", "models/joint"),
+datas = [(f"{ROOT}/mozhi/web", "mozhi/web"), (f"{ROOT}/models/joint", "models/joint"), (f"{ROOT}/models/joint2", "models/joint2"),
          (f"{ROOT}/mozhi/legacy/goal_excerpt.txt", "mozhi/legacy"),
          (f"{ROOT}/mozhi/legacy/components_excerpt.txt", "mozhi/legacy")]
 datas += collect_data_files("dateparser") + collect_data_files("tzlocal")

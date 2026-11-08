@@ -1,7 +1,7 @@
 """Run one router over the benchmark and write metrics plus per-item predictions.
 
-    python -m jarvis.bench.run r0 --set full
-    python -m jarvis.bench.run l1 --model data/raw/models/qwen2.5-1.5b-instruct-q4_k_m.gguf --set subset
+    python -m mozhi.bench.run r0 --set full
+    python -m mozhi.bench.run l1 --model data/raw/models/qwen2.5-1.5b-instruct-q4_k_m.gguf --set subset
 """
 
 import argparse
@@ -10,36 +10,36 @@ import time
 from dataclasses import asdict
 from pathlib import Path
 
-from jarvis.bench import data, metrics
+from mozhi.bench import data, metrics
 
 RESULTS = data.ROOT / "bench" / "results"
 
 
 def build(system: str, model: str | None, gpu: int, **kw):
     if system == "r0":
-        from jarvis.routers.rules import RuleRouter
+        from mozhi.routers.rules import RuleRouter
 
         return RuleRouter()
     if system in ("l0", "l0x", "l1"):
-        from jarvis.routers.llm import LlamaRouter
+        from mozhi.routers.llm import LlamaRouter
 
         return LlamaRouter(model, mode={"l0": "v1", "l0x": "v1x"}.get(system, "min"), n_gpu_layers=gpu)
     if system == "m1":
-        from jarvis.routers.linear import LinearRouter
+        from mozhi.routers.linear import LinearRouter
 
         return LinearRouter.load()
     if system == "j2":
-        from jarvis.routers.joint2 import MODEL_DIR, JointRouter2
+        from mozhi.routers.joint2 import MODEL_DIR, JointRouter2
 
         return JointRouter2(Path(model) if model else MODEL_DIR, threshold=kw.get("threshold"))
     if system in ("j1", "c1"):
-        from jarvis.routers.joint import MODEL_DIR, JointRouter
+        from mozhi.routers.joint import MODEL_DIR, JointRouter
 
         j = JointRouter(Path(model) if model else MODEL_DIR, threshold=kw.get("threshold"))
         if system == "j1":
             return j
-        from jarvis.routers.cascade import Cascade
-        from jarvis.routers.llm import LlamaRouter
+        from mozhi.routers.cascade import Cascade
+        from mozhi.routers.llm import LlamaRouter
 
         tau = Cascade.tau_for_rate(j, data.load("dev"), kw["rate"])
         print(f"cascade tau={tau:.3f} for dev fallback rate {kw['rate']}")
@@ -69,7 +69,7 @@ def main():
     ap.add_argument("--tag", default="")
     ap.add_argument("--quirky", action="store_true", help="sensitivity: include general_quirky")
     ap.add_argument("--limit", type=int)
-    ap.add_argument("--asr", help="Whisper transcript JSON from jarvis.bench.asr")
+    ap.add_argument("--asr", help="Whisper transcript JSON from mozhi.bench.asr")
     ap.add_argument("--asr-clean", action="store_true", help="same items, gold text instead of transcripts")
     ap.add_argument("--threshold", type=float)
     ap.add_argument("--llm", help="GGUF path for the cascade fallback")

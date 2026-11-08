@@ -6,10 +6,10 @@ from scipy.sparse import hstack
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 
-from jarvis.bench import data
-from jarvis.bench.metrics import macro_f1, rates
-from jarvis.routers.rules import CITY, STOP_CITY, WHEN
-from jarvis.schema import ACTION_TOOLS, Route, action_view
+from mozhi.bench import data
+from mozhi.bench.metrics import macro_f1, rates
+from mozhi.routers.rules import CITY, STOP_CITY, WHEN
+from mozhi.schema import ACTION_TOOLS, Route, action_view
 
 _CACHE = {}
 

@@ -4,7 +4,7 @@ Only recordings whose sentence is a MASSIVE train utterance are used, and any se
 occurs in MASSIVE dev/test is dropped, so the transcripts cannot leak the evaluation text.
 The label comes from the MASSIVE train item, the words from the recogniser.
 
-    python -m jarvis.bench.asr_train --model base.en --device cuda --limit 8000
+    python -m mozhi.bench.asr_train --model base.en --device cuda --limit 8000
 """
 
 import argparse
@@ -12,8 +12,8 @@ import io
 import json
 import random
 
-from jarvis.bench import data
-from jarvis.bench.asr import whisper
+from mozhi.bench import data
+from mozhi.bench.asr import whisper
 
 TRAIN_SHARDS = sorted((data.RAW / "slurp").glob("train*.parquet"))
 

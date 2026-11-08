@@ -12,7 +12,7 @@ from pathlib import Path
 
 import numpy as np
 
-from jarvis.routers.joint2 import ACTION_TOOLS, JointRouter2
+from mozhi.routers.joint2 import ACTION_TOOLS, JointRouter2
 from training import synth_koottu
 from training.train_joint2 import LANG_FILES, massive_rows, tool_map
 

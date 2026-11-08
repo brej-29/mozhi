@@ -5,7 +5,7 @@ from datetime import datetime
 
 import numpy as np
 
-from jarvis.schema import ACTION_TOOLS, NO_ACTION, action_view
+from mozhi.schema import ACTION_TOOLS, NO_ACTION, action_view
 
 VIEW = (*ACTION_TOOLS, NO_ACTION)
 _WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"]

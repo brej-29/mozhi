@@ -8,8 +8,8 @@ L1 is the fair baseline: short prompt, few-shot, JSON-schema constrained decodin
 import json
 import re
 
-from jarvis.legacy.v1_prompt import V1_CONTRACT, V1_ROUTER_SYSTEM
-from jarvis.schema import TOOLS, Route
+from mozhi.legacy.v1_prompt import V1_CONTRACT, V1_ROUTER_SYSTEM
+from mozhi.schema import TOOLS, Route
 
 V1_TOOLS = ("WEATHER", "SET_REMINDER", "SAVE_NOTE", "GENERAL_QA")
 
@@ -75,7 +75,7 @@ class LlamaRouter:
                  n_threads: int | None = None):
         import os
 
-        for d in filter(None, os.environ.get("JARVIS_DLL_DIRS", "").split(os.pathsep)):
+        for d in filter(None, os.environ.get("MOZHI_DLL_DIRS", "").split(os.pathsep)):
             os.add_dll_directory(d)  # Windows: CUDA runtime DLLs for the GPU build of llama.cpp
         from llama_cpp import Llama
 

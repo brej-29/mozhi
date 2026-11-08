@@ -4,7 +4,7 @@ import time
 
 import numpy as np
 
-from jarvis.schema import Route
+from mozhi.schema import Route
 
 
 class Cascade:
