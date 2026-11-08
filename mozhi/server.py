@@ -21,6 +21,7 @@ from mozhi.routers.joint2 import JointRouter2, language
 llm.load_dotenv()
 WEB = Path(__file__).resolve().parent / "web"
 state: dict = {}
+tools_acting = ("WEATHER", "SET_REMINDER", "SAVE_NOTE")
 
 
 @asynccontextmanager
@@ -66,8 +67,13 @@ def route_json(r) -> dict:
 
 def run_router(text: str):
     t0 = time.perf_counter()
-    router = state["router2"] if state["router2"] and language(text) != "en" else state["router"]
-    r = router.route(text)
+    r2 = state["router2"]
+    r = (r2 if r2 and language(text) != "en" else state["router"]).route(text)
+    if r2 and language(text) == "en" and r.tool not in tools_acting:
+        # J1 knows nothing of news, stories or verses; if the multilingual router is sure it is one of those, use it
+        alt = r2.route(text)
+        if alt.tool in ("NEWS", "STORY", "VERSE") and alt.confidence >= 0.6:
+            r = alt
     r.ms = (time.perf_counter() - t0) * 1000
     return r
 

@@ -65,7 +65,7 @@ export async function news(lang = "en") {
   const proxy = window.MOZHI_PROXY && (await getJSON(`${window.MOZHI_PROXY}/news?lang=${lang}`));
   if (proxy?.items?.length) return { kind: "news", items: proxy.items.map(cleanItem).filter(Boolean).slice(0, 6) };
   const j = await getJSON(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(FEEDS[lang] || FEEDS.en)}`);
-  if (j?.status !== "ok" || !j.items?.length) return null;
+  if (j?.status !== "ok" || !j.items?.length) return currentEvents(); // the free converter is rate limited at times
   const source = j.feed?.title || "";
   return { kind: "news", items: j.items.slice(0, 6).map((i) => cleanItem({ title: i.title, url: i.link, source, published: i.pubDate })).filter(Boolean) };
 }
@@ -75,4 +75,26 @@ const cleanItem = (i) => (i?.title && httpsOnly(i.url) ? { title: String(i.title
 async function proxySearch(text, lang) {
   const j = await getJSON(`${window.MOZHI_PROXY}/search?lang=${lang}&q=${encodeURIComponent(text.slice(0, 200))}`);
   return j?.text && j.title ? { kind: "search", title: String(j.title).slice(0, 160), text: firstSentences(j.text), url: httpsOnly(j.url), source: String(j.source || "Web search").slice(0, 80), lang } : null;
+}
+
+/** Fallback with no third party and no key: Wikipedia's "Current events" portal, the last two days. English only. */
+async function currentEvents() {
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  for (const back of [0, 1]) {
+    const d = new Date(Date.now() - back * 86400000);
+    const page = `Portal:Current_events/${d.getFullYear()}_${months[d.getMonth()]}_${d.getDate()}`;
+    const j = await getJSON(`https://en.wikipedia.org/w/api.php?action=parse&page=${encodeURIComponent(page)}&prop=text&format=json&formatversion=2&origin=*`);
+    if (!j?.parse?.text) continue;
+    const doc = new DOMParser().parseFromString(j.parse.text, "text/html"); // parsed into an inert document; only text and hrefs are read
+    const items = [];
+    for (const li of doc.querySelectorAll("li")) {
+      if (li.querySelector("ul, li")) continue;
+      const text = li.textContent.replace(/\[\d+\]/g, "").replace(/\s+/g, " ").trim();
+      const href = li.querySelector('a[href^="/wiki/"]')?.getAttribute("href");
+      if (text.length > 60 && href && !/^(edit|history|watch)/i.test(text)) items.push({ title: firstSentences(text, 200), url: "https://en.wikipedia.org" + href, source: "Wikipedia current events, CC BY-SA", published: "" });
+      if (items.length === 6) break;
+    }
+    if (items.length) return { kind: "news", items };
+  }
+  return null;
 }

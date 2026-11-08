@@ -18,9 +18,10 @@ cache = root / ".vendor_cache"
 
 shutil.rmtree(out, ignore_errors=True)  # may fail if a server is running inside it; copytree overwrites
 shutil.copytree(root / "mozhi" / "web", out, dirs_exist_ok=True)
-(out / "model").mkdir(exist_ok=True)
-for name in ("model.int8.onnx", "tokenizer.json", "meta.json"):
-    shutil.copy(root / "models" / "joint" / name, out / "model" / name)
+for source, target in (("joint", "model"), ("joint2", "model2")):
+    (out / target).mkdir(exist_ok=True)
+    for name in ("model.int8.onnx", "tokenizer.json", "meta.json"):
+        shutil.copy(root / "models" / source / name, out / target / name)
 
 (out / "vendor" / "ort").mkdir(parents=True, exist_ok=True)
 cache.mkdir(exist_ok=True)
