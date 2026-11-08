@@ -7,7 +7,8 @@ Without this, Mozhi answers open questions and "search" from Wikipedia (English,
 | Key never reaches the browser | `TAVILY_API_KEY` is a Worker secret. The page only knows the Worker URL. |
 | Stops at half the allowance | Every call is counted in KV before it is made. At `TAVILY_MONTHLY_LIMIT x CAP_FRACTION` (default 1,000 x 0.5 = 500 searches a month) `/search` returns 503 and the page falls back to Wikipedia. Check the limit on your Tavily dashboard and set `TAVILY_MONTHLY_LIMIT` to match. |
 | One visitor cannot drain it | `PER_IP_DAILY` (default 15) searches a day per IP. |
-| Only the Mozhi site can call it | `ALLOWED_ORIGINS` (default `https://brej-29.github.io`); other origins get 403. |
+| Browsers on other sites cannot call it | `ALLOWED_ORIGINS` (default `https://brej-29.github.io`). This is a CORS rule, not authentication: a script can fake the header, so rely on the caps. |
+| Hard stop at the provider | In the Tavily dashboard set a usage limit on the account itself. KV counters are eventually consistent, so a burst can overshoot the half-way cap by a few calls; the account limit is the backstop. |
 | No logging of queries | The Worker stores only counters. |
 
 ## Deploy (about five minutes, free plan)

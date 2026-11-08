@@ -1,6 +1,7 @@
 /* Mozhi search proxy for Cloudflare Workers (free plan).
    Why it exists: a web-search API key must never sit in a web page. This Worker holds the key as a secret,
-   answers only requests from the Mozhi site, and stops by itself when half of the monthly allowance is used.
+   answers browsers on the Mozhi site (the origin check is a CORS rule, not authentication: a script can fake the header, so the
+   caps below are the real protection), and stops by itself when half of the monthly allowance is used.
 
    Routes (GET):
      /search?q=...&lang=en|ta|ml   one web result via Tavily: {title, text, url, source}
@@ -71,14 +72,14 @@ export default {
       if (!env.TAVILY_API_KEY || !env.USAGE) return json({ disabled: true, reason: "not configured" }, 503, origin);
 
       const limit = Number(env.TAVILY_MONTHLY_LIMIT || 1000), cap = Math.floor(limit * Number(env.CAP_FRACTION || 0.5));
-      const used = Number((await env.USAGE.get(`tavily:${month()}`)) || 0);
-      if (used >= cap) return json({ disabled: true, reason: "monthly cap reached" }, 503, origin);
-
       const ip = request.headers.get("cf-connecting-ip") || "unknown";
+      // Count first, then compare the number that came back, so a call that is refused still counts and never goes uncounted.
+      // KV is eventually consistent, so a burst can overshoot the cap by a few calls. The cap is half the allowance on purpose,
+      // which leaves the rest as headroom, and the Tavily account should carry its own hard limit (see README).
       const perIp = await bump(env.USAGE, `ip:${day()}:${ip}`, 90000);
       if (perIp > Number(env.PER_IP_DAILY || 15)) return json({ disabled: true, reason: "daily limit for this visitor" }, 429, origin);
-
-      await bump(env.USAGE, `tavily:${month()}`, 3 * 31 * 86400); // count before the call, so a failure cannot push usage past the cap
+      const used = await bump(env.USAGE, `tavily:${month()}`, 3 * 31 * 86400);
+      if (used > cap) return json({ disabled: true, reason: "monthly cap reached" }, 503, origin);
       const r = await fetch("https://api.tavily.com/search", {
         method: "POST",
         headers: { "content-type": "application/json", authorization: `Bearer ${env.TAVILY_API_KEY}` },
