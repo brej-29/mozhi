@@ -28,6 +28,10 @@ def build(system: str, model: str | None, gpu: int, **kw):
         from jarvis.routers.linear import LinearRouter
 
         return LinearRouter.load()
+    if system == "j2":
+        from jarvis.routers.joint2 import MODEL_DIR, JointRouter2
+
+        return JointRouter2(Path(model) if model else MODEL_DIR, threshold=kw.get("threshold"))
     if system in ("j1", "c1"):
         from jarvis.routers.joint import MODEL_DIR, JointRouter
 

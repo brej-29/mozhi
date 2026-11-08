@@ -3,7 +3,7 @@ PY = .venv/Scripts/python.exe
 LLM15 = data/raw/models/qwen2.5-1.5b-instruct-q4_k_m.gguf
 LLM05 = data/raw/models/qwen2.5-0.5b-instruct-q4_k_m.gguf
 
-.PHONY: setup test run exe eval train repro
+.PHONY: setup test run exe eval train train-j2 repro
 
 setup:
 	uv venv --python 3.11 .venv
@@ -23,6 +23,9 @@ exe:
 
 train:
 	for s in 0 1 2; do PYTHONPATH=. $(PY) training/train_joint.py --seed $$s --out models/aug_seed$$s; done
+
+train-j2:
+	PYTHONPATH=. $(PY) training/train_joint2.py --seeds 0,1,2 --epochs 3 --out models/joint2
 
 # Fast systems on the full test set (about a minute)
 eval:

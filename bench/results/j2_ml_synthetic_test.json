@@ -1,0 +1,67 @@
+{
+  "system": "j2",
+  "language": "ml",
+  "synthetic": true,
+  "n": 24,
+  "labels_with_support": [
+    "NEWS",
+    "SAVE_NOTE",
+    "STORY",
+    "VERSE"
+  ],
+  "tool_macro_f1": 0.575,
+  "tool_macro_f1_ci95": [
+    0.41656249999999995,
+    0.6875
+  ],
+  "action_macro_f1": 0.21428571428571427,
+  "action_macro_f1_ci95": [
+    0.18421052631578946,
+    0.2391304347826087
+  ],
+  "f1_per_tool": {
+    "WEATHER": 0.0,
+    "SET_REMINDER": 0.0,
+    "SAVE_NOTE": 0.0,
+    "GENERAL_QA": 0.0,
+    "NEWS": 1.0,
+    "STORY": 0.8,
+    "VERSE": 0.5,
+    "UNSUPPORTED": 0.0
+  },
+  "false_action_rate": 0.0,
+  "false_action_rate_ci95": [
+    0.0,
+    0.17587922364665765
+  ],
+  "p50_ms": 0.18055003602057695,
+  "p95_ms": 0.259859935613349,
+  "p50_ms_ci95": [
+    0.16960001084953547,
+    0.19520753121469167
+  ],
+  "p95_ms_ci95": [
+    0.21953420378849836,
+    0.4681000718846917
+  ],
+  "model_bytes": 917706,
+  "new_tools": {
+    "synthetic": true,
+    "labels": [
+      "NEWS",
+      "STORY",
+      "VERSE"
+    ],
+    "n": 18,
+    "macro_f1": 0.7666666666666666,
+    "macro_f1_ci95": [
+      0.5384615384615384,
+      0.9111111111111111
+    ],
+    "f1_per_tool": {
+      "NEWS": 1.0,
+      "STORY": 0.8,
+      "VERSE": 0.5
+    }
+  }
+}

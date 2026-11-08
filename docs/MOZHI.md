@@ -102,3 +102,24 @@ data; recogniser output in native script will be noisier than the benchmark.
 ## Deviations
 
 Appended after the work, if there are any.
+
+1. **Encoder.** The planned pruned multilingual DistilBERT was not trained to completion. The shipped J2 is a
+   compact WordPiece encoder (0.9 MB int8) trained from scratch, which is the fallback the plan allowed.
+2. **Synthetic templates.** The synthetic repetition count was raised from 3 to 40 and the template set expanded
+   for NEWS, STORY and VERSE. T13 was not re-measured after that expansion.
+3. **Browser parity (T12).** Only token ids were compared (1,800 of 1,800 matched); tool decisions in a real
+   browser were not run.
+
+## Outcomes (J2, first model)
+
+| Id | Target | Measured | Status |
+|---|---|---|---|
+| T8 | Tamil and Malayalam 0.85 each | Tamil 0.818, Malayalam 0.809 | Missed |
+| T9 | English at least 0.911 | 0.920 | Met |
+| T10 | 60 MB, 15 ms | 0.9 MB, 0.22 ms p50 | Met |
+| T11 | False actions at most 2% | 1.2%, 1.6%, 1.3% (en, ta, ml) | Met |
+| T12 | 99% browser agreement | token ids only | Unverified |
+| T13 | 0.90 synthetic held-out | not re-measured | Unverified |
+| T14 | 0.80 probes per language | en 0.80, ta 0.80, ml 0.73 | Malayalam missed |
+
+Full table with intervals: `bench/results/J2_REPORT.md`. The next step is a pretrained multilingual encoder.
