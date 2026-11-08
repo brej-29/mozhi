@@ -132,7 +132,7 @@ Listed in the order they happened. None changed a threshold.
    note requests.
 3. **Notes and wake word.** MASSIVE has no "save a note" intent, so a model trained on it alone could not
    take a note. Synthetic note phrasings (`training/synth.py`, split by content between train and dev) and a
-   wake-word augmentation ("hey jarvis") were added to training. The test set is untouched. The
+   wake-word augmentation ("hey mozhi") were added to training. The test set is untouched. The
    MASSIVE-only model is kept and reported as `J1v0`, so the pre-registered setup is still measured.
 4. **Speech.** T6 failed with a MASSIVE-only model. The planned fallback was simulated recognition noise;
    instead I used real recogniser output: 6,600 Whisper base.en transcripts of SLURP *train* recordings
@@ -144,7 +144,7 @@ Listed in the order they happened. None changed a threshold.
    pasted docs (H3), a Mistral 7B run through llama.cpp on GPU (the V1 default family, but a GGUF Q4_K_M build
    rather than Ollama's tag).
 7. **Latency.** Latency in the accuracy runs was measured while other jobs shared the CPU. The numbers
-   reported as latency come from `jarvis.bench.latency`, run alone on an idle machine.
+   reported as latency come from `mozhi.bench.latency`, run alone on an idle machine.
 
 ## Outcomes
 

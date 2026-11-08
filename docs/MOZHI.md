@@ -20,7 +20,7 @@ they are talking to. A flat "you" is wrong in both languages. That register is t
 | Thunai (துணை / തുണ) | support, a companion | Also means a spouse, so not used. |
 | Vaani (வாணி / വാണി) | speech, voice | Also a person's name. |
 
-The name lives in one value (`app.name` in `jarvis/web/i18n.json`), so changing it is one edit. The repository
+The name lives in one value (`app.name` in `mozhi/web/i18n.json`), so changing it is one edit. The repository
 and live URL keep the old slug so existing links work. Meanings are my reading; a native speaker should confirm.
 Some file names keep the earlier working name (`tests/probes_koottu.json`, `training/synth_koottu.py`) because the
 pre-registration and the training scripts refer to them.

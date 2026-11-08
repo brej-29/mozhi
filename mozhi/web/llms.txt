@@ -1,0 +1,22 @@
+# Mozhi
+
+> Mozhi is a free, open-source voice assistant for Tamil, Malayalam and English. A small trained router (a fine-tuned MiniLM, 23 MB, int8 ONNX) picks which tool to run in about 2 ms and declines requests it cannot do. It replaces the usual approach of asking a large language model to choose tools, which was slower and less reliable in the author's measurements. It runs in the browser and as a Windows app.
+
+Mozhi (Tamil: மொழி, Malayalam: മൊഴി) means "speech" or "language". Earlier names of the project: Jarvis voice agent, Koottu.
+
+## Key facts
+- Router accuracy: 0.941 action macro-F1 (95% CI 0.916 to 0.962) on 2,805 MASSIVE English test requests, 0.8% false actions, 2.2 ms median latency.
+- Best LLM prompt baseline on the same task: 0.879 macro-F1, about 1,050 ms median latency (Qwen 1.5B, 539-request subset where the router scored 0.953).
+- Tamil and Malayalam router (first model): 0.818 and 0.809 macro-F1, below the 0.85 target the author set in advance.
+- Respect meter: five levels that change the address term and the polite or informal "you" (da, thambi, anna, sir, ayya in Tamil; da, mone, chetta, saar, muthalali in Malayalam).
+- Content: 1,475 public-domain verses (Thirukkural, Aathichoodi, Jnanappana and others) and 14 folk tale summaries with source links.
+- Licence: MIT. Data: MASSIVE (CC BY 4.0).
+
+## Links
+- Live demo: https://brej-29.github.io/mozhi/
+- Source code and full evaluation: https://github.com/brej-29/mozhi
+- Pre-registered evaluation: https://github.com/brej-29/mozhi/blob/main/docs/PREREG.md
+- Tamil and Malayalam design note: https://github.com/brej-29/mozhi/blob/main/docs/MOZHI.md
+
+## Author
+Brejesh Balakrishnan, https://github.com/brej-29

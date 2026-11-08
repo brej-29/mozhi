@@ -1,7 +1,7 @@
 /* One interface for the UI, two backends.
-   Server mode (python -m jarvis): calls /api/health and /api/chat.
-   Static mode (GitHub Pages, window.JARVIS_STATIC): runs the same int8 ONNX router in the browser. */
-export const STATIC = !!window.JARVIS_STATIC;
+   Server mode (python -m mozhi): calls /api/health and /api/chat.
+   Static mode (GitHub Pages, window.MOZHI_STATIC): runs the same int8 ONNX router in the browser. */
+export const STATIC = !!window.MOZHI_STATIC;
 
 // third-party code is vendored (see packaging/build_pages.py), so the page loads nothing from other origins
 const ORT = new URL("vendor/ort/", document.baseURI).href;
@@ -53,7 +53,7 @@ export async function chat(body, on = {}) {
   return { reply, action, route };
 }
 
-/* ---------- text normalisation, a port of jarvis/routers/joint.py ---------- */
+/* ---------- text normalisation, a port of mozhi/routers/joint.py ---------- */
 const SMALL = "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen".split(" ");
 const TENS = "x x twenty thirty forty fifty sixty seventy eighty ninety".split(" ");
 function numWords(n) {
@@ -165,7 +165,7 @@ async function loadRouter() {
   return api;
 }
 
-/* ---------- tools (ports of jarvis/tools.py) ---------- */
+/* ---------- tools (ports of mozhi/tools.py) ---------- */
 const WMO = { 0: "clear", 1: "mostly clear", 2: "partly cloudy", 3: "overcast", 45: "foggy", 48: "foggy", 51: "light drizzle", 53: "drizzle", 55: "heavy drizzle", 61: "light rain", 63: "rain", 65: "heavy rain", 71: "light snow", 73: "snow", 75: "heavy snow", 80: "rain showers", 81: "rain showers", 82: "violent showers", 95: "a thunderstorm", 96: "thunderstorm and hail", 99: "thunderstorm and hail" };
 const WORD_NUM = Object.fromEntries("zero one two three four five six seven eight nine ten eleven twelve".split(" ").map((w, i) => [w, String(i)]));
 const DAYPART = { morning: "9 am", afternoon: "3 pm", evening: "6 pm", night: "8 pm" };
@@ -183,7 +183,7 @@ export function normalizeWhen(text) {
   return t.trim();
 }
 const HAS_TIME = /\d|noon|midnight|\bam\b|\bpm\b|\bin \w+ (?:minutes?|hours?)\b/;
-const LEAD = /^(?:(?:hey |ok |okay )?jarvis,? )?(?:please )?(?:remind me|set (?:a |an )?reminder|reminder)(?: to| about| that| for)? ?/;
+const LEAD = /^(?:(?:hey |ok |okay )?(?:jarvis|mozhi),? )?(?:please )?(?:remind me|set (?:a |an )?reminder|reminder)(?: to| about| that| for)? ?/;
 export function reminderTitle(text, when) {
   let t = clean(text).join(" ").replace(LEAD, "");
   for (const w of when.split(/\s+/).filter(Boolean)) t = t.replace(new RegExp(`\\b${w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`), " ");
@@ -260,29 +260,29 @@ export const PROVIDERS = {
 const DAILY_CAP = 100;
 // An earlier version saved the key in localStorage, which other pages on this shared origin can read.
 // Remove any such copy as soon as this file loads, before anyone interacts with the page.
-try { localStorage.removeItem("jarvis.byok"); } catch { /* storage blocked */ }
+try { localStorage.removeItem("jarvis.byok"); localStorage.removeItem("mozhi.byok"); } catch { /* storage blocked */ }
 export const byok = {
   // Kept for this tab only (sessionStorage). The site shares its origin (brej-29.github.io) with other pages,
   // so nothing about the key is written to storage that outlives the tab.
   get() {
-    try { const v = JSON.parse(sessionStorage.getItem("jarvis.byok")); if (v?.provider in PROVIDERS && v.key && v.model) return v; } catch { /* storage blocked */ }
+    try { const v = JSON.parse(sessionStorage.getItem("mozhi.byok")); if (v?.provider in PROVIDERS && v.key && v.model) return v; } catch { /* storage blocked */ }
     return null;
   },
   set(v) {
     this.clear();
-    try { sessionStorage.setItem("jarvis.byok", JSON.stringify(v)); } catch { /* storage blocked */ }
+    try { sessionStorage.setItem("mozhi.byok", JSON.stringify(v)); } catch { /* storage blocked */ }
   },
   clear() {
-    for (const store of [sessionStorage, localStorage]) { try { store.removeItem("jarvis.byok"); } catch { /* ignore */ } } // also removes a key saved by an older version
+    for (const store of [sessionStorage, localStorage]) { try { store.removeItem("mozhi.byok"); store.removeItem("jarvis.byok"); } catch { /* ignore */ } } // also removes a key saved by an older version
   },
 };
 function underCap() {
   const day = new Date().toISOString().slice(0, 10);
   try {
-    const c = JSON.parse(localStorage.getItem("jarvis.calls") || "{}");
+    const c = JSON.parse(localStorage.getItem("mozhi.calls") || "{}");
     const n = c.day === day ? c.n : 0;
     if (n >= DAILY_CAP) return false;
-    localStorage.setItem("jarvis.calls", JSON.stringify({ day, n: n + 1 }));
+    localStorage.setItem("mozhi.calls", JSON.stringify({ day, n: n + 1 }));
   } catch { /* storage blocked: the provider's own limits still apply */ }
   return true;
 }

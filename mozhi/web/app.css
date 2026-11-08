@@ -260,3 +260,9 @@ select option, select optgroup { background-color: var(--solid); color: var(--in
 .slip.answering::after { content: attr(data-tokens) " tokens"; position: absolute; right: 16px; top: 14px; font: 600 .7rem var(--body); color: var(--qa); padding: 2px 8px; border-radius: 999px; background: color-mix(in srgb, var(--qa) 14%, transparent); animation: pulse 1.2s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: .55; } }
 @media (prefers-reduced-motion: reduce) { .heard span, .scores .bar i, .dots i, .scores li.scanning .bar i, .slip.answering::after { animation: none; transition: none; } }
+
+/* ---------- about text: read by people who scroll and by search engines ---------- */
+.about { max-width: 760px; margin: 56px auto 24px; padding: 0 16px; color: var(--mute); font-size: .92rem; line-height: 1.65; }
+.about h2 { font: 600 1rem var(--display); color: var(--ink); margin: 22px 0 6px; }
+.about p { margin: 0 0 8px; }
+.about a { color: var(--ink); text-underline-offset: 3px; }

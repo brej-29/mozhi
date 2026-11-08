@@ -1,201 +1,183 @@
-# Jarvis: a voice assistant that knows when not to act
+<h1 align="center">Mozhi</h1>
 
-[![CI](https://github.com/brej-29/jarvis-voice-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/brej-29/jarvis-voice-agent/actions/workflows/ci.yml)
+<p align="center"><b>A Tamil, Malayalam and English voice assistant that checks before it acts.</b><br>
+A 2 ms trained router instead of an LLM prompt. It declines what it cannot do and speaks to you at the respect level you choose.</p>
 
-A local voice assistant router. It reads what you said, picks one of five outcomes (weather, reminder, note, answer, or "I cannot do that") in about 2 ms on one CPU thread, and says plainly when it has no tool for a request.
+<p align="center">
+  <a href="https://brej-29.github.io/mozhi/"><img alt="Live demo" src="https://img.shields.io/badge/live%20demo-open-1fa391?style=for-the-badge"></a>
+  <a href="https://github.com/brej-29/mozhi/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/brej-29/mozhi/actions/workflows/ci.yml/badge.svg"></a>
+  <img alt="Licence MIT" src="https://img.shields.io/badge/licence-MIT-blue">
+  <img alt="Python 3.11" src="https://img.shields.io/badge/python-3.11-3776ab">
+  <img alt="Runs in the browser" src="https://img.shields.io/badge/runs%20in-the%20browser-f0b04a">
+</p>
 
-**Live demo:** https://brej-29.github.io/jarvis-voice-agent/ (free, no server: the router runs in your browser, see [limits](#free-hosting-and-limits)).
-**Windows app:** `make exe` builds a single `jarvis.exe` that runs the same app offline on your machine, no Python needed (see [Run it](#run-it)). I have not published a prebuilt copy.
+<p align="center"><a href="https://brej-29.github.io/mozhi/"><img src="docs/images/og.png" alt="Mozhi reading a Tanglish weather request: heard words, a probability for every tool, the decline threshold and a one-line reason" width="860"></a></p>
 
-![Decision slips: each request lights a trace from Heard to Replied, and a declined request stops at the router](docs/images/talk.png)
+**Mozhi** (மொழி, മൊഴി) means "speech" or "language" in Tamil and Malayalam. It started as a Jarvis voice agent that asked a small language model to choose tools. I measured that approach, found it slow and unreliable, and rebuilt it around a 23 MB fine-tuned router that decides in about 2 milliseconds.
 
-The orb is the microphone and a readout: still when idle, rippling with your voice while listening, swirling while a real request is in flight, and it turns grey when Jarvis declines. Answers from the language model stream in. On phones the layout stacks ([screenshot](docs/images/mobile.png)). Motion honours `prefers-reduced-motion`.
+**Try it:** [brej-29.github.io/mozhi](https://brej-29.github.io/mozhi/) (no install, the router runs in your browser).
 
-## The problem
+## At a glance
 
-Jarvis V1 was a Flutter app that sent every request to a small local LLM with a prompt that said "reply with JSON naming a tool". It worked in demos. Nobody had measured it, and a voice assistant that acts on the wrong request is worse than one that says "I cannot do that": a wrong reminder gets created, a note gets saved, or it claims to play music it cannot play.
+| | |
+|---|---|
+| Router accuracy | **0.941** action macro-F1 (95% CI 0.916 to 0.962), 2,805 test requests |
+| False actions | **0.8%** (acting on something it should have declined) |
+| Speed | **2.2 ms** median, against 1,047 ms for the best LLM prompt and 3,333 ms for the original one |
+| Size | 22.9 MB int8 ONNX; Windows app 62.8 MB |
+| Languages | English (finished), Tamil and Malayalam (first model, below target, see [limits](#limits)) |
+| Respect meter | 5 levels: address term plus polite or informal "you" |
+| Content | 1,475 public-domain verses, 14 folk tale summaries with sources |
+| Tests | 47 automated tests, CI on every push |
 
-So the question became: **how often does a prompted small LLM pick the wrong tool, how often does it act when it should decline, and what is the cheapest thing that does better?** And because the text really comes from a microphone: **what happens to all of that when the text is a speech recognizer's guess?**
+## What it looks like
 
-## Evidence that the problem is real
+| Reading a request | The orb, in four states |
+|---|---|
+| ![Mozhi's decision slip reading a weather request and declining a music request](docs/images/decision.gif) | ![Listening, thinking, speaking and declined orb animations](docs/images/orb.gif) |
+| Every request becomes a slip: the words heard, a probability bar for every tool, the decline threshold, and a one-line reason. | Listening uses the live microphone spectrum, thinking sends signals around a constellation, speaking pulses with each word. |
 
-Every number below is in `bench/results/*.json` and reproducible with the commands in [Reproduce](#reproduce). Thresholds were written down before anything was trained: [`docs/PREREG.md`](docs/PREREG.md).
+<details><summary>More screenshots</summary>
 
-**Benchmark.** MASSIVE en-US (Amazon, CC BY 4.0), 2,805 test requests, mapped to Jarvis's tools plus a new `UNSUPPORTED` label. Score: macro-F1 over {weather, reminder, note, do-nothing}. "False action" is the share of requests it should have declined that it acted on. LLM systems run on a fixed stratified subset of 539 requests, so every row sees the same questions.
+| Talk | Evidence page | Phone |
+|---|---|---|
+| ![Talk view](docs/images/talk.png) | ![Evidence charts](docs/images/evidence.png) | ![Mobile layout](docs/images/mobile.png) |
 
-| System (539-request subset) | Macro-F1 (95% CI) | False actions | Valid JSON | Median latency |
-|---|---|---|---|---|
-| **Jarvis V1 prompt, Qwen2.5 1.5B** | 0.49 (0.45 to 0.54) | 41% | 55% | 3.3 s |
-| Jarvis V1 prompt, Qwen2.5 0.5B | 0.30 (0.27 to 0.33) | 83% | 80% | 1.5 s (loaded) |
-| Jarvis V1 prompt, Mistral 7B (V1's default family) | 0.20 (0.18 to 0.22) | 49% | 0% | 9.0 s (GPU) |
-| Same V1 prompt without the pasted project docs, 1.5B | 0.67 | 44% | 91% | 4.1 s (loaded) |
-| Short prompt, constrained JSON, Qwen2.5 1.5B | 0.88 (0.84 to 0.91) | 3.7% | 100% | 1.0 s |
-| Short prompt, constrained JSON, Mistral 7B | 0.79 (0.74 to 0.84) | 10% | 100% | 0.8 s (GPU) |
-| Keyword rules | 0.84 (0.80 to 0.87) | 8.7% | n/a | 0.004 ms |
-| **Jarvis now (joint model)** | **0.95 (0.93 to 0.98)** | **1.7%** | n/a | **2.2 ms** |
+</details>
 
-What the baseline run showed:
+## The question
 
-- The V1 prompt never produced an "unsupported" answer (it had no such label), so every unsupported request was answered as chat. Mistral 7B ignored the JSON instruction altogether and replied in prose, inventing a weather-API call. In 539 requests it produced valid JSON zero times.
-- The prompt pasted in 1,600 characters of the project's own docs. Removing them lifted macro-F1 from 0.49 to 0.67 and valid output from 55% to 91%. The docs were noise.
-- Running V1's code also showed two plain bugs ([`bench/results/v1_bugs.json`](bench/results/v1_bugs.json), reproduce with `make repro`): saving a note crashed with `NameError: name 'datetime' is not defined`, and the "repair the bad JSON" retry was sent the exception message, not the model's output.
-
-Latency in that table is from `bench/results/latency.json` (idle machine) for the 1.5B rows, and from the accuracy runs (other jobs sharing the CPU) where marked "loaded".
-
-## Approach
-
-One small encoder (MiniLM-L6, 22M parameters, int8 ONNX, 23 MB) reads the request once and produces two things: which of 60 fine intents it is, and which words are the city, the time and the event. The fine intents are summed into the five tools. If the summed probability of an action tool is below a threshold tuned on the dev set, Jarvis declines instead of acting.
+Does a voice assistant need a language model to decide what to do? My first version said yes and I had never measured it. A request like "play some jazz" should never become a weather lookup or a saved note.
 
 ```mermaid
 flowchart LR
-    t[Transcript] --> n[Normalise text] --> e[MiniLM int8 ONNX]
-    e --> i[60 intents to 5 tools]
-    e --> s[City, time, title spans]
-    i --> g{Sure enough?}
-    g -->|yes| tool[Weather / reminder / note / answer]
-    g -->|no, or no tool exists| say[Says what it heard and what it cannot do]
+    A[Voice or text] --> B[Speech recognition<br/>in the browser]
+    B --> C{Mozhi router<br/>MiniLM int8, 2 ms}
+    C -->|weather, reminder, note| D[Run the tool]
+    C -->|news, story, verse| E[Bundled sourced content]
+    C -->|open question| F[Language model<br/>local gateway or your own key]
+    C -->|cannot do, or unsure| G[Decline politely<br/>nothing is done]
+    D --> H[Reply addressed by<br/>the respect meter]
+    E --> H
+    F --> H
+    G --> H
+    H --> I[Text, and speech if the<br/>browser has a voice]
 ```
-
-More in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Results
 
-Full test set (2,805 requests), clean text:
+All numbers come from [`bench/results`](bench/results) with 95% bootstrap intervals. Metric: action macro-F1 over weather, reminder, note and "no action", on the MASSIVE English test split (Amazon, CC BY 4.0). The thresholds were written down in [`docs/PREREG.md`](docs/PREREG.md) before training.
 
-| System | Macro-F1 (95% CI) | False actions | Said "cannot" when it should | City right | Time right |
-|---|---|---|---|---|---|
-| Keyword rules | 0.71 (0.68 to 0.74) | 9.9% | 65% | 83% | 49% |
-| TF-IDF + logistic regression | 0.93 (0.91 to 0.95) | 0.7% | 98% | 85% | 47% |
-| Joint model, MASSIVE only (pre-registered) | 0.95 (0.93 to 0.97), 3 seeds 0.951 ± 0.004 | 0.4% | 99% | 98% | 85% |
-| **Joint model, shipped** | **0.94 (0.92 to 0.96) for seed 0, 3 seeds 0.948 ± 0.005** | **0.6%** | **99%** | **98%** | **85%** |
+| System | Requests | Action macro-F1 (95% CI) | False actions | Declines what it should |
+|---|---|---|---|---|
+| Keyword rules | 2,805 | 0.707 (0.677 to 0.736) | 9.9% | 64.8% |
+| TF-IDF + linear | 2,805 | 0.930 (0.906 to 0.953) | 0.7% | 98.3% |
+| **Joint router (shipped)** | 2,805 | **0.941 (0.916 to 0.962)** | **0.8%** | **98.5%** |
+| Original V1 prompt, Qwen 1.5B | 539 | 0.490 (0.447 to 0.537) | 40.7% | 0% |
+| Constrained prompt, Qwen 1.5B | 539 | 0.879 (0.842 to 0.912) | 3.7% | 89.0% |
+| Constrained prompt, Mistral 7B | 539 | 0.791 (0.742 to 0.835) | 10.0% | 64.5% |
+| Joint router, same 539 | 539 | 0.953 (0.928 to 0.975) | 1.7% | 98.5% |
 
-- Choosing the tool is mostly easy: a linear model gets within about 1 to 2 points. The transformer earns its place on arguments (city 85% to 98%, time 47% to 85%).
-- The shipped model trades a little clean-text score for notes and a wake word ("hey jarvis"), neither of which MASSIVE contains. Both models are reported.
-- Many remaining misses are label noise in MASSIVE (for example "by get marks" is labelled as a weather request). The ceiling is below 1.0.
+The LLM rows use a 539-request stratified subset because each run is slow. The original prompt gave a valid answer for 55% of requests with Qwen 1.5B.
 
-### Real speech is the harder problem
-
-I played 494 real recordings (SLURP headset and far-field, sentences not seen in training) through Whisper and routed the transcripts, scoring the same requests on gold text and on speech.
-
-| Router | Gold text | Whisper base.en transcripts | False actions on speech |
-|---|---|---|---|
-| Keyword rules | 0.81 | 0.76 | 5.3% |
-| TF-IDF + linear | 0.90 | 0.79 | 1.3% |
-| Joint model, MASSIVE only | 0.94 | 0.80 | 3.0% |
-| **Joint model, shipped** | **0.95** | **0.84** | **2.3%** |
-| Short prompt, Qwen 1.5B | 0.81 | 0.73 | 5.3% |
-
-Routing from speech loses 10 points, and Whisper base.en got 26% of words wrong on this set. Training on 6,600 recogniser transcripts bought 1 to 2 points on speech (0.822 to 0.831 on average over seeds) and left false actions about where they were. The better lever is the recogniser:
-
-| Whisper model | Word error rate | Macro-F1 of the shipped router | False actions |
-|---|---|---|---|
-| tiny.en | 34% | 0.85 | 2.7% |
-| base.en | 26% | 0.84 | 2.3% |
-| small.en | 20% | 0.88 | 2.3% |
-| medium.en | 17% | 0.93 | 2.0% |
-
-With medium.en the router is 1.7 points below its gold-text score. The tiny/base ordering is inside the noise (494 clips, intervals about ±4 points).
-
-### The safety dial
-
-Threshold on the summed tool probability, shipped model:
-
-| Threshold | Text: false actions / missed | Speech: false actions / missed |
+| Speed (idle machine, 150 requests) | Median | 95th percentile |
 |---|---|---|
-| 0.0 (never decline) | 1.1% / 5.2% | 2.7% / 17.0% |
-| 0.8 | 0.6% / 7.6% | 1.7% / 20.1% |
-| 0.9 | 0.3% / 8.3% | 1.7% / 23.2% |
-| 0.99 | 0.1% / 19.6% | 0.3% / 39.2% |
+| Joint router | 2.2 ms | 3.4 ms |
+| Constrained LLM prompt | 1,047 ms | 1,588 ms |
+| Original V1 prompt | 3,333 ms | 5,680 ms |
 
-### What did not work
-
-- **LLM fallback.** A cascade that sends unsure requests to the 1.5B model scored 0.94 against 0.95 for the router alone, with a 95th percentile of 1.4 s. The fallback made routing slower and no better, so the shipped router abstains instead.
-- **Bigger model.** Mistral 7B with the same short prompt scored 0.79, below the 1.5B Qwen (0.88), and acted on 10% of requests it should decline.
-- **Pre-registered goals.** T1 (clean macro-F1 at least 0.95) was met by the MASSIVE-only model and missed by a hair by the shipped one. T6 (at most 5 points lost on speech) was missed with Whisper base.en and met with medium.en. T4's +10 points over the best V1-prompt result is met by a wide margin (+46), but against the fair constrained-prompt baseline the gain is +7.4 points (CI 3.8 to 11.2).
-
-Pre-registered goals, all seven:
-
-| Goal | Target | Result |
+| Real speech (SLURP through Whisper) | Word error rate | Routing macro-F1 |
 |---|---|---|
-| T1 clean macro-F1 | at least 0.95 | 0.951 MASSIVE-only (met), 0.948 shipped (missed by 0.002) |
-| T2 false actions | at most 2% | 0.6% (met) |
-| T3 latency p95 | at most 25 ms | 3.4 ms (met) |
-| T4 gain over V1 prompt | at least 10 points | +46 points (met); +7.4 over the constrained prompt |
-| T5 arguments | city 90%, time 75% | 98%, 85% (met) |
-| T6 speech drop | at most 5 points | 10 with base.en (missed), 1.7 with medium.en (met) |
-| T7 says "cannot" | at least 85% | 99% (met) |
+| base.en | 25.7% | 0.841 |
+| small.en | 20.3% | 0.882 |
+| medium.en | 17.4% | 0.929 |
+
+Training on 6,600 real recogniser transcripts is what closed most of the speech gap.
+
+### Pre-registered thresholds: what was met and what was not
+
+| Check | Outcome |
+|---|---|
+| City and time slots | Met (97.5% and 85.5%) |
+| False actions | Met (0.6%) |
+| p95 latency | Met (3.4 ms) |
+| Beat the original prompt | Met (+46 points, CI 41 to 51) |
+| Beat a fair constrained prompt by 10 points | **Missed** (+7.4, CI 3.8 to 11.2) |
+| Clean-text accuracy | MASSIVE-only model met it; the shipped speech-aware model missed by a hair (0.948 mean) |
+| Speech gap | **Missed** with base.en, met with medium.en |
+
+## What did not work
+
+| Tried | Result | Change |
+|---|---|---|
+| Paste docs into the V1 prompt | Removing them raised macro-F1 from 0.49 to 0.67 and valid answers from 55% to 91% | Dropped the docs |
+| Train on MASSIVE alone | It has no "save a note" intent | Added hand-written notes to train and dev only; test untouched |
+| Clean-text training for voice | Lost 10 points on Whisper base.en | Trained on real transcripts |
+| Router first, LLM when unsure | 0.940, no gain, 1.4 s tail | Dropped |
+| Free hosted Docker Space | Free CPU tier now needs a paid plan | GitHub Pages, router in the browser |
+| Keep the visitor's key in localStorage | Other pages on the same domain could read it | Tab-only storage, old key deleted on load |
+| English router on Tamil script | Split words into letters, called everything "play music" | Separate multilingual router |
+
+I also reproduced two bugs in the original code with [`bench/repro_v1_bugs.py`](bench/repro_v1_bugs.py): a missing import that crashed note saving, and a repair prompt that never included the model's output.
+
+## Tamil, Malayalam and the respect meter
+
+Most people in Tamil Nadu and Kerala talk to a phone in their own language, and the way you address someone carries respect. A flat "you" is wrong in both. One dial changes the address term and the polite or informal "you" together.
+
+| Level | Feel | Tamil | Malayalam |
+|---|---|---|---|
+| 1 | Close friend | da, di | da, di |
+| 2 | Warm | thambi, thangachi | mone, mole |
+| 3 | Family respect | anna, akka | chetta, chechi |
+| 4 | Polite | sir, madam | saar, madam |
+| 5 | Deferential | ayya, amma, muthalali | thampurane, thampuratti, muthalali |
+
+- Sample requests switch to **Tanglish** or **Manglish** (romanised Tamil or Malayalam). The page itself stays English.
+- Replies are English by default, addressed by the meter ("Anna, in Chennai it is 27 degrees"). A setting turns on Tamil and Malayalam script replies.
+- Content: **1,475 public-domain verses** (Thirukkural, Aathichoodi, Jnanappana, Harinamakeerthanam, Veena Poovu) and **14 folk tales** told from my own summaries with source links. The source books are in copyright, so no text is copied. See [`docs/MOZHI.md`](docs/MOZHI.md).
+
+### Limits
+
+- The first Tamil and Malayalam router scores **0.818 and 0.809** macro-F1 against a 0.85 target set in advance. Malayalam also missed its hand-written probe target (0.73 against 0.80). A larger pretrained encoder is the next step. Full table: [`bench/results/J2_REPORT.md`](bench/results/J2_REPORT.md).
+- Tanglish and Manglish were not trained or measured. They work best mixed with English words.
+- Tamil and Malayalam wording is a draft awaiting native-speaker review.
+- The browser copy has the English router only; Tamil and Malayalam script run in the desktop app and local server.
+- Speech output needs a Tamil or Malayalam voice in your browser, and the machine I tested on had English voices only.
+- Microphone input is not covered by automated tests.
 
 ## Run it
 
-Needs Python 3.11 and [uv](https://docs.astral.sh/uv/).
-
 ```bash
-uv venv --python 3.11 .venv
-uv pip install --python .venv/Scripts/python.exe -e .
-.venv/Scripts/python.exe -m jarvis          # opens http://127.0.0.1:8765
+make setup      # Python 3.11 environment with uv
+make test       # 47 tests
+make run        # http://127.0.0.1:8765
+make exe        # one-file Windows app in dist/mozhi.exe
 ```
 
-Voice input uses your browser's speech recognition (Chrome or Edge); typing works everywhere. Reminders become browser notifications and notes are kept on the device.
+Open questions use a language model through OmniRoute (the `omniroute` npm package) or any OpenAI-compatible endpoint. Copy `.env.example` to `.env` and set `LLM_ENDPOINT`, `LLM_API_KEY` and optionally `LLM_MODEL`. The local app starts OmniRoute if it is not running and stops it on exit only if it started it. The hosted page asks visitors for their own key (kept for that tab only). A monthly budget and a daily call cap protect your account.
 
-General questions ("who painted the Mona Lisa") need a language model, and the router never needs one. Jarvis reads a `.env` file (git-ignored) or the environment and talks to any OpenAI-compatible endpoint: OmniRoute, Ollama's `/v1`, a llama.cpp server. Copy `.env.example` to `.env`:
+## Repository map
 
-```bash
-LLM_ENDPOINT=http://localhost:20128/v1/chat/completions
-LLM_API_KEY=...
-LLM_MODEL=auto/best-free      # default if unset; a free OmniRoute combo
-MONTHLY_BUDGET_USD=1.50       # Jarvis stops calling the model once the tracked spend reaches this
-LLM_PRICE_IN_PER_M=0          # USD per million tokens, so the budget guard can count; 0 for free models
-LLM_PRICE_OUT_PER_M=0
-```
-
-Answers stream into the decision slip as they arrive (first token in about 1.2 s with `auto/best-free` on my setup). The key never leaves the server, calls are capped at 300 a day, and the spend ledger lives in `.jarvis_spend.json`. The spend guard fails closed: each call is counted and saved (atomically) before it is made, so a crash or a cancelled stream cannot undercount, and an unreadable or unwritable ledger blocks calls instead of letting them through. `.env` is read from the repository root (or next to `jarvis.exe`, or the path in `JARVIS_ENV_FILE`), never from whatever folder you launch from. With no endpoint set, general questions say so and everything else works.
-
-**Windows exe:** `make exe` builds `dist/jarvis.exe` with PyInstaller (UI and model inside, 63 MB, no Python needed). It opens your browser on `http://127.0.0.1:8765`. A build made from this commit was smoke-tested over HTTP (health, reminder, greeting). The file is unsigned, so Windows SmartScreen may warn.
+| Path | What is in it |
+|---|---|
+| `mozhi/` | Server, tools, routers, benchmark code, web UI |
+| `mozhi/web/` | The whole front end (vanilla JS, canvas orb, onnxruntime-web) |
+| `training/` | Router training and synthetic data |
+| `bench/` | Evaluation scripts and every result file |
+| `content/` | Build script for the verse collection and the folk tale summaries |
+| `docs/` | [Pre-registration](docs/PREREG.md), [architecture](docs/ARCHITECTURE.md), [Tamil and Malayalam design note](docs/MOZHI.md), [handoff](docs/HANDOFF.md) |
+| `packaging/` | Windows app and GitHub Pages build |
 
 ## Reproduce
 
 ```bash
-make setup           # venv, torch (CUDA), eval dependencies, llama.cpp wheel
-make eval            # rules, TF-IDF and joint models on the full test set (about a minute)
-make train           # three seeds of the joint model (a few minutes on a laptop GPU)
-make eval-llm        # LLM baselines on the subset (about an hour on CPU; downloads GGUF files)
-python bench/summarize.py   # rebuilds bench/results/SUMMARY.md and the Evidence page data
+make eval        # every baseline and the summary
+make train       # the English router
+make repro       # the two original-code bugs
 ```
 
-Data is downloaded by the scripts: MASSIVE from Amazon's S3 bucket, SLURP recordings from the Hugging Face `qmeeus/slurp` copy, Whisper models from Hugging Face. Speech scripts: `python -m jarvis.bench.asr` (evaluation clips) and `python -m jarvis.bench.asr_train` (training transcripts). Audio is never committed.
+## Licences and credits
 
-## Free hosting and limits
+MIT for the code. Data: MASSIVE (Amazon, CC BY 4.0) and SLURP recordings for evaluation. Verses: the Thirukkural JSON dataset (Apache-2.0) and Tamil and Malayalam Wikisource (CC BY-SA), each verse linked to its source. Folk tales: own summaries, linked to Seethalakshmi (1960), Jacob (1960), the Stories From India podcast and Kalampedia.
 
-- **Live demo** is a static site on GitHub Pages, rebuilt from `main` by `.github/workflows/pages.yml`. There is no server, so there is no cold start and nothing to sleep. The same 23 MB int8 model runs in your browser through onnxruntime-web (WASM). Routing takes about 30 ms there, and the browser router agrees with the Python router on the tool for all 604 requests I compared (confidence differs by up to 0.05 because the int8 kernels differ).
-- First visit downloads the model (23 MB) and the onnxruntime WASM runtime (11 MB), both from the same site, so the first request waits a few seconds. The page says so while it loads. The page loads no third-party scripts: onnxruntime-web is fetched at build time from a pinned release and checked against a SHA-256 hash (`packaging/vendor.json`), chrono-node is vendored, and a Content-Security-Policy limits connections to the site and Open-Meteo.
-- Weather calls go from your browser to Open-Meteo (free, no key, fair-use limits). Reminders and notes stay in your browser's storage.
-- The hosted copy has no language model, so "general questions" explain how to connect one. Run it locally for that.
-- Voice input uses the browser's own speech recognition (Chrome or Edge). Typing works anywhere.
-- GitHub Pages limits (1 GB site, soft bandwidth cap) are far above this site's size. Hugging Face Docker Spaces were the first plan, but the free CPU tier now requires a PRO subscription, so I did not use it.
-- Nothing here depends on a paid service, and every endpoint and model id is configuration.
-
-## Limits
-
-- The tool mapping is a proxy: reminders come from MASSIVE's alarm and calendar requests, notes from list requests. Notes were taught with synthetic phrasings and are not measured on real data.
-- Speech results use Whisper (int8, English) on 494 clips from one corpus. Browser speech recognition, which the app actually uses, was not benchmarked.
-- Only the three action tools are gated by the confidence threshold. A garbled request that the model guesses is a general question still goes to the language model, if one is connected.
-- Cascade fallback is set to a 15% dev quantile of confidence, which is near 0.99 because the model is very sure most of the time, so the real fallback rate on test differs from 15%.
-- A few ASR training transcripts (sentences that also got a wake-word variant) were dropped when tags were aligned, so the speech training set is slightly smaller than the 6,600 rows quoted.
-- English only. One laptop (i5-13450HX, RTX 3050 6 GB). Latency is router time only.
-- Time arguments are right 85% of the time given the right tool. I did not break the failures down further.
-
-## Data and licences
-
-MASSIVE is CC BY 4.0 (FitzGerald et al., 2022, Amazon). SLURP text is CC BY 4.0; its recordings are CC BY-NC 4.0 and are used here for evaluation and research only, never redistributed (Bastianelli et al., 2020). Qwen2.5 0.5B and 1.5B are Apache 2.0; Mistral 7B Instruct v0.3 is Apache 2.0. MiniLM (`nreimers/MiniLM-L6-H384-uncased`) is MIT. Code is MIT.
-
-## Repository
-
-| Path | What |
-|---|---|
-| `jarvis/` | Router, tools, server, UI, benchmark harness |
-| `training/` | Training script and synthetic data |
-| `bench/` | `results/` (every number), `summarize.py`, V1 bug reproduction |
-| `docs/` | `PREREG.md`, `ARCHITECTURE.md` |
-| `models/joint/` | The shipped int8 model |
-| `packaging/` | PyInstaller spec and the GitHub Pages site builder |
-| `Dockerfile` | Container for self-hosting the server version |
+Built by [Brejesh Balakrishnan](https://github.com/brej-29). Earlier names of this project: Jarvis voice agent, Koottu.
